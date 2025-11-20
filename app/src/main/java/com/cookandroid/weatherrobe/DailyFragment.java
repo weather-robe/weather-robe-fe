@@ -1,4 +1,10 @@
 package com.cookandroid.weatherrobe;
 
-public class DailyFragment {
+import androidx.fragment.app.Fragment;
+
+public class DailyFragment extends Fragment {
+
+    public DailyFragment() {
+        super(R.layout.fragment_daily);
+    }
 }
