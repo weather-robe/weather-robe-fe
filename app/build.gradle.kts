@@ -4,11 +4,11 @@ plugins {
 
 android {
     namespace = "com.cookandroid.weatherrobe"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.cookandroid.weatherrobe"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
