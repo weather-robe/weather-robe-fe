@@ -3,8 +3,11 @@ package com.cookandroid.weatherrobe;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -14,6 +17,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         View bottomNav = findViewById(R.id.bottom_nav);
+
+        // 최초 실행 → HomeFragment
+        replaceFragment(new HomeFragment());
 
         BottomNavigation.setup(bottomNav, tabId -> {
             if (tabId == R.id.tab_home) {
