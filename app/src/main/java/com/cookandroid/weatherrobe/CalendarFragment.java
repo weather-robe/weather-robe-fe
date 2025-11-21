@@ -31,16 +31,16 @@ public class CalendarFragment extends Fragment {
                               @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // 캘린더 헤더 설정
+        // 캘린더 전용 헤더 설정
         setupHeaderForCalendar(view);
     }
 
     private void setupHeaderForCalendar(View view) {
-        ImageView mapIcon = view.findViewById(R.id.header_map_icon);
-        TextView title = view.findViewById(R.id.header_title);
+        ImageView leftIcon = view.findViewById(R.id.ivLeft);     // 왼쪽 햄버거 btn
+        TextView monthTitle = view.findViewById(R.id.tvMonth);   // 현재 현재 날짜 영역
+        ImageView rightIcon = view.findViewById(R.id.ivInfo);     // 오른쪽 더 보기 btn
 
-        mapIcon.setVisibility(View.GONE);
-        title.setText("2025년 10월");
+        monthTitle.setText("2025년 10월");  // 현재 날짜 영역: 추후 API 연동 예정임. 임시데이터
     }
-
+}
 // 하단 네비바 추가 필요함!
