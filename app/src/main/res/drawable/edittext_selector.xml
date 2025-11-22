@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 포커스 되었을 때 -->
+    <item android:state_focused="true"
+        android:drawable="@drawable/edittext_active"/>
+
+    <!-- 기본 -->
+    <item android:drawable="@drawable/edittext_bg"/>
+
+</selector>
