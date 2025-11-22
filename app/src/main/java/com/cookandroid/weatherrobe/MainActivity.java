@@ -18,11 +18,23 @@ public class MainActivity extends AppCompatActivity {
     private ImageView headerRightIcon;
     private View headerBottomBorder;
 
+    private ImageView customStatusBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+        );
+
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+
         setContentView(R.layout.activity_main);
+
+        customStatusBar = findViewById(R.id.custom_status_bar);
 
         headerLayout = findViewById(R.id.header_root);
         headerLeftIcon = findViewById(R.id.header_left_icon);
@@ -35,29 +47,48 @@ public class MainActivity extends AppCompatActivity {
 
         replaceFragment(new HomeFragment());
         setHeaderStyle(true);
+        setStatusBarImage(true);
         headerLayout.setVisibility(View.VISIBLE);
 
         BottomNavigation.setup(bottomNav, tabId -> {
             if (tabId == R.id.tab_home) {
                 headerLayout.setVisibility(View.VISIBLE);
                 replaceFragment(new HomeFragment());
+
                 setHeaderStyle(true);
+                setStatusBarImage(true);
 
             } else if (tabId == R.id.tab_hourly) {
                 headerLayout.setVisibility(View.VISIBLE);
                 replaceFragment(new HourlyFragment());
+
                 setHeaderStyle(false);
+                setStatusBarImage(false);
 
             } else if (tabId == R.id.tab_daily) {
                 headerLayout.setVisibility(View.VISIBLE);
                 replaceFragment(new DailyFragment());
+
                 setHeaderStyle(false);
+                setStatusBarImage(false);
 
             } else if (tabId == R.id.tab_calendar) {
                 headerLayout.setVisibility(View.GONE);
                 replaceFragment(new CalendarFragment());
+
+                setStatusBarImage(false);
             }
         });
+    }
+
+    private void setStatusBarImage(boolean isHome) {
+        if (isHome) {
+            customStatusBar.setImageResource(R.drawable.ic_menu_white);
+            customStatusBar.setVisibility(View.VISIBLE);
+        } else {
+            customStatusBar.setImageResource(R.drawable.ic_menu_black);
+            customStatusBar.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setHeaderStyle(boolean isHome) {
