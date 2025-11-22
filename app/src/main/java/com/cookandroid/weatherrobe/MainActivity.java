@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        headerLayout = findViewById(R.id.header);
+        headerLayout = findViewById(R.id.header_root);
         headerLeftIcon = findViewById(R.id.header_left_icon);
         headerMapIcon = findViewById(R.id.header_map_icon);
         headerTitle = findViewById(R.id.header_title);
