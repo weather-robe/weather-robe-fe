@@ -11,6 +11,10 @@
     <include
         android:id="@+id/header"
         layout="@layout/header_common"
+        android:layout_width="match_parent"
+        android:layout_height="74dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- 프래그먼트 들어갈 자리 -->
