@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/dialog_bg"
-    android:padding="24dp"
+    android:padding="28dp"
     android:gravity="center_horizontal">
 
     <TextView
@@ -25,10 +25,12 @@
         android:fontFamily="@font/nanumbarungothic"
         android:gravity="center"/>
 
-    <Button
+    <ImageView
         android:id="@+id/btn_confirm"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
+        android:layout_width="288dp"
+        android:layout_height="46dp"
         android:background="@drawable/check_btn"
+        android:clickable="true"
+        android:focusable="true"
         android:layout_marginTop="23dp" />
 </LinearLayout>

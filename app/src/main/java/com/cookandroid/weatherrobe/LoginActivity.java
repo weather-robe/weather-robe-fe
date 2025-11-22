@@ -1,5 +1,7 @@
 package com.cookandroid.weatherrobe;
 
+import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -9,17 +11,16 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
     private EditText inputId;
     private EditText inputPw;
-    private Button btnLogin;
+    private ImageView btnLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,13 +31,10 @@ public class LoginActivity extends AppCompatActivity {
         inputPw = findViewById(R.id.input_pw);
         btnLogin = findViewById(R.id.btn_login);
 
-        // 텍스트 변경 감지 → 버튼 상태 업데이트
         TextWatcher watcher = new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void afterTextChanged(Editable s) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
                 updateButton();
             }
         };
@@ -44,21 +42,23 @@ public class LoginActivity extends AppCompatActivity {
         inputId.addTextChangedListener(watcher);
         inputPw.addTextChangedListener(watcher);
 
-        updateButton(); // 초기 상태
+        updateButton();
 
-        // 로그인 버튼 클릭 → 모달 호출
         btnLogin.setOnClickListener(v -> {
             String id = inputId.getText().toString().trim();
             String pw = inputPw.getText().toString().trim();
 
-            // 임시 로그인 검증
             if (!id.equals("test") || !pw.equals("1234")) {
                 showLoginFailDialog();
+                return;
             }
+
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
         });
     }
 
-    // 버튼 PNG 상태 변경
     private void updateButton() {
         String id = inputId.getText().toString().trim();
         String pw = inputPw.getText().toString().trim();
@@ -70,28 +70,27 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    // 로그인 실패 모달
     private void showLoginFailDialog() {
         View view = getLayoutInflater().inflate(R.layout.login_error, null);
-        Button confirmBtn = view.findViewById(R.id.btn_confirm);
+        ImageView confirmBtn = view.findViewById(R.id.btn_confirm);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setView(view);
-
-        AlertDialog dialog = builder.create();
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(view);
         dialog.show();
 
         Window window = dialog.getWindow();
         if (window != null) {
-            window.setLayout(WindowManager.LayoutParams.WRAP_CONTENT,
-                    WindowManager.LayoutParams.WRAP_CONTENT);
-            window.setGravity(Gravity.CENTER);
+            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
             window.setDimAmount(0.6f);
+
+            window.setLayout(
+                    WindowManager.LayoutParams.WRAP_CONTENT,
+                    WindowManager.LayoutParams.WRAP_CONTENT
+            );
+            window.setGravity(Gravity.CENTER);
         }
 
-        // 확인 버튼 → 닫기
         confirmBtn.setOnClickListener(v -> dialog.dismiss());
     }
 }
