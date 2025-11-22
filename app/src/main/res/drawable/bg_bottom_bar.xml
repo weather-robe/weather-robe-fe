@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <size android:height="64dp" />
-    <solid android:color="#4B4B4B" />
-    <corners android:radius="33dp" />
+    <!-- 바깥 배경 투명 -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent"/>
+        </shape>
+    </item>
 
-</shape>
+    <!-- 실제 캡슐 모양 -->
+    <item android:left="0dp" android:right="0dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#4B4B4B"/>
+            <corners android:radius="33dp"/>
+            <size android:height="64dp" />
+        </shape>
+    </item>
+
+</layer-list>

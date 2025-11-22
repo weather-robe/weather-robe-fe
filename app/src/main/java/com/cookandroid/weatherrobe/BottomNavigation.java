@@ -2,6 +2,7 @@ package com.cookandroid.weatherrobe;
 
 import android.content.res.Resources;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 public class BottomNavigation {
@@ -18,11 +19,13 @@ public class BottomNavigation {
             View bottomNav,
             OnTabSelectedListener listener
     ) {
-        LinearLayout tabHome = bottomNav.findViewById(R.id.tab_home);
-        LinearLayout tabHourly = bottomNav.findViewById(R.id.tab_hourly);
-        LinearLayout tabDaily = bottomNav.findViewById(R.id.tab_daily);
-        LinearLayout tabCalendar = bottomNav.findViewById(R.id.tab_calendar);
+        // tab_xxx 는 ConstraintLayout이므로 LinearLayout 캐스팅 금지
+        ViewGroup tabHome = bottomNav.findViewById(R.id.tab_home);
+        ViewGroup tabHourly = bottomNav.findViewById(R.id.tab_hourly);
+        ViewGroup tabDaily = bottomNav.findViewById(R.id.tab_daily);
+        ViewGroup tabCalendar = bottomNav.findViewById(R.id.tab_calendar);
 
+        // inner_xxx 는 여전히 LinearLayout
         LinearLayout innerHome = bottomNav.findViewById(R.id.inner_home);
         LinearLayout innerHourly = bottomNav.findViewById(R.id.inner_hourly);
         LinearLayout innerDaily = bottomNav.findViewById(R.id.inner_daily);
@@ -36,7 +39,7 @@ public class BottomNavigation {
         };
 
         View.OnClickListener click = v -> {
-            reset.run(); // 전체 초기화
+            reset.run();
 
             if (v.getId() == R.id.tab_home) {
                 innerHome.setBackgroundResource(R.drawable.bg_selected_tab);
@@ -56,6 +59,7 @@ public class BottomNavigation {
         tabDaily.setOnClickListener(click);
         tabCalendar.setOnClickListener(click);
 
+        // 디폴트 Home 선택
         click.onClick(tabHome);
     }
 }
