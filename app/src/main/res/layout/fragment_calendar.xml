@@ -40,21 +40,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
+            <!-- text는 서버 데이터로 채움 -->
             <TextView
                 android:id="@+id/tvMonth"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2025년 11월"
+                android:text=""
                 android:textSize="18sp"
                 android:textColor="#111111"
                 android:fontFamily="@font/nanumbarungothicbold"/>
 
             <ImageView
-                android:id="@+id/ivChevronDown"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginStart="4dp"
-                android:src="@drawable/ic_chevron_down"/>
+                android:id="@+id/header_right_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginLeft="2dp"
+                android:src="@drawable/ic_chevron_down" />
         </LinearLayout>
 
         <!-- 오른쪽 info -->
