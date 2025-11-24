@@ -18,7 +18,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-
     <ImageView
         android:id="@+id/custom_status_bar"
         android:layout_width="0dp"
@@ -35,8 +34,7 @@
         android:id="@+id/header_root"
         layout="@layout/header_common"
         android:layout_width="match_parent"
-        android:layout_height="74dp"
-        android:layout_marginTop="30dp"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
