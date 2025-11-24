@@ -7,15 +7,19 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -24,18 +28,21 @@ public class SignupActivity extends AppCompatActivity {
     private TextView serviceView, privacyView;
     private ImageView btnCheck;
 
-    // 에러 레이아웃
     private LinearLayout idErrorLayout, pwErrorLayout, pwCheckErrorLayout, emailErrorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), true);
         setContentView(R.layout.activity_signup);
 
         initViews();
         setListeners();
         setValidationWatcher();
         updateCheckButtonState();
+
+        enableWheelScrollOnPixel2();
     }
 
     private void initViews() {
@@ -60,11 +67,9 @@ public class SignupActivity extends AppCompatActivity {
 
     private void setListeners() {
 
-        // 약관 모달
         serviceView.setOnClickListener(v -> openDialog(R.layout.service_dialog));
         privacyView.setOnClickListener(v -> openDialog(R.layout.privacy_dialog));
 
-        // 회원가입 완료 → 로그인 화면 이동
         btnCheck.setOnClickListener(v -> {
             Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
             startActivity(intent);
@@ -147,19 +152,33 @@ public class SignupActivity extends AppCompatActivity {
         dialog.setContentView(layoutRes);
 
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        dialog.show();
+
         dialog.getWindow().setLayout(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                dpToPx(607)
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
         );
 
         ImageView closeBtn = dialog.findViewById(R.id.close_btn);
         closeBtn.setOnClickListener(v -> dialog.dismiss());
-
-        dialog.show();
     }
 
     private int dpToPx(int dp) {
         float scale = getResources().getDisplayMetrics().density;
         return (int) (dp * scale);
+    }
+
+    private void enableWheelScrollOnPixel2() {
+        ScrollView scroll = findViewById(R.id.scroll_area);
+
+        scroll.setOnGenericMotionListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_SCROLL) {
+                float vScroll = event.getAxisValue(MotionEvent.AXIS_VSCROLL);
+                scroll.smoothScrollBy(0, (int) (-vScroll * 60));
+                return true;
+            }
+            return false;
+        });
     }
 }

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="607dp"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/signup_dialog"
-    android:padding="28dp"
+    android:padding="16dp"
     android:gravity="center_horizontal">
 
+    <!-- 상단 타이틀 영역 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -30,17 +31,23 @@
             android:clickable="true"
             android:focusable="true"/>
     </LinearLayout>
-    
+
+    <!-- 스크롤 영역 -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_marginTop="16dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=" 웨더로브(Weather Lobe) 서비스 이용약관은 관계법령의 규정을 반영하여 아래와 같이 내용을 정하고 있습니다.\n\n
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=" 웨더로브(Weather Lobe) 서비스 이용약관은 관계법령의 규정을 반영하여 아래와 같이 내용을 정하고 있습니다.\n\n
 ‘웨더로브(Weather Lobe)‘ 이용 약관은 KLP(이하 ‘회사’)에서 제공하는 “웨더로브(Weather Lobe)”서비스에 적용되는 것으로 회사와 이용자간에 적용됩니다. 따라서 서비스 이용 전에 전체 내용을 주의 깊게 확인해 주십시오.\n
 회사는 아래의 내용에 동의하시는 이용자에 한해 정상적인 서비스를 제공할 수 있습니다. 내용에 동의하시지 않는 이용자는 ‘‘웨더로브(Weather Lobe)‘’에서 제공하는 모든 서비스의 이용이 불가합니다.\n\n\n
 제 1조 목적\n
@@ -50,11 +57,18 @@ a. 이용자: ‘웨더로브(Weather Lobe)‘의 이용약관에 따라 ‘웨�
 b. 서비스: 접속 가능한 유, 무선 단말기의 종류 및 웹사이트, 모바일 어플리케이션 등 제공 형태와는 상관없이 당사가 제공하는 ‘웨더로브(Weather Lobe)‘ 및 ‘웨더로브(Weather Lobe)‘ 관련한 모든 제반 서비스를 의미합니다.\n
 c. 가입: 이용자가 온라인 소개팅 및 미팅 주선 서비스를 이용하기 위해 본인에 대한 간단한 소개를 비롯하여 가입신청을 하는 것을 의미합니다. ‘웨더로브(Weather Lobe)‘ 이용을 위해 이용자는 사실만을 신청서에 기재해야 합니다. 이용자가 허위나 부정한 정보를 입력하여 서비스를 이용하는 경우 회사는 이에 관하여 법적 책임을 부담하지 않습니다. ‘웨더로브(Weather Lobe)‘ 서비스에 가입 가능한 자격은 ‘서비스 내 가입조건 페이지에 기재된 가입조건을 충족시키는 자’ 이어야 합니다. 본 가입 자격에 대해서는 회사 측의 별도의 심사를 통해 조정될 수 있습니다.\n\n\n
 제 3조 약관의 효력\n"
-        android:textSize="11sp"
-        android:textColor="#000000"
-        android:layout_marginTop="15dp"
-        android:fontFamily="@font/nanumsquareregular"
-        android:layout_gravity="start"
-        android:gravity="start"/>
+                android:textSize="11sp"
+                android:textColor="#000000"
+                android:layout_marginTop="15dp"
+                android:fontFamily="@font/nanumsquareregular"
+                android:gravity="start"/>
+
+            <!-- ✨ 스크롤뷰 아래 여백 16dp 확보용 더미 뷰 -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="16dp" />
+
+        </LinearLayout>
     </ScrollView>
+
 </LinearLayout>

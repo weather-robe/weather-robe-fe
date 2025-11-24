@@ -4,7 +4,7 @@
     android:layout_height="607dp"
     android:orientation="vertical"
     android:background="@drawable/signup_dialog"
-    android:padding="28dp"
+    android:padding="16dp"
     android:gravity="center_horizontal">
 
     <LinearLayout
