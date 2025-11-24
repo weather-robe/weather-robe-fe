@@ -41,6 +41,7 @@
             android:textColor="#9C9C9C"
             android:fontFamily="@font/nanumbarungothic"/>
 
+        <!-- 아이디 -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -52,7 +53,6 @@
             android:layout_marginTop="53dp"
             android:fontFamily="@font/nanumbarungothic"/>
 
-        <!-- 아이디 -->
         <EditText
             android:id="@+id/input_id"
             android:layout_width="match_parent"
@@ -66,6 +66,37 @@
             android:hint="아이디 입력(6~20자 영어 소문자, 숫자)"
             android:textColorHint="#C7C7C7"/>
 
+        <!-- 아이디 에러 메시지 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="4dp"
+        android:visibility="gone"
+        android:id="@+id/id_error_layout">
+
+        <ImageView
+            android:id="@+id/id_warn"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:src="@drawable/ic_warning"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/id_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="아이디는 6~20자 영어 소문자, 숫자만 가능합니다."
+            android:textSize="12sp"
+            android:textColor="#FF0C00"
+            android:fontFamily="@font/nanumsquarebold"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+
+        <!-- 비밀번호 -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -77,8 +108,6 @@
             android:layout_marginTop="30dp"
             android:fontFamily="@font/nanumbarungothic"/>
 
-
-        <!-- 비밀번호 -->
         <EditText
             android:id="@+id/input_pw"
             android:layout_width="match_parent"
@@ -91,6 +120,35 @@
             android:fontFamily="@font/nanumbarungothic"
             android:hint="비밀번호 입력(문자, 숫자, 특수문자 포함 8~20자)"
             android:textColorHint="#C7C7C7"/>
+
+        <!-- 비밀번호 에러 메시지 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="4dp"
+        android:visibility="gone"
+        android:id="@+id/pw_error_layout">
+
+        <ImageView
+            android:id="@+id/pw_warn"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:src="@drawable/ic_warning"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/pw_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="비밀번호는 문자, 숫자, 특수문자 포함 8~20자만 가능합니다."
+            android:textSize="12sp"
+            android:textColor="#FF0C00"
+            android:fontFamily="@font/nanumsquarebold"
+            android:visibility="gone"/>
+
+    </LinearLayout>
 
         <!-- 비밀번호 확인 -->
         <TextView
@@ -117,6 +175,35 @@
             android:hint="비밀번호 입력(문자, 숫자, 특수문자 포함 8~20자)"
             android:textColorHint="#C7C7C7"/>
 
+        <!-- 비밀번호 확인 에러 메시지 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="4dp"
+        android:visibility="gone"
+        android:id="@+id/pw_check_error_layout">
+
+        <ImageView
+            android:id="@+id/pw_check_warn"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:src="@drawable/ic_warning"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/pw_check_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="비밀번호가 일치하지 않습니다."
+            android:textSize="12sp"
+            android:textColor="#FF0C00"
+            android:fontFamily="@font/nanumsquarebold"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
         <!-- 이메일 -->
         <TextView
             android:layout_width="wrap_content"
@@ -141,6 +228,34 @@
             android:fontFamily="@font/nanumbarungothic"
             android:hint="‘-’  없이 숫자만 입력"
             android:textColorHint="#C7C7C7"/>
+
+        <!-- 이메일 에러 메시지 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="4dp"
+        android:visibility="gone"
+        android:id="@+id/email_error_layout">
+
+        <ImageView
+            android:id="@+id/email_warn"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:src="@drawable/ic_warning"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/email_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="올바른 형식의 이메일 주소 전체를 입력해 주세요."
+            android:textSize="12sp"
+            android:textColor="#FF0C00"
+            android:fontFamily="@font/nanumsquarebold"
+            android:visibility="gone"/>
+    </LinearLayout>
 
         <!-- 서비스 이용 약관 동의 -->
         <LinearLayout
