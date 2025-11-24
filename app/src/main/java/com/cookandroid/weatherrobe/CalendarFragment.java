@@ -33,6 +33,32 @@ public class CalendarFragment extends Fragment {
 
         // 캘린더 전용 헤더 설정
         setupHeaderForCalendar(view);
+
+        // 서버 날짜 불러오기
+        loadMonthFromServer(view);
+    }
+
+    private void loadMonthFromServer(View view) {
+
+        TextView monthTitle = view.findViewById(R.id.tvMonth);
+
+        ApiService api = ApiClient.getClient().create(ApiService.class);
+
+        api.getMonthInfo().enqueue(new Callback<MonthResponse>() {
+            @Override
+            public void onResponse(Call<MonthResponse> call, Response<MonthResponse> response) {
+                if (response.isSuccessful()) {
+                    MonthResponse data = response.body();
+                    String text = data.year + "년 " + data.month + "월";
+                    monthTitle.setText(text);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MonthResponse> call, Throwable t) {
+                // 실패 처리
+            }
+        });
     }
 
     private void setupHeaderForCalendar(View view) {
