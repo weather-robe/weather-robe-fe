@@ -53,11 +53,11 @@
 
             <!-- 날짜 선택 버튼 -->
             <ImageView
-                android:id="@+id/ivChevronDown"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginRight="1dp"
-                android:layout_marginTop="27dp"
+                android:id="@+id/header_right_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="2dp"
                 android:src="@drawable/ic_chevron_down" />
 
         </LinearLayout>
