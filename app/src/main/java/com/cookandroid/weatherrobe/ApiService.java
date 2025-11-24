@@ -1,3 +1,5 @@
+// 실제로 요청을 보낼 API 목록 정의(interface)
+
 package com.cookandroid.weatherrobe;
 
 import retrofit2.Call;

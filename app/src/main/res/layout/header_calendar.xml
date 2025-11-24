@@ -16,54 +16,48 @@
         android:src="@drawable/ic_hamburger"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <!-- 오른쪽 info 아이콘 -->
+    <!-- 오른쪽 info -->
     <ImageView
-        android:id="@+id/header_right_icon"
+        android:id="@+id/ivInfo"
         android:layout_width="27dp"
         android:layout_height="27dp"
         android:layout_marginEnd="24dp"
         android:src="@drawable/ic_info"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <!-- 가운데 묶음: 지도 아이콘 + 텍스트 + 드롭다운 -->
+    <!-- 가운데 텍스트 + 드롭다운 묶음 -->
     <LinearLayout
-        android:id="@+id/header_center_group"
+        android:id="@+id/center_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical"
+        android:gravity="center"
+        app:layout_constraintStart_toEndOf="@id/header_left_icon"
+        app:layout_constraintEnd_toStartOf="@id/ivInfo"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5">
-
-        <ImageView
-            android:id="@+id/header_map_icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_map" />
 
         <TextView
             android:id="@+id/header_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
-            android:text="용인시 처인구"
+            android:text="2025년 11월"
             android:textSize="18sp"
             android:textColor="#111111"
-            android:fontFamily="@font/nanumbarungothicbold" />
+            android:fontFamily="@font/nanumbarungothicbold"/>
 
         <ImageView
-            android:id="@+id/chevron_down"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:id="@+id/header_right_icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_marginStart="4dp"
             android:src="@drawable/ic_chevron_down" />
+
     </LinearLayout>
 
     <!-- 하단 구분선 -->
@@ -72,6 +66,5 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#EAEAEA"
-        app:layout_constraintBottom_toBottomOf="parent" />
-
+        app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
