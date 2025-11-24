@@ -1,10 +1,23 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.WeatherRobe" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="android:statusBarColor">@android:color/transparent</item>
+
+    <!-- Base -->
+    <style name="Base.Theme.WeatherRobe" parent="Theme.AppCompat.Light.NoActionBar">
+
+    <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
+    <style name="WeatherDialogTheme" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.7</item>
+    </style>
+
+
+
+    <!-- 기본 앱 테마 -->
     <style name="Theme.WeatherRobe" parent="Base.Theme.WeatherRobe" />
+
+
 </resources>

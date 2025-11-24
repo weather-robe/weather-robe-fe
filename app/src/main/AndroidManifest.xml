@@ -13,18 +13,21 @@
         android:theme="@style/Theme.WeatherRobe"
         tools:targetApi="31">
 
+        <!-- LoginActivity를 앱 시작 화면으로 지정 -->
         <activity
-            android:name=".CalendarActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".MainActivity"
-            android:exported="true">
+            android:name=".LoginActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- MainActivity는 이제 일반 화면 -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
 
     </application>
 
