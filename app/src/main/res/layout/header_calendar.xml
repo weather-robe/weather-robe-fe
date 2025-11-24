@@ -4,10 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/header_root"
     android:layout_width="match_parent"
-    android:layout_height="74dp"
+    android:layout_height="wrap_content"
+    android:paddingTop="30dp"
+
     android:background="@android:color/transparent">
 
-    <!-- 왼쪽 햄버거 -->
     <ImageView
         android:id="@+id/header_left_icon"
         android:layout_width="27dp"
@@ -18,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <!-- 오른쪽 info -->
+
     <ImageView
         android:id="@+id/ivInfo"
         android:layout_width="27dp"
@@ -29,7 +30,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <!-- 가운데 텍스트 + 드롭다운 묶음 -->
+
     <LinearLayout
         android:id="@+id/center_group"
         android:layout_width="wrap_content"
@@ -42,6 +43,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.5">
 
+
+        <!-- 텍스트 영역 -->
         <TextView
             android:id="@+id/header_title"
             android:layout_width="wrap_content"
@@ -51,6 +54,7 @@
             android:textColor="#111111"
             android:fontFamily="@font/nanumbarungothicbold"/>
 
+        <!-- 드롭바 icon -->
         <ImageView
             android:id="@+id/header_right_icon"
             android:layout_width="20dp"
@@ -60,11 +64,20 @@
 
     </LinearLayout>
 
-    <!-- 하단 구분선 -->
+    <View
+        android:id="@+id/spacer_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        app:layout_constraintTop_toBottomOf="@id/center_group"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
     <View
         android:id="@+id/header_bottom_border"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#EAEAEA"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/spacer_bottom"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    캘린더 전체 화면(UI) 뼈대를 구성하는 레이아웃 (전체적인 화면)
--->
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -11,8 +7,11 @@
     android:padding="0dp"
     android:background="#FFFFFF">
 
-
-
+    <!-- 캘린더용 Header -->
+    <include
+        layout="@layout/header_calendar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <!-- 요일 헤더 영역 -->
     <LinearLayout
