@@ -1,6 +1,202 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:gravity="start"
+            android:text="회원가입"
+            android:textSize="28sp"
+            android:textColor="#000000"
+            android:fontFamily="@font/nanumbarungothicbold"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:gravity="start"
+            android:text="어쩌구저쩌구"
+            android:textSize="12sp"
+            android:textColor="#9C9C9C"
+            android:fontFamily="@font/nanumbarungothic"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:gravity="start"
+            android:text="아이디"
+            android:textSize="12sp"
+            android:textColor="#111111"
+            android:layout_marginTop="53dp"
+            android:fontFamily="@font/nanumbarungothic"/>
+
+        <!-- 아이디 -->
+        <EditText
+            android:id="@+id/input_id"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:background="@drawable/edittext_selector"
+            android:paddingLeft="15dp"
+            android:textColor="#111111"
+            android:gravity="center_vertical|start"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/nanumbarungothic"
+            android:hint="아이디 입력(6~20자 영어 소문자, 숫자)"
+            android:textColorHint="#C7C7C7"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:gravity="start"
+            android:text="비밀번호"
+            android:textSize="12sp"
+            android:textColor="#111111"
+            android:layout_marginTop="30dp"
+            android:fontFamily="@font/nanumbarungothic"/>
+
+
+        <!-- 비밀번호 -->
+        <EditText
+            android:id="@+id/input_pw"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:background="@drawable/edittext_selector"
+            android:paddingLeft="15dp"
+            android:textColor="#111111"
+            android:gravity="center_vertical|start"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/nanumbarungothic"
+            android:hint="비밀번호 입력(문자, 숫자, 특수문자 포함 8~20자)"
+            android:textColorHint="#C7C7C7"/>
+
+        <!-- 비밀번호 확인 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:gravity="start"
+            android:text="비밀번호 확인"
+            android:textSize="12sp"
+            android:textColor="#111111"
+            android:layout_marginTop="30dp"
+            android:fontFamily="@font/nanumbarungothic"/>
+
+        <EditText
+            android:id="@+id/input_pw_check"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:background="@drawable/edittext_selector"
+            android:paddingLeft="15dp"
+            android:textColor="#111111"
+            android:gravity="center_vertical|start"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/nanumbarungothic"
+            android:hint="비밀번호 입력(문자, 숫자, 특수문자 포함 8~20자)"
+            android:textColorHint="#C7C7C7"/>
+
+        <!-- 이메일 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:gravity="start"
+            android:text="이메일"
+            android:textSize="12sp"
+            android:textColor="#111111"
+            android:layout_marginTop="30dp"
+            android:fontFamily="@font/nanumbarungothic"/>
+
+        <EditText
+            android:id="@+id/input_email"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:background="@drawable/edittext_selector"
+            android:paddingLeft="15dp"
+            android:textColor="#111111"
+            android:gravity="center_vertical|start"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/nanumbarungothic"
+            android:hint="‘-’  없이 숫자만 입력"
+            android:textColorHint="#C7C7C7"/>
+
+        <!-- 서비스 이용 약관 동의 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="30dp">
+
+            <CheckBox
+                android:id="@+id/service_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(필수) 서비스 이용 약관 동의 [보기]"
+                android:textSize="12sp"
+                android:textColor="#111111"
+                android:fontFamily="@font/nanumbarungothic"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <!-- 개인정보 처리방침 동의 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="22dp">
+
+            <CheckBox
+                android:id="@+id/privacy_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(필수) 개인정보 처리방침 동의 [보기]"
+                android:textSize="12sp"
+                android:textColor="#111111"
+                android:fontFamily="@font/nanumbarungothic"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+h
+        <!-- 확인 버튼 (중앙 정렬) -->
+        <ImageView
+            android:id="@+id/btn_check"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:background="@drawable/check_default"
+            android:layout_marginTop="38dp" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
