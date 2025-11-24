@@ -339,6 +339,8 @@
         <ImageView
             android:id="@+id/btn_check"
             android:layout_width="match_parent"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
             android:layout_height="54dp"
             android:background="@drawable/check_default"/>
     </LinearLayout>
