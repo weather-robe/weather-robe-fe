@@ -8,7 +8,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="24dp"
+        android:padding="30dp"
         android:background="@drawable/modal_background">
 
         <!-- 날짜 + 날씨 -->
@@ -16,7 +16,8 @@
             android:id="@+id/layoutWeather"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp">
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -29,7 +30,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="11월 15일 날씨"
-                    android:textSize="20sp"
+                    android:fontFamily="@font/nanumbarungothicbold"
+                    android:textSize="24sp"
                     android:textStyle="bold"
                     android:textColor="#111111"/>
 
@@ -38,7 +40,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="   최고 16° / 최저 1°"
-                    android:textSize="15sp"
+                    android:textSize="16sp"
                     android:textColor="#666666"
                     android:layout_marginStart="8dp"/>
             </LinearLayout>
@@ -59,7 +61,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="오늘의 코디 키워드"
-                android:textSize="17sp"
+                android:fontFamily="@font/nanumbarungothicbold"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#111111"/>
 
@@ -68,10 +71,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="설명 텍스트"
-                android:textSize="14sp"
+                android:fontFamily="@font/nanumbarungothic"
+                android:textSize="16sp"
                 android:textColor="#777777"
-                android:layout_marginTop="8dp"/>
+                android:layout_marginTop="10dp"/>
 
+            <!-- 칩 영역은 추후 데이터 받아온 후 수정 예정 -->
             <LinearLayout
                 android:id="@+id/layoutCodiIcons"
                 android:orientation="horizontal"
@@ -85,7 +90,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/chip_background"
-                    android:padding="8dp"
+                    android:padding="10dp"
                     android:layout_marginEnd="8dp"
                     android:gravity="center_vertical">
 
@@ -94,7 +99,7 @@
                         android:layout_height="wrap_content"
                         android:text="🧥"
                         android:textSize="20sp"
-                        android:paddingRight="4dp"/>
+                        android:paddingRight="4dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -138,9 +143,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="나는 😃적당 이라고 답변했어요."
-            android:textSize="16sp"
+            android:fontFamily="@font/nanumbarungothicbold"
+            android:textSize="18sp"
             android:textColor="#111111"
-            android:layout_marginTop="32dp"/>
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="10dp"/>
 
     </LinearLayout>
 

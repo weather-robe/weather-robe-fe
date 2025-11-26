@@ -1,14 +1,17 @@
 package com.cookandroid.weatherrobe.calendar;
-// 날짜 데이터 객체
 
 public class DayItem {
     public String dayText;
-    public boolean isDay;   // 빈칸인지 실제 날짜인지
-    public boolean isToday; // 오늘 날짜인지
+    public boolean isValid;
+    public boolean isToday;
 
-    public DayItem(String dayText, boolean isDay, boolean isToday) {
+    public int year;
+    public int month;
+    public int day;
+
+    public DayItem(String dayText, boolean isValid, boolean isToday) {
         this.dayText = dayText;
-        this.isDay = isDay;
+        this.isValid = isValid;
         this.isToday = isToday;
     }
 }
