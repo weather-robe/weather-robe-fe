@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="57dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_marginRight="13dp">
+
+    <TextView
+        android:id="@+id/txt_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="14시"
+        android:textSize="12sp"
+        android:fontFamily="@font/nanumbarungothic"
+        android:gravity="center"/>
+
+    <ImageView
+        android:id="@+id/img_weather"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_marginTop="14dp"
+        android:src="@drawable/ic_weather_sunny" />
+
+    <TextView
+        android:id="@+id/txt_temp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:fontFamily="@font/nanumbarungothicbold"
+        android:layout_marginTop="11dp"/>
+
+    <TextView
+        android:id="@+id/txt_feel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="31dp"
+        android:textSize="13sp"
+        android:fontFamily="@font/nanumbarungothic"/>
+    <TextView
+        android:id="@+id/txt_rainProb"
+        android:layout_width="match_parent"
+        android:layout_marginTop="33dp"
+        android:layout_height="wrap_content"
+        android:textSize="13sp"
+        android:fontFamily="@font/nanumbarungothic"/>
+    <TextView
+        android:id="@+id/txt_rainAmount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="33dp"
+        android:textSize="13sp"
+        android:fontFamily="@font/nanumbarungothic"/>
+    <TextView
+        android:id="@+id/txt_humidity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="33dp"
+        android:textSize="13sp"
+        android:fontFamily="@font/nanumbarungothic"/>
+    <TextView
+        android:id="@+id/txt_wind"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="13sp"
+        android:fontFamily="@font/nanumbarungothic"/>
+</LinearLayout>
