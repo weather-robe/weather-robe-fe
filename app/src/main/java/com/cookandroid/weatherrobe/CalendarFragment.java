@@ -49,7 +49,7 @@ public class CalendarFragment extends Fragment {
         updateCalendar(view);
 
         // 스와이프 이벤트
-        view.setOnTouchListener(new View.OnTouchListener() {
+        gridView.setOnTouchListener(new View.OnTouchListener() {
             float startX;
 
             @Override
