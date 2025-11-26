@@ -1,4 +1,4 @@
-package com.cookandroid.weatherrobe;
+package com.cookandroid.weatherrobe.calendar;
 // 날짜 데이터 객체
 
 public class DayItem {

@@ -1,6 +1,6 @@
 // GridView 표시용 어댑터
 
-package com.cookandroid.weatherrobe;
+package com.cookandroid.weatherrobe.calendar;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.cookandroid.weatherrobe.R;
 
 import java.util.List;
 
