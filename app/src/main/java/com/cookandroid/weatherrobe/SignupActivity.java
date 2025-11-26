@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,12 +30,13 @@ public class SignupActivity extends AppCompatActivity {
     private ImageView btnCheck;
 
     private LinearLayout idErrorLayout, pwErrorLayout, pwCheckErrorLayout, emailErrorLayout;
+    private ImageView idWarn, pwWarn, pwCheckWarn, emailWarn;
+    private TextView idError, pwError, pwCheckError, emailError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), true);
         setContentView(R.layout.activity_signup);
 
         initViews();
@@ -42,7 +44,6 @@ public class SignupActivity extends AppCompatActivity {
         setValidationWatcher();
         updateCheckButtonState();
 
-        enableWheelScrollOnPixel2();
     }
 
     private void initViews() {
@@ -60,9 +61,17 @@ public class SignupActivity extends AppCompatActivity {
         btnCheck = findViewById(R.id.btn_check);
 
         idErrorLayout = findViewById(R.id.id_error_layout);
+        idWarn = findViewById(R.id.id_warn);
+        idError = findViewById(R.id.id_error);
         pwErrorLayout = findViewById(R.id.pw_error_layout);
+        pwWarn = findViewById(R.id.pw_warn);
+        pwError = findViewById(R.id.pw_error);
         pwCheckErrorLayout = findViewById(R.id.pw_check_error_layout);
+        pwCheckWarn = findViewById(R.id.pw_check_warn);
+        pwCheckError = findViewById(R.id.pw_check_error);
         emailErrorLayout = findViewById(R.id.email_error_layout);
+        emailWarn = findViewById(R.id.email_warn);
+        emailError = findViewById(R.id.email_error);
     }
 
     private void setListeners() {
@@ -78,6 +87,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void setValidationWatcher() {
+        Log.d("WATCHER", "text watcher added");
 
         TextWatcher watcher = new TextWatcher() {
             @Override
@@ -85,6 +95,7 @@ public class SignupActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Log.d("WATCHER", "typing detected: " + s);
                 validateFields();
                 updateCheckButtonState();
             }
@@ -98,8 +109,14 @@ public class SignupActivity extends AppCompatActivity {
         inputPwCheck.addTextChangedListener(watcher);
         inputEmail.addTextChangedListener(watcher);
 
-        serviceCheck.setOnCheckedChangeListener((buttonView, isChecked) -> updateCheckButtonState());
-        privacyCheck.setOnCheckedChangeListener((buttonView, isChecked) -> updateCheckButtonState());
+        serviceCheck.setOnCheckedChangeListener((buttonView, isChecked) ->{
+            Log.d("CHECK", "service = " + isChecked);
+            updateCheckButtonState();
+        });
+        privacyCheck.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            Log.d("CHECK", "privacy = " + isChecked);
+            updateCheckButtonState();
+        });
     }
 
     private void validateFields() {
@@ -113,10 +130,45 @@ public class SignupActivity extends AppCompatActivity {
         boolean pwMatchOk = pw.equals(pwCheck) && pwCheck.length() > 0;
         boolean emailOk = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
 
-        idErrorLayout.setVisibility(idOk ? View.GONE : View.VISIBLE);
-        pwErrorLayout.setVisibility(pwOk ? View.GONE : View.VISIBLE);
-        pwCheckErrorLayout.setVisibility(pwMatchOk ? View.GONE : View.VISIBLE);
-        emailErrorLayout.setVisibility(emailOk ? View.GONE : View.VISIBLE);
+        // --- ID ---
+        if (id.length() == 0) {
+            idErrorLayout.setVisibility(View.GONE);
+        } else {
+            if (idOk) {
+                idErrorLayout.setVisibility(View.GONE);
+            } else {
+                idErrorLayout.setVisibility(View.VISIBLE);
+            }
+        }
+        idWarn.setVisibility(idErrorLayout.getVisibility());
+        idError.setVisibility(idErrorLayout.getVisibility());
+
+        // --- PW ---
+        if (pw.length() == 0) {
+            pwErrorLayout.setVisibility(View.GONE);
+        } else {
+            pwErrorLayout.setVisibility(pwOk ? View.GONE : View.VISIBLE);
+        }
+        pwWarn.setVisibility(pwErrorLayout.getVisibility());
+        pwError.setVisibility(pwErrorLayout.getVisibility());
+
+        // --- PW CHECK ---
+        if (pwCheck.length() == 0) {
+            pwCheckErrorLayout.setVisibility(View.GONE);
+        } else {
+            pwCheckErrorLayout.setVisibility(pwMatchOk ? View.GONE : View.VISIBLE);
+        }
+        pwCheckWarn.setVisibility(pwCheckErrorLayout.getVisibility());
+        pwCheckError.setVisibility(pwCheckErrorLayout.getVisibility());
+
+        // --- EMAIL ---
+        if (email.length() == 0) {
+            emailErrorLayout.setVisibility(View.GONE);
+        } else {
+            emailErrorLayout.setVisibility(emailOk ? View.GONE : View.VISIBLE);
+        }
+        emailWarn.setVisibility(emailErrorLayout.getVisibility());
+        emailError.setVisibility(emailErrorLayout.getVisibility());
     }
 
     private boolean isAllInputValid() {
@@ -138,6 +190,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void updateCheckButtonState() {
+        Log.d("BTN", "valid = " + isAllValid());
         if (isAllValid()) {
             btnCheck.setBackgroundResource(R.drawable.check_btn);
             btnCheck.setEnabled(true);
@@ -169,16 +222,4 @@ public class SignupActivity extends AppCompatActivity {
         return (int) (dp * scale);
     }
 
-    private void enableWheelScrollOnPixel2() {
-        ScrollView scroll = findViewById(R.id.scroll_area);
-
-        scroll.setOnGenericMotionListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_SCROLL) {
-                float vScroll = event.getAxisValue(MotionEvent.AXIS_VSCROLL);
-                scroll.smoothScrollBy(0, (int) (-vScroll * 60));
-                return true;
-            }
-            return false;
-        });
-    }
 }
