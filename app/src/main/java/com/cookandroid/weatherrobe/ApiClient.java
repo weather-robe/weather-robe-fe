@@ -12,7 +12,7 @@ public class ApiClient {
     public static Retrofit getClient() {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
-                    .baseUrl("http://192.168.0.2:8080/")  // 일단 캘린더 API는 이설하 로컬 서버로 돌리는 중
+                    .baseUrl("http://10.0.2.2:8080/")  // AVD 전용 host 접근 IP
                     .addConverterFactory(GsonConverterFactory.create())  // JSON-> Java 변환 설정
                     .build();
         }
