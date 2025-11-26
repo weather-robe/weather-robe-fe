@@ -33,14 +33,33 @@ public class HourlyAdapter extends RecyclerView.Adapter<HourlyAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         HourlyItem item = items.get(position);
 
-        holder.time.setText(item.time);
-        holder.icon.setImageResource(item.iconRes);
-        holder.temp.setText(item.temp);
-        holder.feel.setText(item.feel);
-        holder.rainProb.setText(item.rainProb);
-        holder.rainAmount.setText(item.rainAmount);
-        holder.humidity.setText(item.humidity);
-        holder.wind.setText(item.wind);
+        String hour = item.time.split(":")[0] + "시";
+        holder.time.setText(hour);
+
+        switch (item.weather) {
+            case "Clouds" :
+                holder.icon.setImageResource(R.drawable.ic_weather_cloudy);
+                break;
+            case "Rain":
+                holder.icon.setImageResource(R.drawable.ic_weather_rainy);
+            case "Clear":
+                holder.icon.setImageResource(R.drawable.ic_weather_sunny);
+        }
+
+        holder.temp.setText(String.format("%.1f°", item.temp));
+        holder.feel.setText(String.format("%.1f°", item.feels_like));
+
+        holder.rainProb.setText((int)(item.pop * 100) + "%");
+
+        if (item.rain == null) {
+            holder.rainAmount.setText("0mm");
+        } else {
+            holder.rainAmount.setText(item.rain + "mm");
+        }
+
+        holder.humidity.setText(item.humidity + "%");
+
+        holder.wind.setText(String.format("%.1fm/s", item.wind_speed));
     }
 
     @Override
