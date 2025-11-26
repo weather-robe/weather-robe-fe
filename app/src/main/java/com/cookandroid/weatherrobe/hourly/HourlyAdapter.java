@@ -1,4 +1,4 @@
-package com.cookandroid.weatherrobe;
+package com.cookandroid.weatherrobe.hourly;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +7,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.cookandroid.weatherrobe.R;
 
 import org.jspecify.annotations.NonNull;
 

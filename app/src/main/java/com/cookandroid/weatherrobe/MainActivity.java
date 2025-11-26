@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.cookandroid.weatherrobe.hourly.HourlyFragment;
+
 public class MainActivity extends AppCompatActivity {
 
     private View headerLayout;
