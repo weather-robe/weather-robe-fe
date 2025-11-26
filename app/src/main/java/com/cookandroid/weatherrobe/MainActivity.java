@@ -9,6 +9,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.cookandroid.weatherrobe.calendar.CalendarFragment;
+import com.cookandroid.weatherrobe.calendar.DailyFragment;
+
 public class MainActivity extends AppCompatActivity {
 
     private View headerLayout;
