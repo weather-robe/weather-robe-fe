@@ -40,7 +40,7 @@ public class CalendarFragment extends Fragment {
 
     private void loadMonthFromServer(View view) {
 
-        TextView monthTitle = view.findViewById(R.id.tvMonth);
+        TextView monthTitle = view.findViewById(R.id.header_title);
 
         ApiService api = ApiClient.getClient().create(ApiService.class);
 
