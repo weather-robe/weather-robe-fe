@@ -59,6 +59,8 @@ public class HourlyAdapter extends RecyclerView.Adapter<HourlyAdapter.ViewHolder
 
         holder.humidity.setText(item.humidity + "%");
 
+        holder.windText.setText(item.wind_text);
+
         holder.wind.setText(String.format("%.1fm/s", item.wind_speed));
     }
 
@@ -69,7 +71,7 @@ public class HourlyAdapter extends RecyclerView.Adapter<HourlyAdapter.ViewHolder
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView time, temp, feel, rainProb, rainAmount, humidity, wind;
+        TextView time, temp, feel, rainProb, rainAmount, humidity, windText, wind;
         ImageView icon;
 
         public ViewHolder(@NonNull View itemView) {
@@ -82,7 +84,8 @@ public class HourlyAdapter extends RecyclerView.Adapter<HourlyAdapter.ViewHolder
             rainProb = itemView.findViewById(R.id.txt_rainProb);
             rainAmount = itemView.findViewById(R.id.txt_rainAmount);
             humidity = itemView.findViewById(R.id.txt_humidity);
-            wind = itemView.findViewById(R.id.txt_wind);
+            windText = itemView.findViewById(R.id.txt_wind);
+            wind = itemView.findViewById(R.id.txt_wind_speed);
         }
     }
 }

@@ -76,9 +76,15 @@ public class HourlyFragment extends Fragment {
 
                 if (!response.isSuccessful() || response.body() == null) {
                     Log.e("Hourly", "응답 실패: " + response.code());
+                    return;
                 }
 
                 HourlyResponse.SuccessData data = response.body().success;
+
+                if (data == null || data.hourly == null) {
+                    Log.e("Hourly", "success 또는 hourly 데이터 없음");
+                    return;
+                }
 
                 hourlyList.clear();
                 hourlyList.addAll(data.hourly);
