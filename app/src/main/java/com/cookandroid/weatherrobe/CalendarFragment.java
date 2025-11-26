@@ -14,6 +14,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import android.util.Log;
+
 public class CalendarFragment extends Fragment {
 
     public CalendarFragment() {
@@ -42,22 +44,5 @@ public class CalendarFragment extends Fragment {
 
         TextView monthTitle = view.findViewById(R.id.header_title);
 
-        ApiService api = ApiClient.getClient().create(ApiService.class);
-
-        api.getMonthInfo().enqueue(new Callback<MonthResponse>() {
-            @Override
-            public void onResponse(Call<MonthResponse> call, Response<MonthResponse> response) {
-                if (response.isSuccessful()) {
-                    MonthResponse data = response.body();
-                    String text = data.year + "년 " + data.month + "월";
-                    monthTitle.setText(text);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<MonthResponse> call, Throwable t) {
-                // 서버 요청 실패 처리: 현재 연결 실패 시 아무 변화 없음
-            }
-        });
     }
 }
