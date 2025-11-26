@@ -3,3 +3,5 @@
     <solid android:color="#FFFFFF"/>
     <corners android:radius="24dp"/>
 </shape>
+
+    <!-- 모달의 라운드 흰 배경 -->
