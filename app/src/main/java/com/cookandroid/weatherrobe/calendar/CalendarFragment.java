@@ -1,4 +1,4 @@
-package com.cookandroid.weatherrobe;
+package com.cookandroid.weatherrobe.calendar;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.cookandroid.weatherrobe.R;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,25 +40,21 @@ public class CalendarFragment extends Fragment {
                               @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        TextView monthTitle = view.findViewById(R.id.header_title);
         gridView = view.findViewById(R.id.gridView);
 
-        // 현재 날짜 기준으로 시작
         Calendar cal = Calendar.getInstance();
         currentYear = cal.get(Calendar.YEAR);
         currentMonth = cal.get(Calendar.MONTH);
 
         updateCalendar(view);
 
-        // 스와이프 이벤트
+        // 🟦 스와이프 이벤트
         gridView.setOnTouchListener(new View.OnTouchListener() {
             float startX;
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-
                 switch (event.getAction()) {
-
                     case MotionEvent.ACTION_DOWN:
                         startX = event.getX();
                         return true;
@@ -64,12 +62,11 @@ public class CalendarFragment extends Fragment {
                     case MotionEvent.ACTION_UP:
                         float endX = event.getX();
 
-                        // 오른쪽 -> 왼쪽 : 다음 달
+                        // 오른쪽 → 왼쪽 (다음 달)
                         if (startX - endX > 150) {
                             moveToNextMonth(view);
                         }
-
-                        // 왼쪽 -> 오른쪽 : 이전 달
+                        // 왼쪽 → 오른쪽 (이전 달)
                         else if (endX - startX > 150) {
                             moveToPreviousMonth(view);
                         }
@@ -81,25 +78,24 @@ public class CalendarFragment extends Fragment {
         });
     }
 
-
-    // 달력 갱신 함수
+    // 🟦 달력 갱신
     private void updateCalendar(View view) {
-
         TextView monthTitle = view.findViewById(R.id.header_title);
-
-        // 헤더 텍스트 변경
         monthTitle.setText(currentYear + "년 " + (currentMonth + 1) + "월");
 
-        // 날짜 리스트 생성
-        List<DayItem> calendarDays = buildCalendarDays(currentYear, currentMonth);
+        List<DayItem> days = buildCalendarDays(currentYear, currentMonth);
 
-        // 어댑터 적용
-        calendarAdapter = new CalendarAdapter(requireContext(), calendarDays);
+        calendarAdapter = new CalendarAdapter(requireContext(), days);
         gridView.setAdapter(calendarAdapter);
+
+        // 날짜 클릭 → 모달 띄우기
+        calendarAdapter.setOnDayClickListener((year, month, day) -> {
+            ModalCalendarDialog dialog =
+                    ModalCalendarDialog.newInstance(year, month, day);
+            dialog.show(getParentFragmentManager(), "calendar_modal");
+        });
     }
 
-
-    // 이전/다음달 이동
     private void moveToNextMonth(View view) {
         currentMonth++;
         if (currentMonth > 11) {
@@ -120,34 +116,36 @@ public class CalendarFragment extends Fragment {
 
     // 날짜 리스트 생성
     private List<DayItem> buildCalendarDays(int year, int month) {
-
         List<DayItem> list = new ArrayList<>();
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(year, month, 1);
+        Calendar c = Calendar.getInstance();
+        c.set(year, month, 1);
 
-        int firstDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-        int lastDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        int firstDay = c.get(Calendar.DAY_OF_WEEK);
+        int lastDay = c.getActualMaximum(Calendar.DAY_OF_MONTH);
 
-        // 1일 시작 요일까지 앞에 빈칸 추가
-        for (int i = 1; i < firstDayOfWeek; i++) {
+        // 앞 빈칸
+        for (int i = 1; i < firstDay; i++) {
             list.add(new DayItem("", false, false));
         }
 
-        // 오늘 날짜 비교용
+        // 오늘
         Calendar today = Calendar.getInstance();
-        int todayYear = today.get(Calendar.YEAR);
-        int todayMonth = today.get(Calendar.MONTH);
-        int todayDay = today.get(Calendar.DAY_OF_MONTH);
+        int tYear = today.get(Calendar.YEAR);
+        int tMonth = today.get(Calendar.MONTH);
+        int tDay = today.get(Calendar.DAY_OF_MONTH);
 
-        // 1~마지막 날짜 생성
-        for (int day = 1; day <= lastDay; day++) {
+        // 실제 날짜 생성
+        for (int d = 1; d <= lastDay; d++) {
+            boolean isToday = (year == tYear && month == tMonth && d == tDay);
 
-            boolean isToday = (year == todayYear &&
-                    month == todayMonth &&
-                    day == todayDay);
+            DayItem item = new DayItem(String.valueOf(d), true, isToday);
 
-            list.add(new DayItem(String.valueOf(day), true, isToday));
+            item.year = year;
+            item.month = month;
+            item.day = d;
+
+            list.add(item);
         }
 
         return list;

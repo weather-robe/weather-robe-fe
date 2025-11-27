@@ -1,6 +1,4 @@
-// GridView 표시용 어댑터
-
-package com.cookandroid.weatherrobe;
+package com.cookandroid.weatherrobe.calendar;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -10,9 +8,21 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.cookandroid.weatherrobe.R;
+
 import java.util.List;
 
+public interface OnDayClickListener {
+    void onDayClick(int year, int month, int day);
+}
+
 public class CalendarAdapter extends BaseAdapter {
+
+    private OnDayClickListener listener;
+
+    public void setOnDayClickListener(OnDayClickListener listener) {
+        this.listener = listener;
+    }
 
     private final Context context;
     private final List<DayItem> days;
@@ -47,20 +57,26 @@ public class CalendarAdapter extends BaseAdapter {
 
         DayItem item = days.get(position);
 
-        if (!item.isDay) {
-            // 빈칸
+        // 텍스트 설정
+        if (!item.isValid) {
             tvDay.setText("");
         } else {
             tvDay.setText(item.dayText);
 
             if (item.isToday) {
-                tvDay.setTextColor(Color.parseColor("#3C6FF4")); // 오늘 날짜 파란색
+                tvDay.setTextColor(Color.parseColor("#3C6FF4"));
             } else {
                 tvDay.setTextColor(Color.parseColor("#222222"));
             }
         }
 
+        // 날짜 클릭 이벤트 처리
+        view.setOnClickListener(v -> {
+            if (listener != null && item.isValid) {
+                listener.onDayClick(item.year, item.month, item.day);
+            }
+        });
+
         return view;
     }
 }
-

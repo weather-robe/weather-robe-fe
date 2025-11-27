@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="607dp"
+    android:orientation="vertical"
+    android:background="@drawable/signup_dialog"
+    android:padding="16dp"
+    android:gravity="center_horizontal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="개인정보 처리방침 동의"
+            android:textSize="18sp"
+            android:textColor="#000000"
+            android:fontFamily="@font/nanumsquareextrabold" />
+
+        <ImageView
+            android:id="@+id/close_btn"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:background="@drawable/close_btn"
+            android:clickable="true"
+            android:focusable="true"/>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" 개인정보보호법에 따라 웨더로브(Weather Lobe)(이하 “회사”)에 회원가입 신청하시는 분께 수집하는 개인정보의 항목, 개인정보의 수집 및 이용목적, 개인정보의 보유 및 이용기간, 동의 거부권 및 동의 거부 시 불이익에 관한 사항을 안내 드리오니 자세히 읽은 후 동의하여 주시기 바랍니다.\n\n
+1. 개인정보의 수집 목적\n\n
+회사는 다음의 목적을 위하여 개인정보를 처리합니다. 처리하고 있는 개인정보는 다음의 목적 이외의 용도로는 이용되지 않으며, 이용 목적이 변경되는 경우에는 개인정보 보호법 제 18조에 따라 별도의 동의를 받는 등 필요한 조치를 이행할 예정입니다.\n
+1) 서비스 제공에 관한 계약 이행, 부가서비스 제공 및 회원 관리\n
+고객상담, 매칭 서비스 및 콘텐츠 제공, 회원제 서비스 이용에 따른 본인확인, 개인 식별, 가입의사 확인, 연령 확인, 가입 및 가입횟수 제한, 부가서비스 제공을 위한 고유 이용자 특정, 불량회원의 부정이용 및 비인가 사용 방지, 회원탈퇴 후 72시간 내 재가입 방지, 불만처리 등 민원처리, 분쟁조정을 위한 기록보존, 안내사항 전달, 회원탈퇴 의사의 확인\n\n
+2) 이벤트 관리\n
+이벤트 응모, 당첨확인 및 관련안내, 경품 발송, 관련 민원처리, 세금신고\n\n
+3) 마케팅 및 광고에 활용\n
+신규 서비스(제품) 개발 및 특화, 이벤트 등 광고성 정보 전달, 인구통계학적 특성에 따른 서비스 제공 및 광고 게재, 접속 빈도 파악 또는 회원의 서비스 이용에 대한 통계, 서비스의 유효성 확인\n\n
+4) 수집한 개인정보 이용 및 제 3자 제공\n
+회사는 통계작성, 학술연구 또는 시장조사를 위하여 필요하다면 이용자가 제공한 개인정보를 식별할 수 없는 형태로 가공하여 제3자에게 제공할 수 있습니다.\n\n
+2. 수집하는 개인정보\n"
+            android:textSize="11sp"
+            android:textColor="#000000"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/nanumsquareregular"
+            android:layout_gravity="start"
+            android:gravity="start"/>
+    </ScrollView>
+</LinearLayout>

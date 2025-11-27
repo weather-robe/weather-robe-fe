@@ -13,6 +13,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,6 +22,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText inputId;
     private EditText inputPw;
     private ImageView btnLogin;
+    private TextView textSignup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +32,12 @@ public class LoginActivity extends AppCompatActivity {
         inputId = findViewById(R.id.input_id);
         inputPw = findViewById(R.id.input_pw);
         btnLogin = findViewById(R.id.btn_login);
+        textSignup = findViewById(R.id.text_signup);
+
+        textSignup.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
+            startActivity(intent);
+        });
 
         TextWatcher watcher = new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
