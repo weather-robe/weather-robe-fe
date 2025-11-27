@@ -1,5 +1,6 @@
 package com.cookandroid.weatherrobe.Home;
 
+
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,10 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.cookandroid.weatherrobe.Home.section.HomeWeatherFragment;
-import com.cookandroid.weatherrobe.Home.section.HomeCodyKeywordFragment;
-import com.cookandroid.weatherrobe.Home.section.HomeFeelingFragment;
-import com.cookandroid.weatherrobe.Home.section.HomeCodyRecommendFragment;
+import com.cookandroid.weatherrobe.Home.HomeWeatherFragment;
+import com.cookandroid.weatherrobe.Home.HomeCodyKeywordFragment;
+import com.cookandroid.weatherrobe.Home.HomeFeelingFragment;
+import com.cookandroid.weatherrobe.Home.HomeCodyRecommendFragment;
 import com.cookandroid.weatherrobe.R;
 
 public class HomeFragment extends Fragment {
