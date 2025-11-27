@@ -1,14 +1,19 @@
 package com.cookandroid.weatherrobe.Home;
 
 import android.os.Bundle;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
+import com.cookandroid.weatherrobe.Home.section.HomeWeatherFragment;
+import com.cookandroid.weatherrobe.Home.section.HomeCodyKeywordFragment;
+import com.cookandroid.weatherrobe.Home.section.HomeFeelingFragment;
+import com.cookandroid.weatherrobe.Home.section.HomeCodyRecommendFragment;
 import com.cookandroid.weatherrobe.R;
 
 public class HomeFragment extends Fragment {
@@ -19,6 +24,20 @@ public class HomeFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        loadChildFragments();
+        return view;
+    }
+
+    private void loadChildFragments() {
+        FragmentManager fm = getChildFragmentManager();
+
+        fm.beginTransaction()
+                .replace(R.id.container_home_weather, new HomeWeatherFragment())
+                .replace(R.id.container_home_cody_keyword, new HomeCodyKeywordFragment())
+                .replace(R.id.container_home_feeling, new HomeFeelingFragment())
+                .replace(R.id.container_home_cody_recommend, new HomeCodyRecommendFragment())
+                .commit();
     }
 }

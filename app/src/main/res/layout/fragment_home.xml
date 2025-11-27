@@ -5,5 +5,42 @@
     android:layout_height="match_parent"
     android:background="#000000">
 
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- 날씨 영역: 오늘 날씨 & 키워드 -->
+            <FrameLayout
+                android:id="@+id/container_home_weather"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <!-- B: 오늘의 코디 키워드 -->
+            <FrameLayout
+                android:id="@+id/container_home_cody_keyword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <!-- C: 실제로 어땠나요? -->
+            <FrameLayout
+                android:id="@+id/container_home_feeling"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <!-- D: 오늘의 코디 추천 -->
+            <FrameLayout
+                android:id="@+id/container_home_cody_recommend"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+    </ScrollView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
