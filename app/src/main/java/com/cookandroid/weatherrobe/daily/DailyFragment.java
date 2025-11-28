@@ -113,7 +113,8 @@ public class DailyFragment extends Fragment {
         
         // 어제 데이터 추가 (없는 경우 아예 false 상태로 유지)
         DailyResDTO.Yesterday yesterdayData = successData.getYesterday();
-        if (yesterdayData != null && yesterdayData.getTemp() != null) {
+        System.out.println(yesterdayData);
+        if (yesterdayData != null && yesterdayData.getTemp() != null && yesterdayData.getWeatherId() > 0) {
             DailyWeatherData yesterdayItem = convertToDailyWeatherData(
                     "어제",
                     yesterdayData.getDate(),
