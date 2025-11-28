@@ -19,7 +19,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cookandroid.weatherrobe.R;
 import com.cookandroid.weatherrobe.RetrofitClient;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,7 +35,7 @@ public class HourlyFragment extends Fragment {
     private ArrayList<HourlyItem> hourlyList = new ArrayList<>();
     private HourlyApi api;
     private SharedPreferences prefs;
-
+    private TextView dateText, dayText;
     private ImageView pm10Icon, pm25Icon;
     private TextView pm10Value, pm25Value;
     private TextView pm10Comment2, pm25Comment2;
@@ -51,6 +54,9 @@ public class HourlyFragment extends Fragment {
 
         prefs = requireActivity().getSharedPreferences("user", Context.MODE_PRIVATE);
         prefs.edit().putInt("userId", 1).apply();
+
+        dateText = view.findViewById(R.id.txt_date);
+        dayText = view.findViewById(R.id.txt_day);
 
         recyclerView = view.findViewById(R.id.recycler_weather);
         recyclerView.setLayoutManager(
@@ -116,6 +122,22 @@ public class HourlyFragment extends Fragment {
                 hourlyList.clear();
                 hourlyList.addAll(data.hourly);
                 adapter.notifyDataSetChanged();
+
+                String rawDate = data.hourly.get(0).date;
+
+                try {
+                    SimpleDateFormat serverFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+                    SimpleDateFormat displayDate = new SimpleDateFormat("M월 d일", Locale.KOREA);
+                    SimpleDateFormat displayDay = new SimpleDateFormat("EEEE", Locale.KOREA);
+
+                    Date parsedDate = serverFormat.parse(rawDate);
+
+                    dateText.setText(displayDate.format(parsedDate));
+                    dayText.setText(displayDay.format(parsedDate));
+
+                } catch (Exception e) {
+                    Log.e("Hourly", "날짜 파싱 오류: " + e.getMessage());
+                }
 
                 updatePmCard(pm10Icon, pm10Value, data.pm10text, data.pm10,
                         pm10BarFill, pm10Comment2, pm10Comment3, true);

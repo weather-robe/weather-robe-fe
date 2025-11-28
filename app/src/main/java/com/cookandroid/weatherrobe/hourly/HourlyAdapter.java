@@ -37,14 +37,29 @@ public class HourlyAdapter extends RecyclerView.Adapter<HourlyAdapter.ViewHolder
         String hour = item.time.split(":")[0] + "시";
         holder.time.setText(hour);
 
-        switch (item.weather) {
-            case "Clouds":
-                holder.icon.setImageResource(R.drawable.ic_weather_cloudy);
-                break;
-            case "Rain":
-                holder.icon.setImageResource(R.drawable.ic_weather_rainy);
-            case "Clear":
-                holder.icon.setImageResource(R.drawable.ic_weather_sunny);
+        String iconCode = item.icon;
+
+        if (iconCode == null) {
+            holder.icon.setImageResource(R.drawable.ic_weather_sunny);
+        } else if (iconCode.equals("01d") || iconCode.equals("01n")) {
+            holder.icon.setImageResource(R.drawable.ic_weather_sunny);
+        } else if (iconCode.equals("02d") || iconCode.equals("02n")) {
+            holder.icon.setImageResource(R.drawable.ic_weather_cloudy_day);
+        } else if (
+                iconCode.startsWith("03") ||
+                        iconCode.startsWith("04") ||
+                        iconCode.startsWith("50") ||
+                        iconCode.startsWith("13")
+        ) {
+            holder.icon.setImageResource(R.drawable.ic_weather_cloudy);
+        } else if (
+                iconCode.startsWith("09") ||
+                        iconCode.startsWith("10") ||
+                        iconCode.startsWith("11")
+        ) {
+            holder.icon.setImageResource(R.drawable.ic_weather_rainy);
+        } else {
+            holder.icon.setImageResource(R.drawable.ic_weather_cloudy);
         }
 
         holder.temp.setText(String.format("%.1f°", item.temp));
