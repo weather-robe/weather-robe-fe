@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -62,6 +63,16 @@ public class HourlyAdapter extends RecyclerView.Adapter<HourlyAdapter.ViewHolder
         holder.windText.setText(item.wind_text);
 
         holder.wind.setText(String.format("%.1fm/s", item.wind_speed));
+
+        if (position == 0) {
+            holder.itemView.setBackgroundColor(0x125588FF);
+        } else {
+            holder.itemView.setBackgroundColor(0x00000000);
+        }
+
+        holder.rowFeel.setBackgroundColor(0xFFF8F8F8);
+        holder.rowRainAmount.setBackgroundColor(0xFFF8F8F8);
+        holder.rowWind.setBackgroundColor(0xFFF8F8F8);
     }
 
     @Override
@@ -73,6 +84,7 @@ public class HourlyAdapter extends RecyclerView.Adapter<HourlyAdapter.ViewHolder
 
         TextView time, temp, feel, rainProb, rainAmount, humidity, windText, wind;
         ImageView icon;
+        LinearLayout rowFeel, rowRainAmount, rowWind;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -86,6 +98,10 @@ public class HourlyAdapter extends RecyclerView.Adapter<HourlyAdapter.ViewHolder
             humidity = itemView.findViewById(R.id.txt_humidity);
             windText = itemView.findViewById(R.id.txt_wind);
             wind = itemView.findViewById(R.id.txt_wind_speed);
+
+            rowFeel = itemView.findViewById(R.id.row_feel);
+            rowRainAmount = itemView.findViewById(R.id.row_rainAmount);
+            rowWind = itemView.findViewById(R.id.row_wind);
         }
     }
 }
