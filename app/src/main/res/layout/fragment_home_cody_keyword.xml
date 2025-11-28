@@ -31,6 +31,7 @@
         <TextView
             android:text="오늘은 어제보다 추워졌고, 날씨는 전반적으로 흐려요.
             또한 일교차가 커서 감기에 유의하셔야 해요."
+            android:fontFamily="@font/nanumbarungothic"
             android:letterSpacing="-0.02"
             android:textColor="#5D5D5D"
             android:layout_marginTop="12dp"
@@ -45,23 +46,26 @@
 
             <TextView
                 android:text="🧥 두꺼운 아우터"
+                android:fontFamily="@font/nanumbarungothic"
                 android:textColor="#111111"
                 android:background="@drawable/label_bg"
-                android:layout_marginRight="8dp"
+                android:layout_marginRight="6dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
 
             <TextView
                 android:text="🥼니트"
+                android:fontFamily="@font/nanumbarungothic"
                 android:textColor="#111111"
                 android:background="@drawable/label_bg"
-                android:layout_marginRight="12dp"
+                android:layout_marginRight="6dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <TextView
                 android:text="👖청바지"
+                android:fontFamily="@font/nanumbarungothic"
                 android:textColor="#111111"
                 android:background="@drawable/label_bg"
                 android:layout_width="wrap_content"
