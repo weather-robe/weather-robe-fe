@@ -1,4 +1,4 @@
-package com.cookandroid.weatherrobe.calendar;
+package com.cookandroid.weatherrobe;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -6,8 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
-
-import com.cookandroid.weatherrobe.R;
 
 public class DailyFragment extends Fragment {
 

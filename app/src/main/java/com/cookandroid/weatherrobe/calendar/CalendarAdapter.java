@@ -12,7 +12,7 @@ import com.cookandroid.weatherrobe.R;
 
 import java.util.List;
 
-public interface OnDayClickListener {
+interface OnDayClickListener {
     void onDayClick(int year, int month, int day);
 }
 
