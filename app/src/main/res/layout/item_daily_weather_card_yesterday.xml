@@ -44,7 +44,7 @@
             android:id="@+id/text_temp_min"
             android:layout_width="wrap_content"
             android:layout_height="22dp"
-            android:paddingRight="1dp"
+            android:paddingRight="5dp"
             android:textColor="#0031E3"
             android:gravity="right"
             android:fontFamily="@font/nanumbarungothicbold"
@@ -54,7 +54,7 @@
             android:text="2°"/>
         <TextView
             android:id="@+id/text_temp_max"
-            android:layout_width="wrap_content"
+            android:layout_width="26dp"
             android:layout_height="22dp"
             android:textColor="#E50000"
             android:gravity="right"

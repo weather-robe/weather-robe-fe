@@ -12,17 +12,14 @@ import com.cookandroid.weatherrobe.R;
 
 import java.util.List;
 
-public class DailyWeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
-    private static final int TYPE_HEADER = 0;
-    private static final int TYPE_ITEM = 1;
+public class DailyWeatherAdapter extends RecyclerView.Adapter<DailyWeatherAdapter.ItemViewHolder> {
 
     private List<DailyWeatherData> weatherList;
-    private boolean hasHeader = false;
+    private boolean isYesterday;
 
-    public DailyWeatherAdapter(List<DailyWeatherData> weatherList, boolean hasHeader) {
+    public DailyWeatherAdapter(List<DailyWeatherData> weatherList, boolean isYesterday) {
         this.weatherList = weatherList;
-        this.hasHeader = hasHeader;
+        this.isYesterday = isYesterday;
     }
 
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
@@ -42,61 +39,40 @@ public class DailyWeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    public static class HeaderViewHolder extends RecyclerView.ViewHolder {
-
-        public HeaderViewHolder(View itemView) {
-            super(itemView);
-        }
-    }
-
     @Override
     public int getItemViewType(int position) {
-        if (hasHeader && position == 0) {
-            return TYPE_HEADER;
-        } else {
-            return TYPE_ITEM;
-        }
+        return position;
     }
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == TYPE_HEADER) {
-            View view = LayoutInflater.from(parent.getContext())
+    public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view;
+
+        if (viewType == 0 && isYesterday) {
+            view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_daily_weather_card_yesterday, parent, false);
-            return new HeaderViewHolder(view);
         } else {
-            View view = LayoutInflater.from(parent.getContext())
+            view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_daily_weather_card, parent, false);
-            return new ItemViewHolder(view);
         }
+
+        return new ItemViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (holder.getItemViewType() == TYPE_ITEM) {
-            ItemViewHolder itemHolder = (ItemViewHolder) holder;
+    public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
+        DailyWeatherData currentItem = weatherList.get(position);
 
-            int dataPosition = position;
-            if (hasHeader) {
-                dataPosition = position - 1;
-            }
-
-            DailyWeatherData currentItem = weatherList.get(dataPosition);
-
-            itemHolder.dayLabel.setText(currentItem.getDayLabel());
-            itemHolder.dateValue.setText(currentItem.getDateValue());
-            itemHolder.weatherIcon.setImageResource(currentItem.getWeatherIconRes());
-            itemHolder.tempMin.setText(currentItem.getTempMin());
-            itemHolder.tempMax.setText(currentItem.getTempMax());
-
-        } else if (holder.getItemViewType() == TYPE_HEADER) {
-        }
+        holder.dayLabel.setText(currentItem.getDayLabel());
+        holder.dateValue.setText(currentItem.getDateValue());
+        if(!(position == 0 && isYesterday)) holder.weatherIcon.setImageResource(currentItem.getWeatherIconRes());
+        holder.tempMin.setText(currentItem.getTempMin());
+        holder.tempMax.setText(currentItem.getTempMax());
     }
 
     @Override
     public int getItemCount() {
-        int headerCount = hasHeader ? 1 : 0;
-        return weatherList.size() + headerCount;
+        return weatherList.size();
     }
 }
