@@ -10,6 +10,8 @@ public class HourlyResponse {
     public static class SuccessData {
         public User user;
         public List<HourlyItem> hourly;
+        public String pm10text;
+        public String pm25text;
         public int pm10;
         public int pm25;
 
