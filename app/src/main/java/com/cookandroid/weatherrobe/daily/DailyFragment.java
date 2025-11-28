@@ -28,21 +28,34 @@ public class DailyFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view_weather);
 
-        List<DailyWeatherData> dataList = createDummyWeatherData();
+        DailyWeatherData yesterdayData = createYesterdayDummyData(true);
+        boolean isYesterday = (yesterdayData != null);
 
-        boolean hasYesterdayData = true;
+        List<DailyWeatherData> dataList = createWeatherListDummyData();
 
-        DailyWeatherAdapter weatherAdapter = new DailyWeatherAdapter(dataList, hasYesterdayData);
+        if (isYesterday) {
+            dataList.add(0, yesterdayData);
+        }
+
+        DailyWeatherAdapter weatherAdapter = new DailyWeatherAdapter(dataList, isYesterday);
 
         recyclerView.setAdapter(weatherAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     }
 
-    private List<DailyWeatherData> createDummyWeatherData() {
+    private DailyWeatherData createYesterdayDummyData(boolean shouldCreate) {
+        DailyWeatherData dummyData = null;
+        if (shouldCreate) {
+            int cloudy = R.drawable.ic_weather_cloudy;
+            dummyData = new DailyWeatherData("어제", "11월 3일", cloudy, "0°", "8°");
+        }
+        return dummyData;
+    }
+
+    private List<DailyWeatherData> createWeatherListDummyData() {
         List<DailyWeatherData> dataList = new ArrayList<>();
         int sunny = R.drawable.ic_weather_sunny;
         int cloudy = R.drawable.ic_weather_cloudy;
-
         dataList.add(new DailyWeatherData("오늘", "11월 4일", sunny, "1°", "12°"));
         dataList.add(new DailyWeatherData("토", "11월 5일", cloudy, "2°", "10°"));
         dataList.add(new DailyWeatherData("일", "11월 6일", sunny, "3°", "11°"));
