@@ -18,21 +18,24 @@ public class DailyResDTO {
     public static class Daily {
         private int weatherId;
         private Date date;
-        private String Weather;
+        private String icon;
+        private String weather;
         private Temp temp;
         private double pop;
 
-        public Daily(int weatherId, Date date, String weather, Temp temp, double pop) {
+        public Daily(int weatherId, Date date, String weather, String icon, Temp temp, double pop) {
             this.weatherId = weatherId;
             this.date = date;
-            this.Weather = weather;
+            this.weather = weather;
+            this.icon = icon;
             this.temp = temp;
             this.pop = pop;
         }
 
         public int getWeatherId() { return weatherId; }
         public Date getDate() { return date; }
-        public String getWeather() { return Weather; }
+        public String getIcon() { return icon; }
+        public String getWeather() { return weather; }
         public Temp getTemp() { return temp; }
         public double getPop() { return pop; }
     }

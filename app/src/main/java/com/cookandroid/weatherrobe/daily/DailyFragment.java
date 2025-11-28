@@ -117,7 +117,7 @@ public class DailyFragment extends Fragment {
             DailyWeatherData yesterdayItem = convertToDailyWeatherData(
                     "어제",
                     yesterdayData.getDate(),
-                    yesterdayData.getWeatherId(),
+                    null,
                     yesterdayData.getTemp().getMin(),
                     yesterdayData.getTemp().getMax(),
                     true
@@ -145,7 +145,7 @@ public class DailyFragment extends Fragment {
                 DailyWeatherData dailyItem = convertToDailyWeatherData(
                         dayLabel,
                         dailyData.getDate(),
-                        dailyData.getWeatherId(),
+                        dailyData.getIcon(),
                         dailyData.getTemp().getMin(),
                         dailyData.getTemp().getMax(),
                         false
@@ -159,21 +159,46 @@ public class DailyFragment extends Fragment {
         weatherAdapter.notifyDataSetChanged();
     }
 
-    private DailyWeatherData convertToDailyWeatherData(String dayLabel, Date date, int weatherId, double minTemp,
+    private DailyWeatherData convertToDailyWeatherData(String dayLabel, Date date, String icon, double minTemp,
             double maxTemp, boolean isYesterday) {
         String dateValue = isYesterday ? "어제 날짜" : "오늘 날짜";
         if (date != null) {
             dateValue = android.text.format.DateFormat.format("MM월  d일", date).toString();
         }
-        int iconRes = getWeatherIconResource(); // 이미지 방식 나중에 통일하기
+        int iconRes = getWeatherIconResource(icon); // 이미지 방식 나중에 통일하기
         String tempMinStr = tempFormat.format(minTemp);
         String tempMaxStr = tempFormat.format(maxTemp);
 
         return new DailyWeatherData(dayLabel, dateValue, iconRes, tempMinStr, tempMaxStr);
     }
 
-    // TODO: 날씨 아이콘 매핑 로직 구현
-    private int getWeatherIconResource() {
-        return R.drawable.ic_weather_sunny;
+    private int getWeatherIconResource(String icon) {
+        if (icon == null) return R.drawable.ic_weather_cloudy;
+
+        switch (icon) {
+            case "01d":
+            case "01n":
+                return R.drawable.ic_weather_sunny;
+            case "02d":
+            case "02n":
+                return R.drawable.ic_weather_cloudy_day;
+            case "03d":
+            case "03n":
+            case "04d":
+            case "04n":
+            case "13d":
+            case "13n":
+            case "50d":
+            case "50n":
+                return R.drawable.ic_weather_cloudy;
+            case "09d":
+            case "09n":
+            case "10d":
+            case "10n":
+            case "11d":
+            case "11n":
+                return R.drawable.ic_weather_rainy;
+        }
+        return R.drawable.ic_weather_cloudy;
     }
 }
