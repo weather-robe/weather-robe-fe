@@ -43,15 +43,18 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:text="🧥두꺼운 아우터"
+                android:text="🧥 두꺼운 아우터"
                 android:textColor="#111111"
-                android:layout_marginRight="12dp"
+                android:background="@drawable/label_bg"
+                android:layout_marginRight="8dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
 
             <TextView
                 android:text="🥼니트"
                 android:textColor="#111111"
+                android:background="@drawable/label_bg"
                 android:layout_marginRight="12dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -59,6 +62,7 @@
             <TextView
                 android:text="👖청바지"
                 android:textColor="#111111"
+                android:background="@drawable/label_bg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
