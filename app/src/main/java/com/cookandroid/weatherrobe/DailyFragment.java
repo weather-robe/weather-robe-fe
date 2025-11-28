@@ -5,13 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-public class HourlyFragment extends Fragment {
+public class DailyFragment extends Fragment {
 
-    public HourlyFragment() {
+    public DailyFragment() {
     }
 
     @Override
@@ -19,6 +17,6 @@ public class HourlyFragment extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_hourly, container, false);
+        return inflater.inflate(R.layout.fragment_daily, container, false);
     }
 }
