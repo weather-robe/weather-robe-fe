@@ -38,7 +38,7 @@ public class HourlyAdapter extends RecyclerView.Adapter<HourlyAdapter.ViewHolder
         holder.time.setText(hour);
 
         switch (item.weather) {
-            case "Clouds" :
+            case "Clouds":
                 holder.icon.setImageResource(R.drawable.ic_weather_cloudy);
                 break;
             case "Rain":
@@ -49,30 +49,21 @@ public class HourlyAdapter extends RecyclerView.Adapter<HourlyAdapter.ViewHolder
 
         holder.temp.setText(String.format("%.1f°", item.temp));
         holder.feel.setText(String.format("%.1f°", item.feels_like));
-
-        holder.rainProb.setText((int)(item.pop * 100) + "%");
-
-        if (item.rain == null) {
-            holder.rainAmount.setText("0mm");
-        } else {
-            holder.rainAmount.setText(item.rain + "mm");
-        }
-
+        holder.rainProb.setText((int) (item.pop * 100) + "%");
+        holder.rainAmount.setText(item.rain == null ? "0mm" : item.rain + "mm");
         holder.humidity.setText(item.humidity + "%");
-
         holder.windText.setText(item.wind_text);
-
         holder.wind.setText(String.format("%.1fm/s", item.wind_speed));
-
-        if (position == 0) {
-            holder.itemView.setBackgroundColor(0x125588FF);
-        } else {
-            holder.itemView.setBackgroundColor(0x00000000);
-        }
 
         holder.rowFeel.setBackgroundColor(0xFFF8F8F8);
         holder.rowRainAmount.setBackgroundColor(0xFFF8F8F8);
         holder.rowWind.setBackgroundColor(0xFFF8F8F8);
+
+        if (position == 0) {
+            holder.blueOverlay.setVisibility(View.VISIBLE);
+        } else {
+            holder.blueOverlay.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -85,6 +76,7 @@ public class HourlyAdapter extends RecyclerView.Adapter<HourlyAdapter.ViewHolder
         TextView time, temp, feel, rainProb, rainAmount, humidity, windText, wind;
         ImageView icon;
         LinearLayout rowFeel, rowRainAmount, rowWind;
+        View blueOverlay;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -102,6 +94,8 @@ public class HourlyAdapter extends RecyclerView.Adapter<HourlyAdapter.ViewHolder
             rowFeel = itemView.findViewById(R.id.row_feel);
             rowRainAmount = itemView.findViewById(R.id.row_rainAmount);
             rowWind = itemView.findViewById(R.id.row_wind);
+
+            blueOverlay = itemView.findViewById(R.id.blue_overlay);
         }
     }
 }
