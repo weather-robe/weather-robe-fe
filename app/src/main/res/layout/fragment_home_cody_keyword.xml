@@ -19,16 +19,20 @@
 
         <TextView
             android:text="오늘의 코디 키워드"
-            android:textStyle="bold"
-            android:textSize="20sp"
+            android:fontFamily="@font/nanumbarungothicbold"
+            android:layout_marginTop="2dp"
+            android:letterSpacing="-0.02"
+            android:textSize="18sp"
             android:textColor="#111111"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <TextView
-            android:text="오늘은 어제보다 추워졌고 날씨는 흐려요..."
-            android:textColor="#333333"
-            android:layout_marginTop="6dp"
+            android:text="오늘은 어제보다 추워졌고, 날씨는 전반적으로 흐려요.
+            또한 일교차가 커서 감기에 유의하셔야 해요."
+            android:letterSpacing="-0.02"
+            android:textColor="#5D5D5D"
+            android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -39,21 +43,21 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:text="두꺼운 아우터"
+                android:text="🧥두꺼운 아우터"
                 android:textColor="#111111"
                 android:layout_marginRight="12dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <TextView
-                android:text="니트"
+                android:text="🥼니트"
                 android:textColor="#111111"
                 android:layout_marginRight="12dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <TextView
-                android:text="청바지"
+                android:text="👖청바지"
                 android:textColor="#111111"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
