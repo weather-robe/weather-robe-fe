@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginLeft="50dp">
+            android:layout_marginLeft="62dp">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -48,75 +48,81 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/yesterday_info"
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginRight="80dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="어제보다"
-                android:textColor="#111111"
-                android:textSize="14sp"
-                android:fontFamily="@font/nanumbarungothic"/>
-
             <LinearLayout
-                android:orientation="horizontal"
+                android:id="@+id/yesterday_info"
+                android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp">
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="74dp">
 
-                <!-- 16° -->
-                <TextView
-                    android:id="@+id/tv_yesterday_high"
+                <!-- 최고 -->
+                <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="16°"
-                    android:textColor="#111111"
-                    android:textSize="14sp"
-                    android:fontFamily="@font/nanumbarungothicbold"/>
+                    android:layout_height="wrap_content">
 
-                <!-- 상승 화살표 -->
-                <ImageView
-                    android:id="@+id/iv_yesterday_up"
-                    android:src="@drawable/ic_arrow_up"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_marginEnd="2dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="최고"
+                        android:textColor="#111111"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/nanumbarungothicbold" />
 
-                <!-- / -->
-                <TextView
+                    <TextView
+                        android:id="@+id/tv_yesterday_high"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:text="16°"
+                        android:textColor="#111111"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/nanumbarungothicbold" />
+
+                    <ImageView
+                        android:id="@+id/iv_yesterday_up"
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:layout_marginStart="4dp"
+                        android:src="@drawable/ic_arrow_up" />
+                </LinearLayout>
+
+                <!-- 최저 -->
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_marginTop="4dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="/"
-                    android:textColor="#111111"
-                    android:textSize="14sp"
-                    android:fontFamily="@font/nanumbarungothicbold"
-                    android:layout_marginEnd="4dp"/>
+                    android:layout_height="wrap_content">
 
-                <!-- 1° -->
-                <TextView
-                    android:id="@+id/tv_yesterday_low"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="1°"
-                    android:textColor="#111111"
-                    android:textSize="14sp"
-                    android:fontFamily="@font/nanumbarungothicbold"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="최저"
+                        android:textColor="#111111"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/nanumbarungothicbold" />
 
-                <!-- 하락 화살표 -->
-                <ImageView
-                    android:id="@+id/iv_yesterday_down"
-                    android:src="@drawable/ic_arrow_down"
-                    android:layout_width="14dp"
-                    android:layout_height="14dp" />
+                    <TextView
+                        android:id="@+id/tv_yesterday_low"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:text="1°"
+                        android:textColor="#111111"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/nanumbarungothicbold" />
+
+                    <ImageView
+                        android:id="@+id/iv_yesterday_down"
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:layout_marginStart="4dp"
+                        android:src="@drawable/ic_arrow_down" />
+                </LinearLayout>
+
             </LinearLayout>
 
-        </LinearLayout>
         </LinearLayout>
 
         <!-- 체감온도 / 강수확률 / 미세먼지 -->
@@ -126,7 +132,8 @@
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="36dp" >
 
             <!-- 체감온도 -->
             <LinearLayout
