@@ -5,24 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <!-- 🔳 회색 박스 전체 -->
     <LinearLayout
-        android:id="@+id/cody_recommend_container"
+        android:id="@+id/cody_container"
         android:orientation="vertical"
         android:padding="20dp"
-        android:layout_margin="20dp"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="120dp"
         android:background="@drawable/container_bg"
-
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        >
 
+        <!-- ✨ 텍스트 영역 (스크롤 X) -->
         <TextView
             android:text="오늘의 코디 추천"
             android:fontFamily="@font/nanumbarungothicbold"
-            android:layout_marginTop="6dp"
-            android:letterSpacing="-0.02"
             android:textSize="18sp"
             android:textColor="#111111"
             android:layout_width="wrap_content"
@@ -33,21 +34,45 @@
             android:fontFamily="@font/nanumbarungothic"
             android:letterSpacing="-0.02"
             android:textColor="#5D5D5D"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <ImageView
-            android:id="@+id/img_cody_1"
-            android:layout_marginTop="12dp"
-            android:layout_width="330dp"
-            android:layout_height="440dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/sample"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintDimensionRatio="3:5"/>
+        <!-- ✨ 스크롤 되는 이미지 영역만 ScrollView 안에 있음 -->
+        <HorizontalScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:scrollbars="none"
+            android:overScrollMode="never">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="300dp"
+                    android:layout_height="400dp"
+                    android:layout_marginEnd="12dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/sample" />
+
+                <ImageView
+                    android:layout_width="300dp"
+                    android:layout_height="400dp"
+                    android:layout_marginEnd="12dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/sample" />
+
+                <ImageView
+                    android:layout_width="300dp"
+                    android:layout_height="400dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/sample" />
+
+            </LinearLayout>
+        </HorizontalScrollView>
 
     </LinearLayout>
 
