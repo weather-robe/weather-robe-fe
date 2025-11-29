@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.cookandroid.weatherrobe.Home.HomeFragment;
 import com.cookandroid.weatherrobe.hourly.HourlyFragment;
-import com.cookandroid.weatherrobe.DailyFragment;
+import com.cookandroid.weatherrobe.daily.DailyFragment;
 import com.cookandroid.weatherrobe.calendar.CalendarFragment;
 
 
