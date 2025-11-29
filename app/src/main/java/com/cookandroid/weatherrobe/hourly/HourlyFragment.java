@@ -87,6 +87,12 @@ public class HourlyFragment extends Fragment {
         pm10Comment3 = pm10Card.findViewById(R.id.pm_comment3);
         pm25Comment3 = pm25Card.findViewById(R.id.pm_comment3);
 
+        TextView pm10Title = pm10Card.findViewById(R.id.pm_title);
+        TextView pm25Title = pm25Card.findViewById(R.id.pm_title);
+
+        pm10Title.setText("미세먼지");
+        pm25Title.setText("초미세먼지");
+
         loadWeather();
 
         RecyclerView recycler = view.findViewById(R.id.recycler_weather);
