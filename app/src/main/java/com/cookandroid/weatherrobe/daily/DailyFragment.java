@@ -50,7 +50,7 @@ public class DailyFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.recycler_view_weather);
 
-        weatherAdapter = new DailyWeatherAdapter(dataList, false);
+        weatherAdapter = new DailyWeatherAdapter(dataList, true);
         recyclerView.setAdapter(weatherAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
@@ -99,18 +99,20 @@ public class DailyFragment extends Fragment {
             @Override
             public void onFailure(@NonNull Call<CommonApiResponse<DailyResDTO.PostDailyDTO>> call,
                                   @NonNull Throwable t) {
+                weatherAdapter.setShimmering(false);
                 Log.e("API_CALL", "통신 실패: " + t.getMessage(), t);
             }
         });
     }
+
     private void updateWeatherList(DailyResDTO.PostDailyDTO successData) {
         dataList.clear();
 
         boolean hasYesterday = false;
-        
+
         java.text.SimpleDateFormat dayOfWeekFormat =
                 new java.text.SimpleDateFormat("EEE", java.util.Locale.KOREA); // 요일 만들기 (금, 토, 일 이런식)
-        
+
         // 어제 데이터 추가 (없는 경우 아예 false 상태로 유지)
         DailyResDTO.Yesterday yesterdayData = successData.getYesterday();
         System.out.println(yesterdayData);
@@ -154,19 +156,17 @@ public class DailyFragment extends Fragment {
                 dataList.add(dailyItem);
             }
         }
-
-        weatherAdapter = new DailyWeatherAdapter(dataList, hasYesterday);
-        recyclerView.setAdapter(weatherAdapter);
-        weatherAdapter.notifyDataSetChanged();
+        weatherAdapter.setHasYesterday(hasYesterday);
+        weatherAdapter.setShimmering(false);
     }
 
     private DailyWeatherData convertToDailyWeatherData(String dayLabel, Date date, String icon, double minTemp,
-            double maxTemp, boolean isYesterday) {
+                                                       double maxTemp, boolean isYesterday) {
         String dateValue = isYesterday ? "어제 날짜" : "오늘 날짜";
         if (date != null) {
             dateValue = android.text.format.DateFormat.format("MM월  d일", date).toString();
         }
-        int iconRes = getWeatherIconResource(icon); // 이미지 방식 나중에 통일하기
+        int iconRes = getWeatherIconResource(icon);
         String tempMinStr = tempFormat.format(minTemp);
         String tempMaxStr = tempFormat.format(maxTemp);
 
