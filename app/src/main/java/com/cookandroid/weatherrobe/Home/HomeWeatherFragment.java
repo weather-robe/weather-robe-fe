@@ -20,6 +20,7 @@ import com.cookandroid.weatherrobe.Home.model.Yesterday;
 import com.cookandroid.weatherrobe.R;
 import com.cookandroid.weatherrobe.RetrofitClient;
 import com.cookandroid.weatherrobe.hourly.HourlyRequest;
+import com.google.gson.Gson;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -78,6 +79,7 @@ public class HomeWeatherFragment extends Fragment {
                     Log.e("HomeAPI", "body null");
                     return;
                 }
+                Log.d("CHECK_JSON", new Gson().toJson(res.body()));
                 Log.d("HomeAPI", "updateWeatherUI 실행됨");
                 updateWeatherUI(res.body());
             }
@@ -93,6 +95,18 @@ public class HomeWeatherFragment extends Fragment {
         Current c = res.success.current;
         Today t = res.success.today;
         Yesterday y = res.success.yesterday;
+
+        Log.d("CHECK",
+                "today.min=" + t.temp.min +
+                        " today.max=" + t.temp.max +
+                        " round(min)=" + round(t.temp.min) +
+                        " round(max)=" + round(t.temp.max));
+
+        Log.d("CHECK",
+                "yesterday.min=" + y.temp.min +
+                        " yesterday.max=" + y.temp.max +
+                        " round(min)=" + round(y.temp.min) +
+                        " round(max)=" + round(y.temp.max));
 
         // 현재 온도
         tvTemp.setText(toTemp(c.temp));
