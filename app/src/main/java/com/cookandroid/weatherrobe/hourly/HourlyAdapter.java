@@ -62,8 +62,8 @@ public class HourlyAdapter extends RecyclerView.Adapter<HourlyAdapter.ViewHolder
             holder.icon.setImageResource(R.drawable.ic_weather_cloudy);
         }
 
-        holder.temp.setText(String.format("%.1f°", item.temp));
-        holder.feel.setText(String.format("%.1f°", item.feels_like));
+        holder.temp.setText(Math.round(item.temp) + "°");
+        holder.feel.setText(Math.round(item.feels_like) + "°");
         holder.rainProb.setText((int) (item.pop * 100) + "%");
         holder.rainAmount.setText(item.rain == null ? "0mm" : item.rain + "mm");
         holder.humidity.setText(item.humidity + "%");
