@@ -9,9 +9,9 @@
         android:id="@+id/keyword_container"
         android:orientation="vertical"
         android:padding="20dp"
+        android:layout_margin="20dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
         android:background="@drawable/container_bg"
 
         app:layout_constraintTop_toTopOf="parent"

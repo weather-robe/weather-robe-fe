@@ -9,9 +9,10 @@
         android:id="@+id/cody_recommend_container"
         android:orientation="vertical"
         android:padding="20dp"
+        android:layout_margin="20dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:background="@drawable/container_bg"
 
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,26 +20,34 @@
 
         <TextView
             android:text="오늘의 코디 추천"
-            android:textSize="20sp"
-            android:textStyle="bold"
+            android:fontFamily="@font/nanumbarungothicbold"
+            android:layout_marginTop="6dp"
+            android:letterSpacing="-0.02"
+            android:textSize="18sp"
             android:textColor="#111111"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <TextView
             android:text="코디 키워드를 참고한 실제 코디 추천입니다."
-            android:layout_marginTop="4dp"
-            android:textColor="#333333"
+            android:fontFamily="@font/nanumbarungothic"
+            android:letterSpacing="-0.02"
+            android:textColor="#5D5D5D"
+            android:layout_marginTop="12dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <ImageView
             android:id="@+id/img_cody_1"
-            android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:scaleType="centerCrop"
             android:layout_marginTop="12dp"
-            android:src="@drawable/sample" />
+            android:layout_width="330dp"
+            android:layout_height="440dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/sample"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintDimensionRatio="3:5"/>
 
     </LinearLayout>
 
