@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cookandroid.weatherrobe.Home.HomeFragment;
-import com.cookandroid.weatherrobe.work.FeelingWorkManager;
 
 import com.cookandroid.weatherrobe.hourly.HourlyFragment;
 
@@ -43,9 +42,6 @@ public class MainActivity extends AppCompatActivity {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
 
         setContentView(R.layout.activity_main);
-
-        // '사용자 실제 체감온도'를 서버로 전송하는 작업 스케줄링(매일 23:59 전송)
-        FeelingWorkManager.scheduleFeelingWork(this);
 
         customStatusBar = findViewById(R.id.custom_status_bar);
 
