@@ -26,6 +26,12 @@ public class SendFeelingWorker extends Worker {
         // TODO: 서버로 feeling 값을 전송하는 API 호출
         // sendFeelingToServer(feeling);
 
+        // 사용자 입력 없으면 전송 스킵
+        if ("none".equals(feeling)) {
+            System.out.println("23:59 전송 스킵 — 오늘 입력된 체감온도가 없음.");
+            return Result.success();
+        }
+
         // 로그 찍고 성공 반환
         System.out.println("23:59 체감온도 전송됨: " + feeling);
 
