@@ -22,6 +22,7 @@ public class ModalCalendarDialog extends DialogFragment {
 
     private int year, month, day;
 
+
     public static ModalCalendarDialog newInstance(int y, int m, int d) {
         ModalCalendarDialog dialog = new ModalCalendarDialog();
         Bundle args = new Bundle();
@@ -68,7 +69,7 @@ public class ModalCalendarDialog extends DialogFragment {
             tempText = "최고 -° / 최저 -°"; // 기본 텍스트
         }
 
-        // ⭐ 숫자 부분(16°, 1° 또는 -°)만 색상 적용
+        // 숫자 부분(16°, 1° 또는 -°)만 색상 적용
         tvTempInfo.setText(getColoredTemp(tempText));
 
         // 코디 텍스트
@@ -88,7 +89,7 @@ public class ModalCalendarDialog extends DialogFragment {
         return view;
     }
 
-    // ✔ 숫자 부분만 색칠하는 함수
+    // 숫자 부분만 색칠하는 함수
     private SpannableString getColoredTemp(String tempText) {
         SpannableString ss = new SpannableString(tempText);
 
@@ -130,7 +131,7 @@ public class ModalCalendarDialog extends DialogFragment {
                     ViewGroup.LayoutParams.WRAP_CONTENT
             );
 
-            // 모달 배경 → 투명 처리 (라운드 드러남)
+            // 모달 배경 투명 처리 (라운드 드러남)
             getDialog().getWindow().setBackgroundDrawable(
                     new ColorDrawable(Color.TRANSPARENT)
             );
