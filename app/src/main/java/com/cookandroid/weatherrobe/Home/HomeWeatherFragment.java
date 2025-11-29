@@ -22,6 +22,8 @@ import com.cookandroid.weatherrobe.RetrofitClient;
 import com.cookandroid.weatherrobe.hourly.HourlyRequest;
 import com.google.gson.Gson;
 
+import java.util.Calendar;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -134,6 +136,48 @@ public class HomeWeatherFragment extends Fragment {
 
         applyDiffIcon(ivYesterdayHigh, todayHigh - yHigh);
         applyDiffIcon(ivYesterdayLow, todayLow - yLow);
+
+        applyBackground(c.icon);
+    }
+
+    private void applyBackground(String icon) {
+        Fragment parent = getParentFragment();
+        if (parent == null || parent.getView() == null) return;
+
+        View root = parent.getView().findViewById(R.id.home_root);
+        if(root == null) return;
+
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+
+        if (icon.equals("09d") || icon.equals("09n")
+                || icon.equals("10d") || icon.equals("10n")) {
+
+            root.setBackgroundResource(R.drawable.bg_weather_rainy);
+            return;
+        }
+
+        if (hour >= 18 || hour < 6) {
+            root.setBackgroundResource(R.drawable.bg_weather_night);
+            return;
+        }
+
+        switch (icon) {
+
+            case "01d":
+            case "01n":
+                root.setBackgroundResource(R.drawable.bg_weather_sunny);
+                break;
+
+            case "02d": case "02n":
+            case "03d": case "03n":
+            case "04d": case "04n":
+                root.setBackgroundResource(R.drawable.bg_weather_cloudy);
+                break;
+
+            default:
+                root.setBackgroundResource(R.drawable.bg_weather_cloudy);
+                break;
+        }
     }
 
     private int round(double v) {
