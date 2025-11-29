@@ -70,70 +70,52 @@
                 android:id="@+id/tvCodiDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="설명 텍스트"
+                android:text="오늘은 어제보다 추워졌고, 날씨는 전반적으로 흐려요. 또한 일교차가 커서 감기에 유의하셔야 해요."
+                android:lineSpacingExtra="2dp"
                 android:fontFamily="@font/nanumbarungothic"
                 android:textSize="16sp"
                 android:textColor="#777777"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginTop="14dp"/>
 
             <!-- 칩 영역은 추후 데이터 받아온 후 수정 예정 -->
             <LinearLayout
-                android:id="@+id/layoutCodiIcons"
                 android:orientation="horizontal"
+                android:layout_marginTop="14dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp">
+                android:layout_height="wrap_content">
 
-                <!-- Chip: 두꺼운 아우터 -->
-                <LinearLayout
-                    android:orientation="horizontal"
+                <TextView
+                    android:text="🧥 두꺼운 아우터"
+                    android:textSize="13dp"
+                    android:fontFamily="@font/nanumbarungothic"
+                    android:textColor="#111111"
+                    android:background="@drawable/label_bg_gary_line"
+                    android:layout_marginRight="6dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/chip_background"
-                    android:padding="10dp"
-                    android:layout_marginEnd="8dp"
-                    android:gravity="center_vertical">
+                    android:layout_height="wrap_content" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="🧥"
-                        android:textSize="20sp"
-                        android:paddingRight="4dp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="두꺼운 아우터"
-                        android:textSize="14sp"
-                        android:textColor="#333333"/>
-                </LinearLayout>
-
-                <!-- Chip: 니트 -->
-                <LinearLayout
-                    android:orientation="horizontal"
+                <TextView
+                    android:text="🥼니트"
+                    android:textSize="13dp"
+                    android:fontFamily="@font/nanumbarungothic"
+                    android:textColor="#111111"
+                    android:background="@drawable/label_bg_gary_line"
+                    android:layout_marginRight="6dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/chip_background"
-                    android:padding="8dp"
-                    android:gravity="center_vertical">
+                    android:layout_height="wrap_content"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="🥼"
-                        android:textSize="20sp"
-                        android:paddingRight="4dp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="니트"
-                        android:textSize="14sp"
-                        android:textColor="#333333"/>
-                </LinearLayout>
+                <TextView
+                    android:text="👖청바지"
+                    android:textSize="13dp"
+                    android:fontFamily="@font/nanumbarungothic"
+                    android:textColor="#111111"
+                    android:background="@drawable/label_bg_gary_line"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
             </LinearLayout>
+
         </LinearLayout>
 
 
@@ -146,7 +128,7 @@
             android:fontFamily="@font/nanumbarungothicbold"
             android:textSize="18sp"
             android:textColor="#111111"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="24dp"
             android:layout_marginBottom="10dp"/>
 
     </LinearLayout>
