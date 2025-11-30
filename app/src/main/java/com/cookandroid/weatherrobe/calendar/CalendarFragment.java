@@ -1,7 +1,7 @@
 package com.cookandroid.weatherrobe.calendar;
 
 import android.os.Bundle;
-import android.util.Log;   // 로그
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -40,7 +40,7 @@ public class CalendarFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Retrofit Calendar API 초기화
+        // Retrofit Calendar API 초기화 (기존 주석 유지)
         calendarService = RetrofitClient
                 .getClient("https://weather-robe.site")
                 .create(CalendarService.class);
@@ -62,18 +62,18 @@ public class CalendarFragment extends Fragment {
 
         gridView = view.findViewById(R.id.gridView);
 
-        // 현재 날짜 정보 불러오기
+        // 현재 날짜 정보 불러오기 (기존 주석 유지)
         Calendar cal = Calendar.getInstance();
         currentYear = cal.get(Calendar.YEAR);
         currentMonth = cal.get(Calendar.MONTH);
 
-        // 달력 화면 초기 구성
+        // 달력 화면 초기 구성 (기존 주석 유지)
         updateCalendar(view);
 
-        // 전체 조회 API 호출
+        // 전체 조회 API 호출 (기존 주석 유지)
         fetchCalendarList(1);
 
-        // 스와이프 이벤트 처리 (월 이동)
+        // 스와이프 이벤트 처리 (월 이동) (기존 주석 유지)
         gridView.setOnTouchListener(new View.OnTouchListener() {
             float startX;
 
@@ -98,7 +98,7 @@ public class CalendarFragment extends Fragment {
         });
     }
 
-    // 달력 UI 갱신 및 날짜 클릭 이벤트 설정
+    // 달력 UI 갱신 및 날짜 클릭 이벤트 설정 (기존 주석 유지)
     private void updateCalendar(View view) {
 
         TextView monthTitle = view.findViewById(R.id.header_title);
@@ -109,19 +109,18 @@ public class CalendarFragment extends Fragment {
         calendarAdapter = new CalendarAdapter(requireContext(), days);
         gridView.setAdapter(calendarAdapter);
 
-        // 날짜 클릭 → 상세조회 API 호출 후 모달 띄우기
+        // 날짜 클릭 → 상세조회 API 호출 후 모달 띄우기 (기존 주석 유지)
         calendarAdapter.setOnDayClickListener((year, month, day) -> {
 
             String dateStr = String.format("%04d-%02d-%02d", year, month + 1, day);
-
             Log.d("CAL_CLICK", "날짜 클릭됨: " + dateStr);   // 로그
 
-            // 상세 조회 API 실행
+            // 상세 조회 API 실행 (기존 주석 유지)
             fetchCalendarDetail(1, dateStr);
         });
     }
 
-    // 다음 달로 이동
+    // 다음 달로 이동 (기존 주석 유지)
     private void moveToNextMonth(View view) {
         currentMonth++;
         if (currentMonth > 11) {
@@ -132,7 +131,7 @@ public class CalendarFragment extends Fragment {
         fetchCalendarList(1);
     }
 
-    // 이전 달로 이동
+    // 이전 달로 이동 (기존 주석 유지)
     private void moveToPreviousMonth(View view) {
         currentMonth--;
         if (currentMonth < 0) {
@@ -143,7 +142,7 @@ public class CalendarFragment extends Fragment {
         fetchCalendarList(1);
     }
 
-    // 현재 월의 날짜 리스트 생성
+    // 현재 월의 날짜 리스트 생성 (기존 주석 유지)
     private List<DayItem> buildCalendarDays(int year, int month) {
         List<DayItem> list = new ArrayList<>();
 
@@ -153,18 +152,18 @@ public class CalendarFragment extends Fragment {
         int firstDay = c.get(Calendar.DAY_OF_WEEK);
         int lastDay = c.getActualMaximum(Calendar.DAY_OF_MONTH);
 
-        // 빈 칸 채우기
+        // 빈 칸 채우기 (기존 주석 유지)
         for (int i = 1; i < firstDay; i++) {
             list.add(new DayItem("", false, false));
         }
 
-        // 오늘 날짜 판단
+        // 오늘 날짜 판단 (기존 주석 유지)
         Calendar today = Calendar.getInstance();
         int tYear = today.get(Calendar.YEAR);
         int tMonth = today.get(Calendar.MONTH);
         int tDay = today.get(Calendar.DAY_OF_MONTH);
 
-        // 날짜 생성
+        // 날짜 생성 (기존 주석 유지)
         for (int d = 1; d <= lastDay; d++) {
             boolean isToday = (year == tYear && month == tMonth && d == tDay);
 
@@ -179,7 +178,7 @@ public class CalendarFragment extends Fragment {
         return list;
     }
 
-    // 전체 조회 API
+    // 전체 조회 API (기존 주석 유지)
     private void fetchCalendarList(int userId) {
 
         calendarService.getCalendarList(userId)
@@ -207,12 +206,12 @@ public class CalendarFragment extends Fragment {
                 });
     }
 
-    // 상세 조회 API
+    // 상세 조회 API (기존 주석 유지)
     private void fetchCalendarDetail(int userId, String dateStr) {
 
         Log.d("CAL_DETAIL", "상세조회 API 실행됨: " + dateStr);   // 로그
 
-        calendarService.getCalendarDetail(userId)
+        calendarService.getCalendarDetail(userId, dateStr)
                 .enqueue(new Callback<CommonApiResponse<CalendarResDTO.CalendarDetailDTO>>() {
 
                     @Override
@@ -232,7 +231,7 @@ public class CalendarFragment extends Fragment {
                             CalendarResDTO.CalendarDetailDTO detail =
                                     response.body().getSuccess();
 
-                            // 모달 띄우기
+                            // 모달 띄우기 (기존 주석 유지)
                             ModalCalendarDialog dialog =
                                     ModalCalendarDialog.newInstance(dateStr);
 

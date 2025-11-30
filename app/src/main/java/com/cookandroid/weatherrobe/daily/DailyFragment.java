@@ -29,10 +29,10 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import com.cookandroid.weatherrobe.calendar.CalendarDataStore;
+import com.cookandroid.weatherrobe.location.AppLocationManager;
+import com.cookandroid.weatherrobe.location.LocationUpdateListener;
 
-
-public class DailyFragment extends Fragment {
+public class DailyFragment extends Fragment implements LocationUpdateListener {
 
     private static final String BASE_URL = "https://api.weather-robe.kro.kr/";
     private DailyService dailyService;
@@ -164,12 +164,6 @@ public class DailyFragment extends Fragment {
     private void updateWeatherList(DailyResDTO.PostDailyDTO successData) {
         dataList.clear();
 
-        // 캘린더에 데이터 보내기
-        CalendarDataStore.weatherMap.clear();
-        java.text.SimpleDateFormat keyFormat =
-                new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.KOREA);
-
-
         boolean hasYesterday = false;
 
         java.text.SimpleDateFormat dayOfWeekFormat =
@@ -218,36 +212,22 @@ public class DailyFragment extends Fragment {
                 dataList.add(dailyItem);
             }
         }
-
-        weatherAdapter = new DailyWeatherAdapter(dataList, hasYesterday);
-        recyclerView.setAdapter(weatherAdapter);
-        weatherAdapter.notifyDataSetChanged();
-
+        weatherAdapter.setHasYesterday(hasYesterday);
+        weatherAdapter.setShimmering(false);
     }
 
-    private DailyWeatherData convertToDailyWeatherData(String dayLabel, Date date, String icon,
-                                                       double minTemp, double maxTemp, boolean isYesterday) {
-
+    private DailyWeatherData convertToDailyWeatherData(String dayLabel, Date date, String icon, double minTemp,
+                                                       double maxTemp, boolean isYesterday) {
         String dateValue = isYesterday ? "어제 날짜" : "오늘 날짜";
         if (date != null) {
             dateValue = android.text.format.DateFormat.format("MM월  d일", date).toString();
         }
-
         int iconRes = getWeatherIconResource(icon);
         String tempMinStr = tempFormat.format(minTemp);
         String tempMaxStr = tempFormat.format(maxTemp);
 
-        // 캘린더 모달 연동
-        if (date != null) {
-            String key = new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.KOREA).format(date);
-            String tempText = "최고 " + tempMaxStr + " / 최저 " + tempMinStr;
-
-            CalendarDataStore.weatherMap.put(key, tempText);
-        }
-
         return new DailyWeatherData(dayLabel, dateValue, iconRes, tempMinStr, tempMaxStr);
     }
-
 
     private int getWeatherIconResource(String icon) {
         if (icon == null) return R.drawable.ic_weather_cloudy;

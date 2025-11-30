@@ -6,6 +6,8 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 
+import retrofit2.http.Query;
+
 import com.cookandroid.weatherrobe.common.CommonApiResponse;
 
 public interface CalendarService {
@@ -19,6 +21,7 @@ public interface CalendarService {
     // 캘린더 상세 조회
     @GET("/v1/api/user/{userId}/calender/detail")
     Call<CommonApiResponse<CalendarResDTO.CalendarDetailDTO>> getCalendarDetail(
-            @Path("userId") int userId
+            @Path("userId") int userId,
+            @Query("date") String date
     );
 }
