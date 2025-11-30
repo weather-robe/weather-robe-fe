@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tvDay"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="60dp"
-    android:gravity="center"
-    android:textColor="#111111"
-    android:textSize="12sp"
-    android:background="@android:color/transparent"/>
+    android:foreground="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="false">
+
+    <TextView
+        android:id="@+id/tvDay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textColor="#111111"
+        android:textSize="12sp"
+        android:background="@android:color/transparent" />
+
+</FrameLayout>
