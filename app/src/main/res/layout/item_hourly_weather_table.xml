@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#FFFFFF">
+
+    <LinearLayout
+        android:id="@+id/weather_table"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="104dp">
+
+        <LinearLayout
+            android:layout_width="97dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="24dp"
+            android:paddingRight="19dp">
+
+            <TextView
+                android:id="@+id/txt_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="11월 11일"
+                android:textColor="#000000"
+                android:layout_marginTop="18dp"
+                android:fontFamily="@font/nanumbarungothicbold"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/txt_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="화요일"
+                android:textColor="#000000"
+                android:layout_marginTop="3dp"
+                android:fontFamily="@font/nanumbarungothic"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="기온"
+                android:textColor="#000000"
+                android:textSize="12sp"
+                android:fontFamily="@font/nanumbarungothic" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="34dp"
+                android:text="체감온도"
+                android:textColor="#000000"
+                android:textSize="12sp"
+                android:fontFamily="@font/nanumbarungothic" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="34dp"
+                android:text="강수확률"
+                android:textColor="#000000"
+                android:textSize="12sp"
+                android:fontFamily="@font/nanumbarungothic" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="34dp"
+                android:text="강수량"
+                android:textColor="#000000"
+                android:textSize="12sp"
+                android:fontFamily="@font/nanumbarungothic" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="34dp"
+                android:text="습도"
+                android:textColor="#000000"
+                android:textSize="12sp"
+                android:fontFamily="@font/nanumbarungothic" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="34dp"
+                android:layout_marginBottom="23dp"
+                android:text="바람"
+                android:textColor="#000000"
+                android:textSize="12sp"
+                android:fontFamily="@font/nanumbarungothic" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#EAEAEA" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_weather"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#EAEAEA" />
+
+</LinearLayout>

@@ -7,8 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,17 +28,10 @@ import retrofit2.Response;
 
 public class HourlyFragment extends Fragment {
 
-    private RecyclerView recyclerView;
-    private HourlyAdapter adapter;
-    private ArrayList<HourlyItem> hourlyList = new ArrayList<>();
+    private RecyclerView recyclerMain;
+    private HourlyMainAdapter mainAdapter;
     private HourlyApi api;
     private SharedPreferences prefs;
-    private TextView dateText, dayText;
-    private ImageView pm10Icon, pm25Icon;
-    private TextView pm10Value, pm25Value;
-    private TextView pm10Comment2, pm25Comment2;
-    private TextView pm10Comment3, pm25Comment3;
-    private View pm10BarFill, pm25BarFill;
 
     public HourlyFragment() {}
 
@@ -55,53 +46,18 @@ public class HourlyFragment extends Fragment {
         prefs = requireActivity().getSharedPreferences("user", Context.MODE_PRIVATE);
         prefs.edit().putInt("userId", 1).apply();
 
-        dateText = view.findViewById(R.id.txt_date);
-        dayText = view.findViewById(R.id.txt_day);
+        recyclerMain = view.findViewById(R.id.recycler_main);
+        recyclerMain.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        recyclerView = view.findViewById(R.id.recycler_weather);
-        recyclerView.setLayoutManager(
-                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false)
-        );
-
-        adapter = new HourlyAdapter(hourlyList);
-        recyclerView.setAdapter(adapter);
+        mainAdapter = new HourlyMainAdapter();
+        recyclerMain.setAdapter(mainAdapter);
 
         api = RetrofitClient.getClient("https://api.weather-robe.kro.kr/")
                 .create(HourlyApi.class);
 
-        View pm10Card = view.findViewById(R.id.pm10_card);
-        View pm25Card = view.findViewById(R.id.pm25_card);
-
-        pm10Icon = pm10Card.findViewById(R.id.pm_icon);
-        pm25Icon = pm25Card.findViewById(R.id.pm_icon);
-
-        pm10Value = pm10Card.findViewById(R.id.pm_status);
-        pm25Value = pm25Card.findViewById(R.id.pm_status);
-
-        pm10BarFill = pm10Card.findViewById(R.id.pm_bar_fill);
-        pm25BarFill = pm25Card.findViewById(R.id.pm_bar_fill);
-
-        pm10Comment2 = pm10Card.findViewById(R.id.pm_comment2);
-        pm25Comment2 = pm25Card.findViewById(R.id.pm_comment2);
-
-        pm10Comment3 = pm10Card.findViewById(R.id.pm_comment3);
-        pm25Comment3 = pm25Card.findViewById(R.id.pm_comment3);
-
-        TextView pm10Title = pm10Card.findViewById(R.id.pm_title);
-        TextView pm25Title = pm25Card.findViewById(R.id.pm_title);
-
-        pm10Title.setText("미세먼지");
-        pm25Title.setText("초미세먼지");
-
         loadWeather();
 
-        RecyclerView recycler = view.findViewById(R.id.recycler_weather);
-        LinearLayoutManager layoutManager =
-                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        recycler.setLayoutManager(layoutManager);
-
         return view;
-
     }
 
     private void loadWeather() {
@@ -125,31 +81,30 @@ public class HourlyFragment extends Fragment {
                     return;
                 }
 
-                hourlyList.clear();
-                hourlyList.addAll(data.hourly);
-                adapter.notifyDataSetChanged();
-
+                // 날짜 정보 설정
                 String rawDate = data.hourly.get(0).date;
-
                 try {
                     SimpleDateFormat serverFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
                     SimpleDateFormat displayDate = new SimpleDateFormat("M월 d일", Locale.KOREA);
                     SimpleDateFormat displayDay = new SimpleDateFormat("EEEE", Locale.KOREA);
 
                     Date parsedDate = serverFormat.parse(rawDate);
-
-                    dateText.setText(displayDate.format(parsedDate));
-                    dayText.setText(displayDay.format(parsedDate));
-
+                    mainAdapter.setDateInfo(
+                            displayDate.format(parsedDate),
+                            displayDay.format(parsedDate)
+                    );
                 } catch (Exception e) {
                     Log.e("Hourly", "날짜 파싱 오류: " + e.getMessage());
                 }
 
-                updatePmCard(pm10Icon, pm10Value, data.pm10text, data.pm10,
-                        pm10BarFill, pm10Comment2, pm10Comment3, true);
+                // 시간별 날씨 데이터 설정
+                mainAdapter.setHourlyData(new ArrayList<>(data.hourly));
 
-                updatePmCard(pm25Icon, pm25Value, data.pm25text, data.pm25,
-                        pm25BarFill, pm25Comment2, pm25Comment3, false);
+                // 미세먼지 데이터 설정
+                mainAdapter.setPmData(data.pm10text, data.pm10, data.pm25text, data.pm25);
+
+                // UI 갱신
+                mainAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -157,66 +112,5 @@ public class HourlyFragment extends Fragment {
                 Log.e("Hourly", "연결 실패: " + t.getMessage());
             }
         });
-    }
-
-    private void updatePmCard(ImageView icon,
-                              TextView valueText,
-                              String gradeText,
-                              int value,
-                              View barFill,
-                              TextView comment2,
-                              TextView comment3,
-                              boolean isPm10) {
-
-        valueText.setText(gradeText + " " + value + "㎍/㎥");
-        icon.setImageResource(getPmIcon(gradeText));
-
-        int goodLimit = isPm10 ? 30 : 15;
-        comment2.setText(value <= goodLimit ? "이하" : "이상");
-
-        comment3.setText(getActivityMessage(gradeText));
-
-        barFill.setBackgroundColor(getBarColor(gradeText));
-        updateBarWidth(barFill, value);
-    }
-
-    private String getActivityMessage(String grade) {
-        switch (grade) {
-            case "좋음": return "야외 활동에 적합";
-            case "보통": return "몸상태에 따라 활동 유의";
-            case "나쁨": return "가급적 실내 활동 권장";
-            case "매우 나쁨": return "실외 활동 제한 및 마스크 착용 권장";
-            default: return "활동 유의";
-        }
-    }
-
-    private int getBarColor(String grade) {
-        switch (grade) {
-            case "좋음": return 0xFF8FDA92;
-            case "보통": return 0xFFFFED65;
-            case "나쁨": return 0xFFFF9800;
-            case "매우 나쁨": return 0xFFFD675C;
-            default: return 0xFF8FDA92;
-        }
-    }
-
-    private void updateBarWidth(View fill, int value) {
-        fill.post(() -> {
-            int parentWidth = ((View) fill.getParent()).getWidth();
-            float ratio = Math.min(value, 100) / 100f;
-            ViewGroup.LayoutParams params = fill.getLayoutParams();
-            params.width = (int) (parentWidth * ratio);
-            fill.setLayoutParams(params);
-        });
-    }
-
-    private int getPmIcon(String grade) {
-        switch (grade) {
-            case "좋음": return R.drawable.ic_pm_good;
-            case "보통": return R.drawable.ic_pm_normal;
-            case "나쁨": return R.drawable.ic_pm_bad;
-            case "매우 나쁨": return R.drawable.ic_pm_very_bad;
-            default: return R.drawable.ic_pm_normal;
-        }
     }
 }
