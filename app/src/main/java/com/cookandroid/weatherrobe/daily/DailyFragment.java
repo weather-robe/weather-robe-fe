@@ -40,11 +40,20 @@ public class DailyFragment extends Fragment {
     private DailyWeatherAdapter weatherAdapter;
     private final List<DailyWeatherData> dataList = new ArrayList<>();
     private final DecimalFormat tempFormat = new DecimalFormat("0°");
+    private AppLocationManager locationManager;
+    // 서울 기본 값 설정
+    private final double DEFAULT_LAT = 37.5665;
+    private final double DEFAULT_LON = 126.9780;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         initRetrofit();
+
+        if (getContext() != null) {
+            locationManager = new AppLocationManager(this, this);
+        }
+
         return inflater.inflate(R.layout.fragment_daily, container, false);
     }
 
@@ -53,15 +62,58 @@ public class DailyFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.recycler_view_weather);
 
-        weatherAdapter = new DailyWeatherAdapter(dataList, false);
+        weatherAdapter = new DailyWeatherAdapter(dataList, true);
         recyclerView.setAdapter(weatherAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
-        // TODO: GPS로 위치 받아오기
-        int testUserId = 1;
-        double testLat = 37.5665;
-        double testLon = 126.9780;
-        fetchDailyWeather(testUserId, testLat, testLon);
+        if (locationManager != null) {
+            locationManager.requestPermissionsAndStartUpdates();
+        } else {
+            fetchDailyWeather(1, DEFAULT_LAT, DEFAULT_LON);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (locationManager != null && locationManager.checkPermissions()) {
+            locationManager.startLocationUpdates();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (locationManager != null) {
+            locationManager.stopLocationUpdates();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (locationManager != null && locationManager.handlePermissionResult(requestCode, grantResults)) {
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    @Override
+    public void onLocationReceived(double latitude, double longitude) {
+        Log.d("DailyFragment", "위치 수신 성공: Lat=" + latitude + ", Lon=" + longitude);
+        // 위치를 받아 백엔드에 전송 (날씨 업데이트)
+        fetchDailyWeather(1, latitude, longitude);
+    }
+
+    @Override
+    public void onPermissionDenied() {
+        Log.w("DailyFragment", "위치 권한 거부됨. 기본 위치 사용.");
+        fetchDailyWeather(1, DEFAULT_LAT, DEFAULT_LON);
+    }
+
+    @Override
+    public void onLocationFailed(String error) {
+        Log.e("DailyFragment", "위치 로드 실패: " + error);
+        fetchDailyWeather(1, DEFAULT_LAT, DEFAULT_LON);
     }
 
     private void initRetrofit() {
@@ -96,16 +148,19 @@ public class DailyFragment extends Fragment {
 
                 } else {
                     Log.e("API_CALL", "응답 오류: " + response.code() + ", " + apiResponse.getError());
+                    weatherAdapter.setShimmering(false);
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<CommonApiResponse<DailyResDTO.PostDailyDTO>> call,
                                   @NonNull Throwable t) {
+                weatherAdapter.setShimmering(false);
                 Log.e("API_CALL", "통신 실패: " + t.getMessage(), t);
             }
         });
     }
+
     private void updateWeatherList(DailyResDTO.PostDailyDTO successData) {
         dataList.clear();
 
