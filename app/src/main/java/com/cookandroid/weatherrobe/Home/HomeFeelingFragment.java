@@ -8,7 +8,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,8 +20,6 @@ import com.cookandroid.weatherrobe.Home.model.SharedWeatherViewModel;
 import com.cookandroid.weatherrobe.R;
 import com.cookandroid.weatherrobe.RetrofitClient;
 import com.cookandroid.weatherrobe.common.CommonApiResponse;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -76,15 +73,7 @@ public class HomeFeelingFragment extends Fragment {
             }
             int weatherId = weatherIdObj;
             String currentFeedback = sharedViewModel.getWeatherFeedback().getValue();
-            String newFeedback;
-
-            if ("적당".equals(currentFeedback)) {
-                newFeedback = null;
-            } else {
-                newFeedback = "적당";
-            }
-
-            sharedViewModel.setWeatherFeedback(newFeedback);
+            String newFeedback = "적당".equals(currentFeedback) ? "" : "적당";
             fetchWeatherFeedback(1, weatherId, newFeedback);
         });
 
@@ -96,15 +85,7 @@ public class HomeFeelingFragment extends Fragment {
             }
             int weatherId = weatherIdObj;
             String currentFeedback = sharedViewModel.getWeatherFeedback().getValue();
-            String newFeedback;
-
-            if ("추움".equals(currentFeedback)) {
-                newFeedback = null;
-            } else {
-                newFeedback = "추움";
-            }
-
-            sharedViewModel.setWeatherFeedback(newFeedback);
+            String newFeedback = "추움".equals(currentFeedback) ? "" : "추움";
             fetchWeatherFeedback(1, weatherId, newFeedback);
         });
 
@@ -116,15 +97,7 @@ public class HomeFeelingFragment extends Fragment {
             }
             int weatherId = weatherIdObj;
             String currentFeedback = sharedViewModel.getWeatherFeedback().getValue();
-            String newFeedback;
-
-            if ("더움".equals(currentFeedback)) {
-                newFeedback = null;
-            } else {
-                newFeedback = "더움";
-            }
-
-            sharedViewModel.setWeatherFeedback(newFeedback);
+            String newFeedback = "더움".equals(currentFeedback) ? "" : "더움";
             fetchWeatherFeedback(1, weatherId, newFeedback);
         });
     }
@@ -136,6 +109,11 @@ public class HomeFeelingFragment extends Fragment {
     }
 
     private void updateFeedbackUI(String feedback) {
+        if (feedback == null || feedback.isEmpty()) {
+            resetBackground();
+            return;
+        }
+
         switch(feedback) {
             case "적당":
                 resetBackground();
@@ -170,11 +148,26 @@ public class HomeFeelingFragment extends Fragment {
             public void onResponse(Call<CommonApiResponse<HomeResDTO.PostFeedbackDTO>> call,
                                    Response<CommonApiResponse<HomeResDTO.PostFeedbackDTO>> res) {
 
+                if (!isAdded()) return;
+
                 if (res.isSuccessful() && res.body() != null && res.body().getSuccess() != null) {
 
-                    Log.d("API_CALL", "키워드 로드 성공");
                     HomeResDTO.Daily weatherData = res.body().getSuccess().getDaily();
-                    updateFeedbackUI(weatherData.getFeedback());
+
+                    if (weatherData != null) {
+                        Log.d("API_CALL", "피드백 업데이트 성공");
+
+                        String finalFeedback = weatherData.getFeedback();
+
+                        if (finalFeedback == null) {
+                            finalFeedback = "";
+                        }
+
+                        sharedViewModel.setWeatherFeedback(finalFeedback);
+                    } else {
+                        Log.e("API_CALL", "응답은 성공했으나 Daily 데이터가 누락됨.");
+                    }
+
 
                 } else {
                     Log.e("API_CALL", "응답 실패. Status: " + res.code() + ", Message: " + (res.body() != null ? res.body().getError() : "N/A"));
@@ -183,6 +176,8 @@ public class HomeFeelingFragment extends Fragment {
 
             @Override
             public void onFailure(Call<CommonApiResponse<HomeResDTO.PostFeedbackDTO>> call, Throwable t) {
+                if (!isAdded()) return;
+
                 Log.e("CodyAPI", "키워드 요청 실패: " + t.getMessage());
             }
         });
