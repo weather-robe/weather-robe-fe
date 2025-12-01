@@ -102,8 +102,10 @@ public class HomeWeatherFragment extends Fragment {
         Today t = res.success.today;
         Yesterday y = res.success.yesterday;
         int TodayWeatherId = t.weatherId;
+        String TodayWeatherFeedback = t.feedback;
 
         sharedViewModel.setWeatherId(TodayWeatherId);
+        sharedViewModel.setWeatherFeedback(TodayWeatherFeedback);
 
         Log.d("HomeWeatherFragment", "Weather ID (" + TodayWeatherId + ")를 ViewModel에 저장했습니다.");
         Log.d("CHECK",
