@@ -63,7 +63,10 @@ public class ModalCalendarDialog extends DialogFragment {
         TextView tvDate = view.findViewById(R.id.tvDateTitle);
         TextView tvTempInfo = view.findViewById(R.id.tvTempInfo);
         TextView tvCodiDesc = view.findViewById(R.id.tvCodiDescription);
-        TextView tvKeywords = view.findViewById(R.id.tvUserAnswer);
+
+        TextView tvKeywords = view.findViewById(R.id.tvKeywords);   // 키워드 영역
+        TextView tvUserAnswer = view.findViewById(R.id.tvUserAnswer); // 나는 ~~라고 답변했어요
+
 
         // 날짜 출력
         tvDate.setText(dateStr);
@@ -71,10 +74,11 @@ public class ModalCalendarDialog extends DialogFragment {
         // 상세 데이터가 존재하면 UI 구성
         if (detailData != null) {
 
-            // 온도
-            String tempText = String.format("최고 %.1f° / 최저 %.1f°",
-                    detailData.getTemp_max(),
-                    detailData.getTemp_min()
+            // 온도: 소수점은 반올림 처리
+            String tempText = String.format(
+                    "최고 %d° / 최저 %d°",
+                    Math.round(detailData.getTemp_max()),
+                    Math.round(detailData.getTemp_min())
             );
             tvTempInfo.setText(getColoredTemp(tempText));
 
@@ -88,11 +92,19 @@ public class ModalCalendarDialog extends DialogFragment {
                 tvKeywords.setText("추천 키워드가 없어요.");
             }
 
+            String feeling = detailData.getFeeling_status();
+            if (feeling != null && !feeling.isEmpty()) {
+                String answerText = String.format("나는 😃%s 이라고 답변했어요.", feeling);
+                tvUserAnswer.setText(answerText);
+            } else {
+                tvUserAnswer.setText("나는 아직 답변하지 않았어요.");
+            }
+
         } else {
             // 상세 데이터 존재X
             tvTempInfo.setText("날씨 정보 없음");
-            tvCodiDesc.setText("데이터가 없습니다.");
-            tvKeywords.setText("정보 없음");
+            tvCodiDesc.setText("코디 정보가 없습니다.");
+            tvKeywords.setText("-");
         }
 
         return view;
