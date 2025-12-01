@@ -66,7 +66,6 @@ public class HomeCodyKeywordFragment extends Fragment {
     }
 
     private void fetchWeatherKeywords(int userId, int weatherId) {
-        // ... (API 요청 로직은 동일) ...
         HomeApi api = RetrofitClient.getClient("https://api.weather-robe.kro.kr/")
                 .create(HomeApi.class);
 
