@@ -3,19 +3,22 @@ package com.cookandroid.weatherrobe;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 import androidx.fragment.app.Fragment;
-
+import androidx.annotation.NonNull;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.util.Log; // Log import
 
 import com.cookandroid.weatherrobe.Home.HomeFragment;
 import com.cookandroid.weatherrobe.hourly.HourlyFragment;
 import com.cookandroid.weatherrobe.daily.DailyFragment;
 import com.cookandroid.weatherrobe.calendar.CalendarFragment;
+import com.cookandroid.weatherrobe.location.AppLocationManager; // 추가
+import com.cookandroid.weatherrobe.location.LocationUpdateListener; // 추가
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LocationUpdateListener {
 
     private View headerLayout;
     private ImageView headerLeftIcon;
@@ -23,8 +26,12 @@ public class MainActivity extends AppCompatActivity {
     private TextView headerTitle;
     private ImageView headerRightIcon;
     private View headerBottomBorder;
-
     private ImageView customStatusBar;
+
+    private AppLocationManager locationManager;
+    private double currentLatitude = 37.5665;
+    private double currentLongitude = 126.9780;
+    private boolean isLocationReady = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +58,11 @@ public class MainActivity extends AppCompatActivity {
 
         View bottomNav = findViewById(R.id.bottom_nav);
 
+
+        locationManager = new AppLocationManager(this, this);
+        locationManager.requestPermissionsAndStartUpdates();
+
+        // 초기 HomeFragment 로드
         replaceFragment(new HomeFragment());
         setHeaderStyle(true);
         setStatusBarImage(true);
@@ -59,7 +71,13 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigation.setup(bottomNav, tabId -> {
             if (tabId == R.id.tab_home) {
                 headerLayout.setVisibility(View.VISIBLE);
-                replaceFragment(new HomeFragment());
+
+                HomeFragment homeFragment = new HomeFragment();
+                replaceFragment(homeFragment);
+
+                if (isLocationReady) {
+                    homeFragment.updateLocation(currentLatitude, currentLongitude);
+                }
 
                 setHeaderStyle(true);
                 setStatusBarImage(true);
@@ -73,7 +91,13 @@ public class MainActivity extends AppCompatActivity {
 
             } else if (tabId == R.id.tab_daily) {
                 headerLayout.setVisibility(View.VISIBLE);
-                replaceFragment(new DailyFragment());
+
+                DailyFragment dailyFragment = new DailyFragment();
+                replaceFragment(dailyFragment);
+
+                if (isLocationReady) {
+                    dailyFragment.updateLocation(currentLatitude, currentLongitude);
+                }
 
                 setHeaderStyle(false);
                 setStatusBarImage(false);
@@ -85,6 +109,72 @@ public class MainActivity extends AppCompatActivity {
                 setStatusBarImage(false);
             }
         });
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (locationManager != null && locationManager.checkPermissions()) {
+            locationManager.startLocationUpdates();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (locationManager != null) {
+            locationManager.stopLocationUpdates();
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (locationManager != null && locationManager.handlePermissionResult(requestCode, grantResults)) {
+            // AppLocationManager에서 처리 완료
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    @Override
+    public void onLocationReceived(double latitude, double longitude) {
+        Log.d("MainActivity", "위치 수신 성공: Lat=" + latitude + ", Lon=" + longitude);
+        this.currentLatitude = latitude;
+        this.currentLongitude = longitude;
+        this.isLocationReady = true;
+
+        notifyCurrentFragment(latitude, longitude);
+
+        locationManager.stopLocationUpdates();
+    }
+
+    @Override
+    public void onPermissionDenied() {
+        Log.w("MainActivity", "위치 권한 거부됨. 기본 위치 사용.");
+        this.isLocationReady = true;
+        notifyCurrentFragment(currentLatitude, currentLongitude);
+    }
+
+    @Override
+    public void onLocationFailed(String error) {
+        Log.e("MainActivity", "위치 로드 실패: " + error);
+        this.isLocationReady = true;
+        notifyCurrentFragment(currentLatitude, currentLongitude);
+    }
+
+    private void notifyCurrentFragment(double latitude, double longitude) {
+        // 프래그먼트가 이미 화면에 있다면 findFragmentById로 찾습니다.
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+
+        if (currentFragment instanceof HomeFragment) {
+            ((HomeFragment) currentFragment).updateLocation(latitude, longitude);
+        }
+
+        if (currentFragment instanceof DailyFragment) {
+            ((DailyFragment) currentFragment).updateLocation(latitude, longitude);
+        }
     }
 
     private void setStatusBarImage(boolean isHome) {
