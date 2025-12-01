@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.facebook.shimmer.ShimmerFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/shimmer_view_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:shimmer_auto_start="true"   app:shimmer_duration="1000"     >
+
+    <LinearLayout
+        android:id="@+id/simmer_root_container"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:scrollbars="none"
+            android:overScrollMode="never">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <View
+                    android:layout_width="300dp"
+                    android:layout_height="400dp"
+                    android:layout_marginEnd="12dp"
+                    android:background="#E0E0E0"  />
+
+                <View
+                    android:layout_width="300dp"
+                    android:layout_height="400dp"
+                    android:layout_marginEnd="12dp"
+                    android:background="#E0E0E0"
+                    />
+
+                <View
+                    android:layout_width="300dp"
+                    android:layout_height="400dp"
+                    android:background="#E0E0E0"
+                    />
+
+            </LinearLayout>
+        </HorizontalScrollView>
+    </LinearLayout>
+
+</com.facebook.shimmer.ShimmerFrameLayout>
