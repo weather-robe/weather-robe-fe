@@ -17,6 +17,8 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 
 import com.cookandroid.weatherrobe.R;
+import android.widget.LinearLayout;
+
 
 public class ModalCalendarDialog extends DialogFragment {
 
@@ -24,8 +26,7 @@ public class ModalCalendarDialog extends DialogFragment {
     private String dateStr;
 
     // 상세조회 API 데이터
-    private CalendarResDTO.CalendarDetailDTO detailData;
-
+    private CalendarWeatherDTO detailData;
 
     // newInstance : 날짜 문자열만 전달
     public static ModalCalendarDialog newInstance(String date) {
@@ -37,7 +38,7 @@ public class ModalCalendarDialog extends DialogFragment {
     }
 
     // CalendarFragment에서 조회한 상세데이터 주입
-    public void setDetailData(CalendarResDTO.CalendarDetailDTO data) {
+    public void setDetailData(CalendarWeatherDTO data) {
         this.detailData = data;
     }
 
@@ -63,7 +64,10 @@ public class ModalCalendarDialog extends DialogFragment {
         TextView tvDate = view.findViewById(R.id.tvDateTitle);
         TextView tvTempInfo = view.findViewById(R.id.tvTempInfo);
         TextView tvCodiDesc = view.findViewById(R.id.tvCodiDescription);
-        TextView tvKeywords = view.findViewById(R.id.tvUserAnswer);
+        LinearLayout keywordContainer = view.findViewById(R.id.keywordContainer);
+
+        TextView tvKeywords = view.findViewById(R.id.tvKeywords);   // 키워드 영역
+        TextView tvUserAnswer = view.findViewById(R.id.tvUserAnswer); // 나는 ~~라고 답변했어요
 
         // 날짜 출력
         tvDate.setText(dateStr);
@@ -71,28 +75,84 @@ public class ModalCalendarDialog extends DialogFragment {
         // 상세 데이터가 존재하면 UI 구성
         if (detailData != null) {
 
-            // 온도
-            String tempText = String.format("최고 %.1f° / 최저 %.1f°",
-                    detailData.getTemp_max(),
-                    detailData.getTemp_min()
+            // 온도: 소수점은 반올림 처리
+            String tempText = String.format(
+                    "최고 %d° / 최저 %d°",
+                    Math.round(detailData.getTemp_max()),
+                    Math.round(detailData.getTemp_min())
             );
             tvTempInfo.setText(getColoredTemp(tempText));
 
             // 설명 텍스트
             tvCodiDesc.setText(detailData.getText());
 
-            // 키워드
+            // 코디 키워드
+            keywordContainer.removeAllViews(); // 기존 뷰 제거
+
+            if (detailData.getKeywords() != null && !detailData.getKeywords().isEmpty()) {
+
+                for (String keyword : detailData.getKeywords()) {
+
+                    TextView tv = new TextView(getContext());
+                    tv.setText(keyword);
+                    tv.setTextSize(14);
+                    tv.setTextColor(Color.parseColor("#111111"));
+                    tv.setBackgroundResource(R.drawable.label_bg_gary_line);
+                    tv.setPadding(25, 12, 25, 12);
+
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                    );
+                    params.setMargins(0, 0, 12, 0);
+                    tv.setLayoutParams(params);
+
+                    keywordContainer.addView(tv);
+                }
+
+            } else {
+            keywordContainer.removeAllViews();
+
+            TextView empty = new TextView(getContext());
+            empty.setText("추천 키워드가 없어요.");
+            empty.setTextSize(13);
+            empty.setTextColor(Color.parseColor("#B1B1B1"));
+
+            keywordContainer.addView(empty);
+        }
+
+
+        // 키워드
             if (detailData.getKeywords() != null && !detailData.getKeywords().isEmpty()) {
                 tvKeywords.setText(detailData.getKeywords().toString());
+            }
+
+            String feeling = detailData.getFeeling_status();
+            if (feeling != null && !feeling.isEmpty()) {
+                String answerText = String.format("나는 😃%s 이라고 답변했어요.", feeling);
+                tvUserAnswer.setText(answerText);
             } else {
-                tvKeywords.setText("추천 키워드가 없어요.");
+                tvUserAnswer.setText("답변 내용이 없습니다🥲");
+                tvUserAnswer.setTextSize(16);
+                tvUserAnswer.setTextColor(Color.parseColor("#111111"));
+
+
             }
 
         } else {
             // 상세 데이터 존재X
-            tvTempInfo.setText("날씨 정보 없음");
-            tvCodiDesc.setText("데이터가 없습니다.");
-            tvKeywords.setText("정보 없음");
+            tvTempInfo.setText(" 날씨 정보 없음");
+            tvTempInfo.setTextSize(12);
+            tvTempInfo.setTextColor(Color.parseColor("#B1B1B1"));
+
+            tvCodiDesc.setText("아직 날씨 정보가 없어서 알 수 없어요.");
+            tvCodiDesc.setTextSize(12);
+            tvCodiDesc.setTextColor(Color.parseColor("#B1B1B1"));
+
+            tvKeywords.setText("-");
+            tvKeywords.setTextSize(12);
+            tvKeywords.setTextColor(Color.parseColor("#B1B1B1"));
+
         }
 
         return view;

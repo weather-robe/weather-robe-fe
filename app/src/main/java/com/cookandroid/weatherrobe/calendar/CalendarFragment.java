@@ -42,7 +42,7 @@ public class CalendarFragment extends Fragment {
 
         // Retrofit Calendar API 초기화 (기존 주석 유지)
         calendarService = RetrofitClient
-                .getClient("https://weather-robe.site")
+                .getClient("https://weather-robe.site/")
                 .create(CalendarService.class);
     }
 
@@ -209,29 +209,27 @@ public class CalendarFragment extends Fragment {
     // 상세 조회 API (기존 주석 유지)
     private void fetchCalendarDetail(int userId, String dateStr) {
 
-        Log.d("CAL_DETAIL", "상세조회 API 실행됨: " + dateStr);   // 로그
+        Log.d("CAL_DETAIL", "상세조회 API 실행됨: " + dateStr);
 
         calendarService.getCalendarDetail(userId, dateStr)
-                .enqueue(new Callback<CommonApiResponse<CalendarResDTO.CalendarDetailDTO>>() {
+                .enqueue(new Callback<CommonApiResponse<CalendarDetailWrapper>>() {
 
                     @Override
                     public void onResponse(
-                            Call<CommonApiResponse<CalendarResDTO.CalendarDetailDTO>> call,
-                            Response<CommonApiResponse<CalendarResDTO.CalendarDetailDTO>> response) {
+                            Call<CommonApiResponse<CalendarDetailWrapper>> call,
+                            Response<CommonApiResponse<CalendarDetailWrapper>> response) {
 
                         if (!isAdded() || response.body() == null) {
-                            Log.e("CAL_DETAIL", "응답 body null");   // 로그
+                            Log.e("CAL_DETAIL", "응답 body null");
                             return;
                         }
 
-                        Log.d("CAL_DETAIL", "상세조회 응답 코드: " + response.code());   // 로그
-
                         if (response.isSuccessful() && response.body().isSuccessful()) {
 
-                            CalendarResDTO.CalendarDetailDTO detail =
-                                    response.body().getSuccess();
+                            // ⬅⬅⬅ 여기! success.weather 객체 추출
+                            CalendarWeatherDTO detail =
+                                    response.body().getSuccess().getWeather();
 
-                            // 모달 띄우기 (기존 주석 유지)
                             ModalCalendarDialog dialog =
                                     ModalCalendarDialog.newInstance(dateStr);
 
@@ -242,10 +240,11 @@ public class CalendarFragment extends Fragment {
 
                     @Override
                     public void onFailure(
-                            Call<CommonApiResponse<CalendarResDTO.CalendarDetailDTO>> call,
+                            Call<CommonApiResponse<CalendarDetailWrapper>> call,
                             Throwable t) {
-                        Log.e("CAL_DETAIL", "상세 조회 실패: " + t.getMessage());   // 로그
+                        Log.e("CAL_DETAIL", "상세 조회 실패: " + t.getMessage());
                     }
                 });
     }
+
 }
