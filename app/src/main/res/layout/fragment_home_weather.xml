@@ -237,6 +237,7 @@
                     android:fontFamily="@font/nanumbarungothic"/>
             </LinearLayout>
 
+            <!-- 편집 -->
             <LinearLayout
                 android:gravity="center"
                 android:orientation="vertical"
