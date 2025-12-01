@@ -20,8 +20,9 @@ public interface CalendarService {
 
     // 캘린더 상세 조회
     @GET("/v1/api/user/{userId}/calender/detail")
-    Call<CommonApiResponse<CalendarResDTO.CalendarDetailDTO>> getCalendarDetail(
+    Call<CommonApiResponse<CalendarDetailWrapper>> getCalendarDetail(
             @Path("userId") int userId,
             @Query("date") String date
     );
+
 }

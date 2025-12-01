@@ -20,6 +20,8 @@ import com.cookandroid.weatherrobe.Home.model.Today;
 import com.cookandroid.weatherrobe.Home.model.Yesterday;
 import com.cookandroid.weatherrobe.R;
 import com.cookandroid.weatherrobe.RetrofitClient;
+import com.cookandroid.weatherrobe.hourly.HourlyRequest;
+import com.google.gson.Gson;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -58,6 +60,7 @@ public class HomeWeatherFragment extends Fragment {
         ivWeather = v.findViewById(R.id.iv_weather);
 
         tvTemp = v.findViewById(R.id.tv_temp);
+
         tvYesterdayHigh = v.findViewById(R.id.tv_yesterday_high);
         tvYesterdayLow = v.findViewById(R.id.tv_yesterday_low);
 
@@ -217,7 +220,6 @@ public class HomeWeatherFragment extends Fragment {
             }
         });
     }
-
     private void updateWeatherUI() {
         tvTemp.setText(toTemp(current.temp));
         ivWeather.setImageResource(getWeatherIcon(current.icon));
@@ -247,6 +249,7 @@ public class HomeWeatherFragment extends Fragment {
         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 
         if (icon.startsWith("09") || icon.startsWith("10")) {
+
             root.setBackgroundResource(R.drawable.bg_weather_rainy);
             return;
         }
@@ -278,18 +281,26 @@ public class HomeWeatherFragment extends Fragment {
 
     private int getWeatherIcon(String icon) {
         switch (icon) {
+            // 맑음 (Sunny)
             case "01d":
             case "01n":
                 return R.drawable.ic_weather_sunny;
+            // 구름 조금 (Partly Cloudy)
             case "02d":
             case "02n":
                 return R.drawable.ic_weather_cloudy_day;
+            // 흐림 (Cloudy)
             case "03d": case "03n":
             case "04d": case "04n":
                 return R.drawable.ic_weather_cloudy;
+            // 비 (Rain)
             case "09d": case "09n":
             case "10d": case "10n":
                 return R.drawable.ic_weather_rainy;
+            // 눈, 안개, 천둥 등 → 아이콘 없으니 흐림으로 통일
+            case "11d": case "11n":
+            case "13d": case "13n":
+            case "50d": case "50n":
             default:
                 return R.drawable.ic_weather_cloudy;
         }

@@ -9,7 +9,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity; // AppCompatActivity Import
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -27,14 +27,14 @@ public class AppLocationManager {
     private LocationCallback locationCallback;
     private LocationUpdateListener listener;
     private Context context;
-    private Fragment fragment;
+    private AppCompatActivity activity;
 
     private Location lastSentLocation;
     private static final float MIN_DISTANCE_CHANGE_FOR_UPDATE = 100.0f;
 
-    public AppLocationManager(Fragment fragment, LocationUpdateListener listener) {
-        this.fragment = fragment;
-        this.context = fragment.requireContext().getApplicationContext();
+    public AppLocationManager(AppCompatActivity activity, LocationUpdateListener listener) {
+        this.activity = activity;
+        this.context = activity.getApplicationContext();
         this.listener = listener;
         initLocationClient();
     }
@@ -73,7 +73,7 @@ public class AppLocationManager {
         if (checkPermissions()) {
             startLocationUpdates();
         } else {
-            fragment.requestPermissions(
+            activity.requestPermissions(
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     LOCATION_PERMISSION_REQUEST_CODE
             );
