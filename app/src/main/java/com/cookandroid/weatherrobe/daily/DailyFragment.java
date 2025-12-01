@@ -29,10 +29,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import com.cookandroid.weatherrobe.location.AppLocationManager;
-import com.cookandroid.weatherrobe.location.LocationUpdateListener;
-
-public class DailyFragment extends Fragment implements LocationUpdateListener {
+public class DailyFragment extends Fragment{
 
     private static final String BASE_URL = "https://api.weather-robe.kro.kr/";
     private DailyService dailyService;
@@ -40,19 +37,14 @@ public class DailyFragment extends Fragment implements LocationUpdateListener {
     private DailyWeatherAdapter weatherAdapter;
     private final List<DailyWeatherData> dataList = new ArrayList<>();
     private final DecimalFormat tempFormat = new DecimalFormat("0°");
-    private AppLocationManager locationManager;
-    // 서울 기본 값 설정
-    private final double DEFAULT_LAT = 37.5665;
-    private final double DEFAULT_LON = 126.9780;
+    private double currentLat = 37.5665;
+    private double currentLon = 126.9780;
+    private boolean isDataLoaded = false;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         initRetrofit();
-
-        if (getContext() != null) {
-            locationManager = new AppLocationManager(this, this);
-        }
 
         return inflater.inflate(R.layout.fragment_daily, container, false);
     }
@@ -66,54 +58,31 @@ public class DailyFragment extends Fragment implements LocationUpdateListener {
         recyclerView.setAdapter(weatherAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
-        if (locationManager != null) {
-            locationManager.requestPermissionsAndStartUpdates();
-        } else {
-            fetchDailyWeather(1, DEFAULT_LAT, DEFAULT_LON);
+        if (!isDataLoaded) {
+            fetchDailyWeather(1, currentLat, currentLon);
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (locationManager != null && locationManager.checkPermissions()) {
-            locationManager.startLocationUpdates();
-        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if (locationManager != null) {
-            locationManager.stopLocationUpdates();
+    }
+    public void updateLocation(double latitude, double longitude) {
+        if (isDataLoaded && currentLat == latitude && currentLon == longitude) {
+            return;
         }
-    }
+        this.currentLat = latitude;
+        this.currentLon = longitude;
+        this.isDataLoaded = false;
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (locationManager != null && locationManager.handlePermissionResult(requestCode, grantResults)) {
-        } else {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (isAdded()) {
+            fetchDailyWeather(1, currentLat, currentLon);
         }
-    }
-
-    @Override
-    public void onLocationReceived(double latitude, double longitude) {
-        Log.d("DailyFragment", "위치 수신 성공: Lat=" + latitude + ", Lon=" + longitude);
-        // 위치를 받아 백엔드에 전송 (날씨 업데이트)
-        fetchDailyWeather(1, latitude, longitude);
-    }
-
-    @Override
-    public void onPermissionDenied() {
-        Log.w("DailyFragment", "위치 권한 거부됨. 기본 위치 사용.");
-        fetchDailyWeather(1, DEFAULT_LAT, DEFAULT_LON);
-    }
-
-    @Override
-    public void onLocationFailed(String error) {
-        Log.e("DailyFragment", "위치 로드 실패: " + error);
-        fetchDailyWeather(1, DEFAULT_LAT, DEFAULT_LON);
     }
 
     private void initRetrofit() {
@@ -142,6 +111,7 @@ public class DailyFragment extends Fragment implements LocationUpdateListener {
 
                 if (response.isSuccessful() && apiResponse.isSuccessful()) {
                     Log.d("API_CALL", "일자별 날씨 로드 성공");
+                    isDataLoaded = true; // 성공적으로 로드 완료
 
                     DailyResDTO.PostDailyDTO successData = apiResponse.getSuccess();
                     updateWeatherList(successData);

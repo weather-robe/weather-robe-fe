@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <!-- 🔳 회색 박스 전체 -->
     <LinearLayout
         android:id="@+id/cody_container"
         android:orientation="vertical"
@@ -19,26 +18,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         >
-
-        <!-- ✨ 텍스트 영역 (스크롤 X) -->
-        <TextView
-            android:text="오늘의 코디 추천"
-            android:fontFamily="@font/nanumbarungothicbold"
-            android:textSize="18sp"
-            android:textColor="#111111"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:text="코디 키워드를 참고한 실제 코디 추천입니다."
-            android:fontFamily="@font/nanumbarungothic"
-            android:letterSpacing="-0.02"
-            android:textColor="#5D5D5D"
-            android:layout_marginTop="8dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <!-- ✨ 스크롤 되는 이미지 영역만 ScrollView 안에 있음 -->
         <HorizontalScrollView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,29 +26,14 @@
             android:overScrollMode="never">
 
             <LinearLayout
-                android:orientation="horizontal"
+                android:id="@+id/ll_image_container" android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_width="300dp"
+                <View 
+                android:layout_width="300dp"
                     android:layout_height="400dp"
-                    android:layout_marginEnd="12dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/sample" />
-
-                <ImageView
-                    android:layout_width="300dp"
-                    android:layout_height="400dp"
-                    android:layout_marginEnd="12dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/sample" />
-
-                <ImageView
-                    android:layout_width="300dp"
-                    android:layout_height="400dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/sample" />
+                    android:layout_marginEnd="30dp"
+                    android:scaleType="centerCrop"/>
 
             </LinearLayout>
         </HorizontalScrollView>

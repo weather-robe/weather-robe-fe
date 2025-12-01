@@ -15,11 +15,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.cookandroid.weatherrobe.Home.model.Current;
+import com.cookandroid.weatherrobe.Home.model.SharedWeatherViewModel;
 import com.cookandroid.weatherrobe.Home.model.Today;
 import com.cookandroid.weatherrobe.Home.model.Yesterday;
 import com.cookandroid.weatherrobe.R;
 import com.cookandroid.weatherrobe.RetrofitClient;
 import com.cookandroid.weatherrobe.hourly.HourlyRequest;
+import androidx.lifecycle.ViewModelProvider;
 import com.google.gson.Gson;
 
 import java.util.Calendar;
@@ -29,7 +31,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class HomeWeatherFragment extends Fragment {
-
+    private SharedWeatherViewModel sharedViewModel;
     private ImageView ivWeather, ivYesterdayHigh, ivYesterdayLow;
     private TextView tvTemp, tvFeel, tvPop, tvPm;
     private TextView tvYesterdayHigh, tvYesterdayLow;
@@ -43,6 +45,8 @@ public class HomeWeatherFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home_weather, container, false);
 
         initViews(view);
+        sharedViewModel = new ViewModelProvider(requireActivity())
+                .get(SharedWeatherViewModel.class);
         loadWeatherData();
 
         return view;
@@ -97,7 +101,13 @@ public class HomeWeatherFragment extends Fragment {
         Current c = res.success.current;
         Today t = res.success.today;
         Yesterday y = res.success.yesterday;
+        int TodayWeatherId = t.weatherId;
+        String TodayWeatherFeedback = t.feedback;
 
+        sharedViewModel.setWeatherId(TodayWeatherId);
+        sharedViewModel.setWeatherFeedback(TodayWeatherFeedback);
+
+        Log.d("HomeWeatherFragment", "Weather ID (" + TodayWeatherId + ")를 ViewModel에 저장했습니다.");
         Log.d("CHECK",
                 "today.min=" + t.temp.min +
                         " today.max=" + t.temp.max +

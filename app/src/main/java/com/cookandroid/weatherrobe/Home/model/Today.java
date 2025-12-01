@@ -3,6 +3,7 @@ package com.cookandroid.weatherrobe.Home.model;
 public class Today {
     public int weatherId;
     public Temp temp;
+    public String feedback;
     public double feels_like;
     public int humidity;
     public double pop;
