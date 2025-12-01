@@ -13,12 +13,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.bumptech.glide.Glide; // Glide 임포트
+import com.bumptech.glide.Glide;
 import com.cookandroid.weatherrobe.Home.dto.HomeResDTO;
 import com.cookandroid.weatherrobe.Home.model.SharedWeatherViewModel;
 import com.cookandroid.weatherrobe.R;
-import com.cookandroid.weatherrobe.RetrofitClient; // 가정
-import com.cookandroid.weatherrobe.common.CommonApiResponse; // 가정
+import com.cookandroid.weatherrobe.RetrofitClient;
+import com.cookandroid.weatherrobe.common.CommonApiResponse;
+import com.facebook.shimmer.ShimmerFrameLayout; // ShimmerFrameLayout 임포트
 
 import java.util.List;
 
@@ -31,6 +32,8 @@ public class HomeCodyRecommendFragment extends Fragment {
     private static final String TAG = "CodyRecommendFragment";
     private SharedWeatherViewModel sharedViewModel;
     private LinearLayout llImageContainer;
+    private ShimmerFrameLayout shimmerViewContainer; // ShimmerFrameLayout 참조 변수
+    private View codyScrollView; // HorizontalScrollView 참조 변수
 
     @Nullable
     @Override
@@ -41,6 +44,12 @@ public class HomeCodyRecommendFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home_cody_recommend, container, false);
 
         llImageContainer = view.findViewById(R.id.ll_image_container);
+
+        // ShimmerFrameLayout과 실제 스크롤뷰 참조
+        View includeView = view.findViewById(R.id.simmer_layout);
+        shimmerViewContainer = includeView.findViewById(R.id.shimmer_view_container);
+        codyScrollView = view.findViewById(R.id.cody_scrollview);
+
         sharedViewModel = new ViewModelProvider(requireActivity())
                 .get(SharedWeatherViewModel.class);
         return view;
@@ -49,6 +58,9 @@ public class HomeCodyRecommendFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // 초기 상태: Shimmer 시작 (API 호출 전)
+        showSimmer();
 
         sharedViewModel.getWeatherId().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
@@ -68,7 +80,7 @@ public class HomeCodyRecommendFragment extends Fragment {
         Log.d(TAG, "이미지 요청: User ID " + userId + ", Weather ID " + weatherId);
 
         Call<CommonApiResponse<HomeResDTO.PostImageDTO>> call =
-                apiService.getWeatherImages(userId, weatherId); // HomeApi의 메서드 호출
+                apiService.getWeatherImages(userId, weatherId);
 
         call.enqueue(new Callback<CommonApiResponse<HomeResDTO.PostImageDTO>>() {
             @Override
@@ -93,6 +105,9 @@ public class HomeCodyRecommendFragment extends Fragment {
                 } else {
                     Log.e(TAG, "API 호출 실패. Status: " + res.code() + ", Message: " + (res.errorBody() != null ? res.errorBody().toString() : "N/A"));
                 }
+
+                // 성공/실패와 관계없이 API 응답이 오면 Shimmer 중지
+                hideSimmer();
             }
 
             @Override
@@ -100,6 +115,8 @@ public class HomeCodyRecommendFragment extends Fragment {
                     @NonNull Call<CommonApiResponse<HomeResDTO.PostImageDTO>> call,
                     @NonNull Throwable t) {
                 Log.e(TAG, "API 통신 오류 발생", t);
+                // 통신 실패 시에도 Shimmer 중지
+                hideSimmer();
             }
         });
     }
@@ -121,6 +138,7 @@ public class HomeCodyRecommendFragment extends Fragment {
 
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(widthPx, heightPx);
 
+                // 마지막 이미지가 아니면 마진 추가 (12dp 사용)
                 if (i < imageUrls.size() - 1) {
                     params.rightMargin = dpToPx(12);
                 }
@@ -130,7 +148,6 @@ public class HomeCodyRecommendFragment extends Fragment {
 
                 Glide.with(this)
                         .load(imageUrl)
-                        .placeholder(R.drawable.sample)
                         .into(imageView);
 
                 llImageContainer.addView(imageView);
@@ -138,6 +155,28 @@ public class HomeCodyRecommendFragment extends Fragment {
             Log.d(TAG, "코디 이미지 " + imageUrls.size() + "개 업데이트 완료.");
         } else {
             Log.d(TAG, "받은 코디 이미지가 없습니다.");
+        }
+    }
+
+    // Shimmer View를 표시하고 애니메이션 시작, 실제 View를 숨기는 메소드
+    private void showSimmer() {
+        if (shimmerViewContainer != null) {
+            shimmerViewContainer.setVisibility(View.VISIBLE);
+            shimmerViewContainer.startShimmer(); // Shimmer 애니메이션 시작
+        }
+        if (codyScrollView != null) {
+            codyScrollView.setVisibility(View.GONE);
+        }
+    }
+
+    // Shimmer View를 숨기고 애니메이션 중지, 실제 View를 표시하는 메소드
+    private void hideSimmer() {
+        if (shimmerViewContainer != null) {
+            shimmerViewContainer.stopShimmer(); // Shimmer 애니메이션 중지
+            shimmerViewContainer.setVisibility(View.GONE);
+        }
+        if (codyScrollView != null) {
+            codyScrollView.setVisibility(View.VISIBLE);
         }
     }
 

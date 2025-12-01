@@ -16,27 +16,38 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        >
-        <HorizontalScrollView
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:scrollbars="none"
-            android:overScrollMode="never">
+            android:layout_height="wrap_content">
 
-            <LinearLayout
-                android:id="@+id/ll_image_container" android:orientation="horizontal"
+            <include
+                android:id="@+id/simmer_layout"
+                layout="@layout/fragment_home_cody_recommend_simmer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+            <HorizontalScrollView
+                android:id="@+id/cody_scrollview"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <View 
-                android:layout_width="300dp"
-                    android:layout_height="400dp"
-                    android:layout_marginEnd="30dp"
-                    android:scaleType="centerCrop"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:scrollbars="none"
+                android:overScrollMode="never"
+                android:visibility="gone"
+                >
 
-            </LinearLayout>
-        </HorizontalScrollView>
+                <LinearLayout
+                    android:id="@+id/ll_image_container"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </LinearLayout>
+            </HorizontalScrollView>
+
+        </FrameLayout>
 
     </LinearLayout>
 
