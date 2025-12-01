@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/home_weather_dialog">
+    android:background="@drawable/home_weather_dialog"
+    android:clipToOutline="true"
+    android:layout_marginTop="87dp">
 
     <!-- grabber: 패딩 영향 밖에서 화면 전체 기준 중앙 정렬 -->
     <LinearLayout
@@ -20,7 +22,6 @@
             android:layout_marginBottom="35dp"/>
     </LinearLayout>
 
-    <!-- 콘텐츠: 패딩 안에서 왼쪽 정렬 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
