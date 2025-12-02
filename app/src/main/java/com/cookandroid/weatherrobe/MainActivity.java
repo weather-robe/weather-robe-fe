@@ -1,6 +1,8 @@
 package com.cookandroid.weatherrobe;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.core.view.GravityCompat;
 import androidx.core.view.WindowCompat;
 import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
@@ -26,7 +28,6 @@ public class MainActivity extends AppCompatActivity implements LocationUpdateLis
     private TextView headerTitle;
     private ImageView headerRightIcon;
     private View headerBottomBorder;
-    private ImageView customStatusBar;
 
     private AppLocationManager locationManager;
     private double currentLatitude = 37.5665;
@@ -37,17 +38,33 @@ public class MainActivity extends AppCompatActivity implements LocationUpdateLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-        );
-
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-
         setContentView(R.layout.activity_main);
 
-        customStatusBar = findViewById(R.id.custom_status_bar);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        ImageView menuButton = findViewById(R.id.header_left_icon);
+
+        menuButton.setOnClickListener(v -> {
+            drawer.openDrawer(GravityCompat.START);
+        });
+
+
+        headerLayout = findViewById(R.id.header_root);
+
+        // 상태바 높이 계산해서 헤더에 자동 적용
+        int statusBarHeightId = getResources()
+                .getIdentifier("status_bar_height", "dimen", "android");
+
+        int statusBarHeight = statusBarHeightId > 0
+                ? getResources().getDimensionPixelSize(statusBarHeightId)
+                : 0;
+
+        headerLayout.setPadding(0, statusBarHeight, 0, 0);
+
+
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), true);
+
+
+
 
         headerLayout = findViewById(R.id.header_root);
         headerLeftIcon = findViewById(R.id.header_left_icon);
@@ -65,8 +82,6 @@ public class MainActivity extends AppCompatActivity implements LocationUpdateLis
         // 초기 HomeFragment 로드
         replaceFragment(new HomeFragment());
         setHeaderStyle(true);
-        setStatusBarImage(true);
-        headerLayout.setVisibility(View.VISIBLE);
 
         BottomNavigation.setup(bottomNav, tabId -> {
             if (tabId == R.id.tab_home) {
@@ -80,14 +95,12 @@ public class MainActivity extends AppCompatActivity implements LocationUpdateLis
                 }
 
                 setHeaderStyle(true);
-                setStatusBarImage(true);
 
             } else if (tabId == R.id.tab_hourly) {
                 headerLayout.setVisibility(View.VISIBLE);
                 replaceFragment(new HourlyFragment());
 
                 setHeaderStyle(false);
-                setStatusBarImage(false);
 
             } else if (tabId == R.id.tab_daily) {
                 headerLayout.setVisibility(View.VISIBLE);
@@ -100,13 +113,11 @@ public class MainActivity extends AppCompatActivity implements LocationUpdateLis
                 }
 
                 setHeaderStyle(false);
-                setStatusBarImage(false);
 
             } else if (tabId == R.id.tab_calendar) {
                 headerLayout.setVisibility(View.GONE);
                 replaceFragment(new CalendarFragment());
 
-                setStatusBarImage(false);
             }
         });
     }
@@ -177,15 +188,7 @@ public class MainActivity extends AppCompatActivity implements LocationUpdateLis
         }
     }
 
-    private void setStatusBarImage(boolean isHome) {
-        if (isHome) {
-            customStatusBar.setImageResource(R.drawable.ic_menu_white);
-            customStatusBar.setVisibility(View.VISIBLE);
-        } else {
-            customStatusBar.setImageResource(R.drawable.ic_menu_black);
-            customStatusBar.setVisibility(View.VISIBLE);
-        }
-    }
+
 
     private void setHeaderStyle(boolean isHome) {
         if (headerLayout == null ||
