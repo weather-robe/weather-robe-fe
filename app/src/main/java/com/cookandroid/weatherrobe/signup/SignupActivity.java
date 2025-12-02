@@ -42,6 +42,9 @@ public class SignupActivity extends AppCompatActivity {
     private LinearLayout idErrorLayout, pwErrorLayout, pwCheckErrorLayout, emailErrorLayout;
     private ImageView idWarn, pwWarn, pwCheckWarn, emailWarn;
     private TextView idError, pwError, pwCheckError, emailError;
+    private ImageView pwToggle, pwCheckToggle;
+    private boolean isPwVisible = false;
+    private boolean isPwCheckVisible = false;
 
     private signupService api;
 
@@ -69,6 +72,9 @@ public class SignupActivity extends AppCompatActivity {
         inputPw = findViewById(R.id.input_pw);
         inputPwCheck = findViewById(R.id.input_pw_check);
         inputEmail = findViewById(R.id.input_email);
+
+        pwToggle = findViewById(R.id.pw_toggle);
+        pwCheckToggle = findViewById(R.id.pw_check_toggle);
 
         serviceCheck = findViewById(R.id.service_check);
         privacyCheck = findViewById(R.id.privacy_check);
@@ -106,6 +112,28 @@ public class SignupActivity extends AppCompatActivity {
             Log.d("BTN", "clicked!!");
             sendSignupRequest();
         });
+
+        pwToggle.setOnClickListener(v -> {
+            togglePassword(inputPw, pwToggle, isPwVisible);
+            isPwVisible = !isPwVisible;
+        });
+
+        pwCheckToggle.setOnClickListener(v -> {
+            togglePassword(inputPwCheck, pwCheckToggle, isPwCheckVisible);
+            isPwCheckVisible = !isPwCheckVisible;
+        });
+    }
+
+    private void togglePassword(EditText editText, ImageView toggleIcon, boolean isVisibleFlag) {
+        if (isVisibleFlag) {
+            editText.setTransformationMethod(android.text.method.PasswordTransformationMethod.getInstance());
+            toggleIcon.setImageResource(R.drawable.ic_eye_off);
+        } else {
+            editText.setTransformationMethod(null);
+            toggleIcon.setImageResource(R.drawable.ic_eye_on);
+        }
+
+        editText.setSelection(editText.getText().length());
     }
 
     private void setValidationWatcher() {
