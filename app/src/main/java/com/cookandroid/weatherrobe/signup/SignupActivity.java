@@ -1,4 +1,4 @@
-package com.cookandroid.weatherrobe;
+package com.cookandroid.weatherrobe.signup;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -8,19 +8,28 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.WindowCompat;
+
+import com.cookandroid.weatherrobe.LoginActivity;
+import com.cookandroid.weatherrobe.R;
+import com.cookandroid.weatherrobe.signup.RetrofitClient;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -33,11 +42,15 @@ public class SignupActivity extends AppCompatActivity {
     private ImageView idWarn, pwWarn, pwCheckWarn, emailWarn;
     private TextView idError, pwError, pwCheckError, emailError;
 
+    private signupService api;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_signup);
+
+        api = RetrofitClient.getInstance().create(signupService.class);
 
         initViews();
         setListeners();
@@ -79,11 +92,7 @@ public class SignupActivity extends AppCompatActivity {
         serviceView.setOnClickListener(v -> openDialog(R.layout.service_dialog));
         privacyView.setOnClickListener(v -> openDialog(R.layout.privacy_dialog));
 
-        btnCheck.setOnClickListener(v -> {
-            Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-        });
+        btnCheck.setOnClickListener(v -> sendSignupRequest());
     }
 
     private void setValidationWatcher() {
@@ -96,6 +105,10 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 Log.d("WATCHER", "typing detected: " + s);
+
+                idErrorLayout.setVisibility(View.GONE);
+                emailErrorLayout.setVisibility(View.GONE);
+
                 validateFields();
                 updateCheckButtonState();
             }
@@ -199,6 +212,74 @@ public class SignupActivity extends AppCompatActivity {
             btnCheck.setEnabled(false);
         }
     }
+
+    private void sendSignupRequest() {
+
+        if (!isAllValid()) return;
+
+        String id = inputId.getText().toString().trim();
+        String pw = inputPw.getText().toString().trim();
+        String email = inputEmail.getText().toString().trim();
+
+        Map<String, String> body = new HashMap<>();
+        body.put("loginId", id);
+        body.put("password", pw);
+        body.put("email", email);
+        body.put("name", "이름"); // 필요하면 수정
+
+        api.signup(body).enqueue(new Callback<Map<String, Object>>() {
+            @Override
+            public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> res) {
+
+                if (res.isSuccessful()) {
+                    Log.d("SIGNUP", "회원가입 성공");
+                    startActivity(new Intent(SignupActivity.this, LoginActivity.class));
+                    finish();
+                }
+                else if (res.code() == 409) {
+                    try {
+                        String errorBody = res.errorBody().string();
+                        JSONObject json = new JSONObject(errorBody);
+                        JSONObject error = json.getJSONObject("error");
+                        String errorCode = error.getString("errorCode");
+
+                        // 입력 시 다시 사라지도록 기본은 숨김
+                        idErrorLayout.setVisibility(View.GONE);
+                        emailErrorLayout.setVisibility(View.GONE);
+
+                        if (errorCode.equals("duplicate_loginId")) {
+                            idErrorLayout.setVisibility(View.VISIBLE);
+                            idWarn.setVisibility(View.VISIBLE);
+                            idError.setVisibility(View.VISIBLE);
+                            idError.setText("이미 존재하는 아이디입니다.");
+                        }
+
+                        if (errorCode.equals("duplicate_email")) {
+                            emailErrorLayout.setVisibility(View.VISIBLE);
+                            emailWarn.setVisibility(View.VISIBLE);
+                            emailError.setVisibility(View.VISIBLE);
+                            emailError.setText("이미 존재하는 이메일입니다.");
+                        }
+
+                    } catch (Exception e) {
+                        Log.e("SIGNUP", "409 처리 중 JSON 파싱 오류");
+                    }
+                }
+                else if (res.code() == 400) {
+                    Log.e("SIGNUP", "잘못된 요청 (400)");
+                }
+                else {
+                    Log.e("SIGNUP", "알 수 없는 오류: " + res.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Map<String, Object>> call, Throwable t) {
+                Log.e("SIGNUP", "서버 연결 실패: " + t.getMessage());
+            }
+        });
+    }
+
 
     private void openDialog(int layoutRes) {
         Dialog dialog = new Dialog(this);

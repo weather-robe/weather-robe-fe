@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.cookandroid.weatherrobe.signup.SignupActivity;
+
 public class LoginActivity extends AppCompatActivity {
 
     private EditText inputId;
