@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card_root"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/home_dialog_card">
+
+        <ImageView
+            android:id="@+id/card_icon"
+            android:src="@drawable/ic_pm_good"
+            android:layout_marginTop="8dp"
+            android:layout_width="34dp"
+            android:layout_height="34dp"/>
+
+        <TextView
+            android:id="@+id/card_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="좋음"
+            android:textColor="#111111"
+            android:textSize="14sp"
+            android:fontFamily="@font/nanumbarungothicbold"
+            android:layout_marginTop="5dp" />
+
+        <TextView
+            android:id="@+id/card_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="초미세먼지"
+            android:textColor="#111111"
+            android:fontFamily="@font/nanumbarungothic"
+            android:textSize="11sp"/>
+    </LinearLayout>
