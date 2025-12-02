@@ -22,6 +22,8 @@ import com.cookandroid.weatherrobe.R;
 import com.cookandroid.weatherrobe.RetrofitClient;
 import com.cookandroid.weatherrobe.hourly.HourlyRequest;
 import com.google.gson.Gson;
+import com.cookandroid.weatherrobe.Home.model.SharedWeatherViewModel;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -32,7 +34,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class HomeWeatherFragment extends Fragment {
-
+    private SharedWeatherViewModel sharedViewModel; // 전역 변수 용으로 필요 feat.수현
     private ImageView ivWeather, ivYesterdayHigh, ivYesterdayLow, ivEdit;
     private TextView tvTemp, tvYesterdayHigh, tvYesterdayLow;
 
@@ -49,6 +51,9 @@ public class HomeWeatherFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_home_weather, container, false);
+
+        sharedViewModel = new ViewModelProvider(requireActivity()) // 전역 변수 용으로 필요 feat.수현
+                .get(SharedWeatherViewModel.class);
 
         initViews(view);
         loadWeatherData();
@@ -209,7 +214,7 @@ public class HomeWeatherFragment extends Fragment {
                 yesterday = res.body().success.yesterday;
 
                 updateWeatherUI();
-
+                setSharedViewModelValue(today.weatherId, today.feedback);
                 // 홈 화면 기본 3개 반영
                 applySelectedOptions(Arrays.asList("FEEL", "POP", "PM10"));
             }
@@ -310,5 +315,10 @@ public class HomeWeatherFragment extends Fragment {
         if (diff > 0) iv.setImageResource(R.drawable.ic_arrow_up);
         else if (diff < 0) iv.setImageResource(R.drawable.ic_arrow_down);
         else iv.setImageResource(R.drawable.ic_same);
+    }
+
+    private void setSharedViewModelValue(int weatherId, String feedback) {
+        sharedViewModel.setWeatherId(weatherId);
+        sharedViewModel.setWeatherFeedback(feedback);
     }
 }
