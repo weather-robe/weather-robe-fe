@@ -99,10 +99,12 @@ public class HomeCodyKeywordFragment extends Fragment {
         if (shimmerContainer != null && dataLayoutWrapper != null) {
             dataLayoutWrapper.setVisibility(View.GONE);
 
+            shimmerContainer.setVisibility(View.GONE);
+
             if (shimmerContainer.getParent() instanceof View) {
-                ((View) shimmerContainer.getParent()).setVisibility(View.VISIBLE);
+                ((View) shimmerContainer.getParent()).setVisibility(View.GONE);
             }
-            shimmerContainer.startShimmer();
+            dataLayoutWrapper.setVisibility(View.VISIBLE);
         }
     }
 
@@ -113,7 +115,6 @@ public class HomeCodyKeywordFragment extends Fragment {
             if (shimmerContainer.getParent() instanceof View) {
                 ((View) shimmerContainer.getParent()).setVisibility(View.GONE);
             }
-
             dataLayoutWrapper.setVisibility(View.VISIBLE);
         }
     }
