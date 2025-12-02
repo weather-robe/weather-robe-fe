@@ -1,4 +1,4 @@
-package com.cookandroid.weatherrobe;
+package com.cookandroid.weatherrobe.login;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -16,6 +16,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.cookandroid.weatherrobe.MainActivity;
+import com.cookandroid.weatherrobe.R;
+import com.cookandroid.weatherrobe.signup.SignupActivity;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -40,9 +48,16 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         TextWatcher watcher = new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void afterTextChanged(Editable s) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
                 updateButton();
             }
         };
@@ -52,19 +67,7 @@ public class LoginActivity extends AppCompatActivity {
 
         updateButton();
 
-        btnLogin.setOnClickListener(v -> {
-            String id = inputId.getText().toString().trim();
-            String pw = inputPw.getText().toString().trim();
-
-            if (!id.equals("test") || !pw.equals("1234")) {
-                showLoginFailDialog();
-                return;
-            }
-
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        });
+        btnLogin.setOnClickListener(v -> sendLoginRequest());
     }
 
     private void updateButton() {
@@ -77,6 +80,40 @@ public class LoginActivity extends AppCompatActivity {
             btnLogin.setBackgroundResource(R.drawable.login_default);
         }
     }
+
+        private void sendLoginRequest() {
+            String id = inputId.getText().toString().trim();
+            String pw = inputPw.getText().toString().trim();
+
+            LoginRequest body = new LoginRequest(id, pw);
+
+            Call<LoginResponse> call = RetrofitClient.getLoginService().login(body);
+            call.enqueue(new Callback<LoginResponse>() {
+                @Override
+                public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+
+                    if (!response.isSuccessful()) {
+                        showLoginFailDialog();
+                        return;
+                    }
+
+                    LoginResponse res = response.body();
+                    if (res == null || !"SUCCESS".equals(res.resultType)) {
+                        showLoginFailDialog();
+                        return;
+                    }
+
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+
+                @Override
+                public void onFailure(Call<LoginResponse> call, Throwable t) {
+                    showLoginFailDialog();
+                }
+            });
+        }
 
     private void showLoginFailDialog() {
         View view = getLayoutInflater().inflate(R.layout.login_error, null);

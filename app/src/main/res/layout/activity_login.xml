@@ -31,7 +31,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="어쩌구저쩌구"
+            android:text="날씨에 맞춘 옷차림, 나만의 기준으로"
             android:textSize="12sp"
             android:textColor="#9C9C9C"
             android:fontFamily="@font/nanumbarungothic"/>

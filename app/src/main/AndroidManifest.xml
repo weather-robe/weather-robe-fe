@@ -19,7 +19,7 @@
 
         <!-- 로그인 화면을 앱 시작 화면으로 지정 -->
         <activity
-            android:name=".LoginActivity"
+            android:name=".login.LoginActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
@@ -29,7 +29,9 @@
         </activity>
 
         <!-- 회원가입 화면 -->
-        <activity android:name=".SignupActivity" />
+        <activity android:name=".signup.SignupActivity"
+            android:theme="@style/Theme.WeatherRobe.NoTranslucent"
+            android:windowSoftInputMode="adjustResize"/>
 
         <!-- 홈 화면 -->
         <activity
