@@ -1,6 +1,8 @@
 package com.cookandroid.weatherrobe;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.core.view.GravityCompat;
 import androidx.core.view.WindowCompat;
 import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
@@ -37,6 +39,14 @@ public class MainActivity extends AppCompatActivity implements LocationUpdateLis
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        ImageView menuButton = findViewById(R.id.header_left_icon);
+
+        menuButton.setOnClickListener(v -> {
+            drawer.openDrawer(GravityCompat.START);
+        });
+
 
         headerLayout = findViewById(R.id.header_root);
 

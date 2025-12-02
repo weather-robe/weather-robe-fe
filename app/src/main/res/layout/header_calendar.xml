@@ -5,7 +5,7 @@
     android:id="@+id/header_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="40dp"
+    android:paddingTop="26dp"
     android:background="@android:color/transparent">
 
     <!-- 왼쪽 햄버거 -->
