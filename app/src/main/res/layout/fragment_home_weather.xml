@@ -126,7 +126,7 @@
 
         </LinearLayout>
 
-        <!-- 체감온도 / 강수확률 / 미세먼지 -->
+        <!-- 카드 슬롯 3개 + 편집 버튼 -->
         <LinearLayout
             android:id="@+id/info_container"
             android:orientation="horizontal"
@@ -137,106 +137,32 @@
             android:layout_marginBottom="36dp" >
 
             <!-- 체감온도 -->
-            <LinearLayout
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical"
+            <FrameLayout
+                android:id="@+id/card_slot_1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:layout_marginLeft="50dp">
-
-                <ImageView
-                    android:src="@drawable/ic_feel"
-                    android:layout_width="34dp"
-                    android:layout_height="34dp"/>
-
-                <TextView
-                    android:id="@+id/tv_feel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="21°"
-                    android:textColor="#FFFFFF"
-                    android:textSize="14sp"
-                    android:fontFamily="@font/nanumbarungothicbold"
-                    android:layout_marginTop="5dp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="체감온도"
-                    android:textColor="#FFFFFF"
-                    android:fontFamily="@font/nanumbarungothic"
-                    android:textSize="11sp"/>
-            </LinearLayout>
+                android:layout_weight="1"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="2dp"/>
 
             <!-- 강수확률 -->
-            <LinearLayout
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical"
+            <FrameLayout
+                android:id="@+id/card_slot_2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="50dp">
-
-                <ImageView
-                    android:src="@drawable/ic_pop"
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"/>
-
-                <TextView
-                    android:id="@+id/tv_pop"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="45%"
-                    android:textColor="#FFFFFF"
-                    android:textSize="14sp"
-                    android:fontFamily="@font/nanumbarungothicbold"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="강수확률"
-                    android:textColor="#FFFFFF"
-                    android:textSize="11sp"
-                    android:fontFamily="@font/nanumbarungothic"/>
-            </LinearLayout>
+                android:layout_weight="1"
+                android:layout_marginLeft="50dp"/>
 
             <!-- 미세먼지 -->
-            <LinearLayout
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical"
+            <FrameLayout
+                android:id="@+id/card_slot_3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:layout_marginLeft="50dp"
-                android:layout_marginTop="2dp">
+                android:layout_marginTop="2dp"/>
 
-                <ImageView
-                    android:id="@+id/iv_pm"
-                    android:src="@drawable/ic_pm_normal"
-                    android:layout_width="34dp"
-                    android:layout_height="34dp"/>
-
-                <TextView
-                    android:id="@+id/tv_pm"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="보통"
-                    android:textColor="#FFFFFF"
-                    android:textSize="14sp"
-                    android:layout_marginTop="6dp"
-                    android:fontFamily="@font/nanumbarungothicbold"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="미세먼지"
-                    android:textColor="#FFFFFF"
-                    android:textSize="11sp"
-                    android:fontFamily="@font/nanumbarungothic"/>
-            </LinearLayout>
-
+            <!-- 편집 -->
             <LinearLayout
                 android:gravity="center"
                 android:orientation="vertical"
