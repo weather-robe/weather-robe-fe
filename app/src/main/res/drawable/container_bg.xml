@@ -2,6 +2,6 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
 
-    <solid android:color="#EBEBEB" />     <!-- 배경색 나중에 흰색 투명도 90%로 수정 -->
+    <solid android:color="#F3F3F3E6" />     <!-- 배경색 나중에 흰색 투명도 90%로 수정 -->
     <corners android:radius="22dp" />     <!--  모서리 라운드 R값 -->
 </shape>
