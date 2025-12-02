@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
@@ -31,6 +32,8 @@ public class LoginActivity extends AppCompatActivity {
     private EditText inputPw;
     private ImageView btnLogin;
     private TextView textSignup;
+    private ImageView pwToggle;
+    private boolean isPwVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +44,7 @@ public class LoginActivity extends AppCompatActivity {
         inputPw = findViewById(R.id.input_pw);
         btnLogin = findViewById(R.id.btn_login);
         textSignup = findViewById(R.id.text_signup);
+        pwToggle = findViewById(R.id.pw_toggle);
 
         textSignup.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
@@ -68,6 +72,21 @@ public class LoginActivity extends AppCompatActivity {
         updateButton();
 
         btnLogin.setOnClickListener(v -> sendLoginRequest());
+
+        pwToggle.setOnClickListener(v -> togglePassword());
+    }
+
+    private void togglePassword() {
+        if (isPwVisible) {
+            inputPw.setTransformationMethod(android.text.method.PasswordTransformationMethod.getInstance());
+            pwToggle.setImageResource(R.drawable.ic_eye_off);
+        } else {
+            inputPw.setTransformationMethod(null);
+            pwToggle.setImageResource(R.drawable.ic_eye_on);
+        }
+
+        inputPw.setSelection(inputPw.getText().length());
+        isPwVisible = !isPwVisible;
     }
 
     private void updateButton() {

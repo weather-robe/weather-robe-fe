@@ -118,10 +118,15 @@
                     android:layout_gravity="start"
                     android:layout_marginTop="30dp"/>
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:layout_marginTop="5dp">
+
                 <EditText
                     android:id="@+id/input_pw"
                     android:layout_width="match_parent"
-                    android:layout_height="46dp"
+                    android:layout_height="match_parent"
                     android:background="@drawable/edittext_selector"
                     android:paddingLeft="15dp"
                     android:textColor="#111111"
@@ -130,10 +135,21 @@
                     android:hint="비밀번호 입력(문자, 숫자, 특수문자 포함 8~20자)"
                     android:textAppearance="@style/HintTextStyle"
                     android:textColorHint="#C7C7C7"
-                    android:layout_marginTop="5dp"
+                    android:inputType="textPassword"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
                     android:clickable="true"/>
+
+                    <ImageView
+                        android:id="@+id/pw_toggle"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="20dp"
+                        android:src="@drawable/ic_eye_off"/>
+
+                </RelativeLayout>
 
                 <LinearLayout
                     android:id="@+id/pw_error_layout"
@@ -173,10 +189,15 @@
                     android:layout_gravity="start"
                     android:layout_marginTop="30dp"/>
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:layout_marginTop="5dp">
+
                 <EditText
                     android:id="@+id/input_pw_check"
                     android:layout_width="match_parent"
-                    android:layout_height="46dp"
+                    android:layout_height="match_parent"
                     android:background="@drawable/edittext_selector"
                     android:paddingLeft="15dp"
                     android:textColor="#111111"
@@ -185,10 +206,21 @@
                     android:hint="비밀번호 입력(문자, 숫자, 특수문자 포함 8~20자)"
                     android:textAppearance="@style/HintTextStyle"
                     android:textColorHint="#C7C7C7"
-                    android:layout_marginTop="5dp"
+                    android:inputType="textPassword"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
                     android:clickable="true"/>
+
+                    <ImageView
+                        android:id="@+id/pw_check_toggle"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="20dp"
+                        android:src="@drawable/ic_eye_off"/>
+
+                </RelativeLayout>
 
                 <LinearLayout
                     android:id="@+id/pw_check_error_layout"

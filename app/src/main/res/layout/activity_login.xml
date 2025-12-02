@@ -52,6 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="46dp"
             android:background="@drawable/edittext_selector"
+            android:textSize="14sp"
             android:paddingLeft="15dp"
             android:textColor="#111111"
             android:gravity="center_vertical|start"
@@ -69,16 +70,32 @@
             android:layout_marginTop="33dp"
             android:fontFamily="@font/nanumbarungothic"/>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_marginTop="5dp">
+
         <EditText
             android:id="@+id/input_pw"
             android:layout_width="match_parent"
-            android:layout_height="46dp"
+            android:layout_height="match_parent"
             android:background="@drawable/edittext_selector"
+            android:textSize="14sp"
             android:paddingLeft="15dp"
             android:textColor="#111111"
             android:gravity="center_vertical|start"
-            android:layout_marginTop="5dp"
+            android:inputType="textPassword"
             android:fontFamily="@font/nanumbarungothic"/>
+
+        <ImageView
+            android:id="@+id/pw_toggle"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/ic_eye_off"/>
+        </RelativeLayout>
 
         <!-- 자동로그인 + 아이디/비번 찾기 -->
         <LinearLayout
