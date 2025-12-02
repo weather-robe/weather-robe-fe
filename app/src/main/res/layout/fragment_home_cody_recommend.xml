@@ -18,49 +18,46 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
+        <!-- 텍스트는 FrameLayout 밖으로! -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="50dp"
+                android:fontFamily="@font/nanumbarungothicbold"
+                android:text="오늘의 코디 추천"
+                android:textColor="#111111"
+                android:textSize="18dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="50dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/nanumbarungothic"
+                android:text="코디 키워드를 참고한 코디 사진입니다."
+                android:textColor="#5D5D5D"
+                android:textSize="14dp" />
+
+        </LinearLayout>
+
+        <!-- FrameLayout-->
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:layout_marginEnd="50dp"
-                    android:fontFamily="@font/nanumbarungothicbold"
-                    android:letterSpacing="-0.02"
-                    android:lineSpacingExtra="2dp"
-                    android:text="오늘의 코디 추천"
-                    android:textColor="#111111"
-                    android:textSize="18dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:layout_marginEnd="50dp"
-                    android:layout_marginBottom="8dp"
-                    android:fontFamily="@font/nanumbarungothic"
-                    android:letterSpacing="-0.02"
-                    android:lineSpacingExtra="2dp"
-                    android:text="코디 키워드를 참고한 코디 사진입니다."
-                    android:textColor="#5D5D5D"
-                    android:textSize="14dp" />
-
-            </LinearLayout>
-
-
+            <!-- shimmer -->
             <include
                 android:id="@+id/simmer_layout"
                 layout="@layout/fragment_home_cody_recommend_simmer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content"/>
 
             <HorizontalScrollView
                 android:id="@+id/cody_scrollview"
@@ -74,8 +71,8 @@
                     android:id="@+id/ll_image_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="60dp"
-                    android:orientation="horizontal"></LinearLayout>
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"/>
             </HorizontalScrollView>
 
         </FrameLayout>
