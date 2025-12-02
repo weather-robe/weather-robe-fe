@@ -18,6 +18,7 @@ import android.text.style.ForegroundColorSpan;
 
 import com.cookandroid.weatherrobe.R;
 import android.widget.LinearLayout;
+import com.cookandroid.weatherrobe.common.CommonUtils;
 
 
 public class ModalCalendarDialog extends DialogFragment {
@@ -95,7 +96,7 @@ public class ModalCalendarDialog extends DialogFragment {
                 for (String keyword : detailData.getKeywords()) {
 
                     TextView tv = new TextView(getContext());
-                    tv.setText(keyword);
+                    tv.setText(CommonUtils.addKeywordIcon(keyword));
                     tv.setTextSize(14);
                     tv.setTextColor(Color.parseColor("#111111"));
                     tv.setBackgroundResource(R.drawable.label_bg_gary_line);
