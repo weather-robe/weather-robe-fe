@@ -10,8 +10,10 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -36,7 +38,7 @@ public class SignupActivity extends AppCompatActivity {
     private EditText inputId, inputPw, inputPwCheck, inputEmail;
     private CheckBox serviceCheck, privacyCheck;
     private TextView serviceView, privacyView;
-    private ImageView btnCheck;
+    private FrameLayout btnCheck;
 
     private LinearLayout idErrorLayout, pwErrorLayout, pwCheckErrorLayout, emailErrorLayout;
     private ImageView idWarn, pwWarn, pwCheckWarn, emailWarn;
@@ -49,6 +51,10 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_signup);
+
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+        );
 
         api = RetrofitClient.getInstance().create(signupService.class);
 
@@ -92,7 +98,15 @@ public class SignupActivity extends AppCompatActivity {
         serviceView.setOnClickListener(v -> openDialog(R.layout.service_dialog));
         privacyView.setOnClickListener(v -> openDialog(R.layout.privacy_dialog));
 
-        btnCheck.setOnClickListener(v -> sendSignupRequest());
+        btnCheck.setOnTouchListener((v, event) -> {
+            v.performClick();
+            return false;
+        });
+
+        btnCheck.setOnClickListener(v -> {
+            Log.d("BTN", "clicked!!");
+            sendSignupRequest();
+        });
     }
 
     private void setValidationWatcher() {
@@ -215,7 +229,15 @@ public class SignupActivity extends AppCompatActivity {
 
     private void sendSignupRequest() {
 
-        if (!isAllValid()) return;
+        Log.d("DEBUG", "sendSignupRequest() called");
+        Log.d("DEBUG", "isAllValid = " + isAllValid());
+
+        if (!isAllValid()){
+            Log.d("DEBUG", "isAllValid = false → return됨");
+            return;
+        }
+
+        Log.d("DEBUG", "API 요청 시작");
 
         String id = inputId.getText().toString().trim();
         String pw = inputPw.getText().toString().trim();
@@ -231,6 +253,9 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> res) {
 
+                Log.d("DEBUG", "응답 도착");
+                Log.d("DEBUG", "code = " + res.code());
+
                 if (res.isSuccessful()) {
                     Log.d("SIGNUP", "회원가입 성공");
                     startActivity(new Intent(SignupActivity.this, LoginActivity.class));
@@ -242,6 +267,9 @@ public class SignupActivity extends AppCompatActivity {
                         JSONObject json = new JSONObject(errorBody);
                         JSONObject error = json.getJSONObject("error");
                         String errorCode = error.getString("errorCode");
+
+                        Log.d("DEBUG", "409 errorBody = " + errorBody);
+                        Log.d("DEBUG", "errorCode = " + errorCode);
 
                         // 입력 시 다시 사라지도록 기본은 숨김
                         idErrorLayout.setVisibility(View.GONE);

@@ -29,7 +29,9 @@
         </activity>
 
         <!-- 회원가입 화면 -->
-        <activity android:name=".signup.SignupActivity" />
+        <activity android:name=".signup.SignupActivity"
+            android:theme="@style/Theme.WeatherRobe.NoTranslucent"
+            android:windowSoftInputMode="adjustResize"/>
 
         <!-- 홈 화면 -->
         <activity
