@@ -66,8 +66,8 @@ public class ModalCalendarDialog extends DialogFragment {
         TextView tvCodiDesc = view.findViewById(R.id.tvCodiDescription);
         LinearLayout keywordContainer = view.findViewById(R.id.keywordContainer);
 
-        TextView tvKeywords = view.findViewById(R.id.tvKeywords);   // 키워드 영역
-        TextView tvUserAnswer = view.findViewById(R.id.tvUserAnswer); // 나는 ~~라고 답변했어요
+        TextView tvKeywords = view.findViewById(R.id.tvKeywords);    // 키워드 영역
+        TextView tvUserAnswer = view.findViewById(R.id.tvUserAnswer);  // 나는 ~~라고 답변했어요
 
         // 날짜 출력
         tvDate.setText(dateStr);
@@ -85,6 +85,7 @@ public class ModalCalendarDialog extends DialogFragment {
 
             // 설명 텍스트
             tvCodiDesc.setText(detailData.getText());
+            tvCodiDesc.setTextSize(14);
 
             // 코디 키워드
             keywordContainer.removeAllViews(); // 기존 뷰 제거
@@ -98,7 +99,7 @@ public class ModalCalendarDialog extends DialogFragment {
                     tv.setTextSize(14);
                     tv.setTextColor(Color.parseColor("#111111"));
                     tv.setBackgroundResource(R.drawable.label_bg_gary_line);
-                    tv.setPadding(25, 12, 25, 12);
+                    tv.setPadding(30, 20, 30, 20);
 
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -121,11 +122,6 @@ public class ModalCalendarDialog extends DialogFragment {
             keywordContainer.addView(empty);
         }
 
-
-        // 키워드
-            if (detailData.getKeywords() != null && !detailData.getKeywords().isEmpty()) {
-                tvKeywords.setText(detailData.getKeywords().toString());
-            }
 
             String feeling = detailData.getFeeling_status();
             if (feeling != null && !feeling.isEmpty()) {

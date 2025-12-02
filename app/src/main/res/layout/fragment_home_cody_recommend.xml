@@ -37,7 +37,7 @@
                     android:lineSpacingExtra="2dp"
                     android:text="오늘의 코디 추천"
                     android:textColor="#111111"
-                    android:textSize="16dp" />
+                    android:textSize="18dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
