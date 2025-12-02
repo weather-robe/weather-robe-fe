@@ -20,9 +20,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.cookandroid.weatherrobe.LoginActivity;
+import com.cookandroid.weatherrobe.login.LoginActivity;
 import com.cookandroid.weatherrobe.R;
-import com.cookandroid.weatherrobe.signup.RetrofitClient;
 
 import org.json.JSONObject;
 
