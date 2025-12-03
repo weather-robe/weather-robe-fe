@@ -282,23 +282,21 @@ public class HomeWeatherFragment extends Fragment {
             return;
         }
 
-        if (hour >= 18 || hour < 6) {
+        // 2) 아이콘이 n(밤)으로 끝나면 night 배경
+        if (icon.endsWith("n")) {
             root.setBackgroundResource(R.drawable.bg_weather_night);
             return;
         }
 
+        // 3) 낮(d)일 때 날씨에 맞춰 배경 설정
         switch (icon) {
             case "01d":
-            case "01n":
                 root.setBackgroundResource(R.drawable.bg_weather_sunny);
                 break;
 
             case "02d":
-            case "02n":
             case "03d":
-            case "03n":
             case "04d":
-            case "04n":
                 root.setBackgroundResource(R.drawable.bg_weather_cloudy);
                 break;
 
