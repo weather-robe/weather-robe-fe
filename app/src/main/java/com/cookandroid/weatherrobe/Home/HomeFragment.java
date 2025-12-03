@@ -46,7 +46,7 @@ public class HomeFragment extends Fragment {
 
         if (isAdded()) {
             Log.d("HomeFragment", "위치 수신. 자식 프래그먼트 업데이트 시작.");
-            notifyChildFragments(currentLat, currentLon);
+            notifyChildFragments(latitude, longitude);
         }
     }
 
@@ -65,6 +65,21 @@ public class HomeFragment extends Fragment {
         HomeWeatherFragment weatherFragment = (HomeWeatherFragment) getChildFragmentManager().findFragmentById(R.id.container_home_weather);
 
         if (weatherFragment != null) {
+            weatherFragment.updateLocation(latitude, longitude);
+        }
+
+        // 🏷 2) 코디 키워드 프래그먼트
+        HomeCodyKeywordFragment keywordFragment =
+                (HomeCodyKeywordFragment) getChildFragmentManager().findFragmentById(R.id.container_home_cody_keyword);
+        if (keywordFragment != null) {
+            keywordFragment.updateLocation(latitude, longitude);
+        }
+
+        // 🙂 3) 사용자 느낌(문구) 프래그먼트
+        HomeFeelingFragment feelingFragment =
+                (HomeFeelingFragment) getChildFragmentManager().findFragmentById(R.id.container_home_feeling);
+        if (feelingFragment != null) {
+            feelingFragment.updateLocation(latitude, longitude);
         }
     }
 }
