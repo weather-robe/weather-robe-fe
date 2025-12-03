@@ -55,7 +55,7 @@
     <!-- ⭐ 왼쪽에서 나오는 슬라이딩 메뉴 -->
     <include
         layout="@layout/drawer_menu"
-        android:layout_width="260dp"
+        android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="start" />
 

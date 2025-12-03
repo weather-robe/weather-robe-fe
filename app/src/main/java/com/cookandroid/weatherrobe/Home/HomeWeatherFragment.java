@@ -34,7 +34,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class HomeWeatherFragment extends Fragment {
-    private SharedWeatherViewModel sharedViewModel; // 전역 변수 용으로 필요 feat.수현
+
+    private static final String PREF_CARD_KEYS = "home_card_keys";
+    private SharedWeatherViewModel sharedViewModel;
     private ImageView ivWeather, ivYesterdayHigh, ivYesterdayLow, ivEdit;
     private TextView tvTemp, tvYesterdayHigh, tvYesterdayLow;
 
@@ -52,7 +54,7 @@ public class HomeWeatherFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_home_weather, container, false);
 
-        sharedViewModel = new ViewModelProvider(requireActivity()) // 전역 변수 용으로 필요 feat.수현
+        sharedViewModel = new ViewModelProvider(requireActivity())
                 .get(SharedWeatherViewModel.class);
 
         initViews(view);
@@ -63,9 +65,7 @@ public class HomeWeatherFragment extends Fragment {
 
     private void initViews(View v) {
         ivWeather = v.findViewById(R.id.iv_weather);
-
         tvTemp = v.findViewById(R.id.tv_temp);
-
         tvYesterdayHigh = v.findViewById(R.id.tv_yesterday_high);
         tvYesterdayLow = v.findViewById(R.id.tv_yesterday_low);
 
@@ -80,12 +80,10 @@ public class HomeWeatherFragment extends Fragment {
         ivEdit.setOnClickListener(view -> {
             SelectOptionDialogFragment dialog =
                     new SelectOptionDialogFragment(selectedKeys -> applySelectedOptions(selectedKeys));
-
             dialog.show(getParentFragmentManager(), "select_options");
         });
     }
 
-    /** 옵션 선택 후 홈 카드 반영 */
     private void applySelectedOptions(List<String> keys) {
         FrameLayout[] slots = { slot1, slot2, slot3 };
 
@@ -97,18 +95,42 @@ public class HomeWeatherFragment extends Fragment {
             View card = LayoutInflater.from(container.getContext())
                     .inflate(layoutRes, container, false);
 
-
             View cardRoot = card.findViewById(R.id.card_root);
             cardRoot.setBackground(null);
 
             bindCardData(card, keys.get(i));
-            applyWhiteText(card);    // 글씨 흰색으로 변경
+            applyWhiteText(card);
 
             container.addView(card);
         }
+
+        saveSelectedKeys(keys);
     }
 
-    /** 홈화면 날씨 텍스트 흰색으로 설정 */
+    private void saveSelectedKeys(List<String> keys) {
+        Context context = getContext();
+        if (context == null) return;
+
+        SharedPreferences prefs = context.getSharedPreferences("user", Context.MODE_PRIVATE);
+        prefs.edit().putString(PREF_CARD_KEYS, new Gson().toJson(keys)).apply();
+    }
+
+    private List<String> loadSelectedKeys() {
+        Context context = getContext();
+        if (context == null) {
+            return Arrays.asList("FEEL", "POP", "PM10");
+        }
+
+        SharedPreferences prefs = context.getSharedPreferences("user", Context.MODE_PRIVATE);
+        String json = prefs.getString(PREF_CARD_KEYS, null);
+
+        if (json == null) {
+            return Arrays.asList("FEEL", "POP", "PM10");
+        }
+
+        return Arrays.asList(new Gson().fromJson(json, String[].class));
+    }
+
     private void applyWhiteText(View card) {
         TextView title = card.findViewById(R.id.card_title);
         TextView value = card.findViewById(R.id.card_value);
@@ -117,7 +139,6 @@ public class HomeWeatherFragment extends Fragment {
         if (value != null) value.setTextColor(0xFFFFFFFF);
     }
 
-    /** 카드 타입 매핑 */
     private int getCardLayout(String key) {
         switch (key) {
             case "FEEL": return R.layout.home_feel_card_item;
@@ -131,7 +152,6 @@ public class HomeWeatherFragment extends Fragment {
         return R.layout.home_feel_card_item;
     }
 
-    /** 카드 데이터 바인딩 */
     private void bindCardData(View card, String key) {
         ImageView icon = card.findViewById(R.id.card_icon);
         TextView value = card.findViewById(R.id.card_value);
@@ -202,11 +222,14 @@ public class HomeWeatherFragment extends Fragment {
                 requireActivity().getSharedPreferences("user", Context.MODE_PRIVATE);
 
         int userId = prefs.getInt("userId", -1);
-        HomeRequest req = new HomeRequest(37.5, 127.0);
+        HomeRequest req = new HomeRequest(37.5665, 126.9780);
 
         api.getHomeWeather(userId, req).enqueue(new Callback<HomeWeatherResponse>() {
             @Override
             public void onResponse(Call<HomeWeatherResponse> call, Response<HomeWeatherResponse> res) {
+
+                if (!isAdded()) return;
+
                 if (!res.isSuccessful() || res.body() == null) return;
 
                 current = res.body().success.current;
@@ -215,8 +238,8 @@ public class HomeWeatherFragment extends Fragment {
 
                 updateWeatherUI();
                 setSharedViewModelValue(today.weatherId, today.feedback);
-                // 홈 화면 기본 3개 반영
-                applySelectedOptions(Arrays.asList("FEEL", "POP", "PM10"));
+
+                applySelectedOptions(loadSelectedKeys());
             }
 
             @Override
@@ -225,6 +248,7 @@ public class HomeWeatherFragment extends Fragment {
             }
         });
     }
+
     private void updateWeatherUI() {
         tvTemp.setText(toTemp(current.temp));
         ivWeather.setImageResource(getWeatherIcon(current.icon));
@@ -254,7 +278,6 @@ public class HomeWeatherFragment extends Fragment {
         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 
         if (icon.startsWith("09") || icon.startsWith("10")) {
-
             root.setBackgroundResource(R.drawable.bg_weather_rainy);
             return;
         }
@@ -270,9 +293,12 @@ public class HomeWeatherFragment extends Fragment {
                 root.setBackgroundResource(R.drawable.bg_weather_sunny);
                 break;
 
-            case "02d": case "02n":
-            case "03d": case "03n":
-            case "04d": case "04n":
+            case "02d":
+            case "02n":
+            case "03d":
+            case "03n":
+            case "04d":
+            case "04n":
                 root.setBackgroundResource(R.drawable.bg_weather_cloudy);
                 break;
 
@@ -286,26 +312,28 @@ public class HomeWeatherFragment extends Fragment {
 
     private int getWeatherIcon(String icon) {
         switch (icon) {
-            // 맑음 (Sunny)
             case "01d":
             case "01n":
                 return R.drawable.ic_weather_sunny;
-            // 구름 조금 (Partly Cloudy)
             case "02d":
             case "02n":
                 return R.drawable.ic_weather_cloudy_day;
-            // 흐림 (Cloudy)
-            case "03d": case "03n":
-            case "04d": case "04n":
+            case "03d":
+            case "03n":
+            case "04d":
+            case "04n":
                 return R.drawable.ic_weather_cloudy;
-            // 비 (Rain)
-            case "09d": case "09n":
-            case "10d": case "10n":
+            case "09d":
+            case "09n":
+            case "10d":
+            case "10n":
                 return R.drawable.ic_weather_rainy;
-            // 눈, 안개, 천둥 등 → 아이콘 없으니 흐림으로 통일
-            case "11d": case "11n":
-            case "13d": case "13n":
-            case "50d": case "50n":
+            case "11d":
+            case "11n":
+            case "13d":
+            case "13n":
+            case "50d":
+            case "50n":
             default:
                 return R.drawable.ic_weather_cloudy;
         }

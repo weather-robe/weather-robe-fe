@@ -6,9 +6,13 @@ import androidx.core.view.GravityCompat;
 import androidx.core.view.WindowCompat;
 import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
+
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.util.Log; // Log import
 
@@ -18,6 +22,7 @@ import com.cookandroid.weatherrobe.daily.DailyFragment;
 import com.cookandroid.weatherrobe.calendar.CalendarFragment;
 import com.cookandroid.weatherrobe.location.AppLocationManager; // 추가
 import com.cookandroid.weatherrobe.location.LocationUpdateListener; // 추가
+import com.cookandroid.weatherrobe.login.LoginActivity;
 
 
 public class MainActivity extends AppCompatActivity implements LocationUpdateListener {
@@ -41,6 +46,23 @@ public class MainActivity extends AppCompatActivity implements LocationUpdateLis
         setContentView(R.layout.activity_main);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
+
+        ImageView closeBtn = findViewById(R.id.close_btn);
+        closeBtn.setOnClickListener(v -> drawer.closeDrawer(GravityCompat.START));
+
+        LinearLayout logoutBtn = findViewById(R.id.menu_logout);
+        logoutBtn.setOnClickListener(v -> {
+
+            SharedPreferences prefs = getSharedPreferences("USER_PREFS", MODE_PRIVATE);
+            prefs.edit().clear().apply();
+
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+
+            finish();
+        });
+
         ImageView menuButton = findViewById(R.id.header_left_icon);
 
         menuButton.setOnClickListener(v -> {

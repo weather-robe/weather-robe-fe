@@ -109,7 +109,7 @@ public class HourlyFragment extends Fragment {
                 requireActivity().getSharedPreferences("user", Context.MODE_PRIVATE);
 
         int userId = prefs.getInt("userId", -1);
-        HourlyRequest req = new HourlyRequest(37.5, 127.0);
+        HourlyRequest req = new HourlyRequest(37.5665, 126.9780);
 
         api.getHourlyWeather(userId, req).enqueue(new Callback<HourlyResponse>() {
             @Override
