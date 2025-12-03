@@ -47,18 +47,11 @@ public class HomeWeatherFragment extends Fragment {
 
     private FrameLayout slot1, slot2, slot3;
 
-    // -------------------------
-    // ⭐ 위치 기반 업데이트용 변수
-    // -------------------------
-    private double currentLat = 37.5665;
-    private double currentLon = 126.9780;
-    private boolean isDataLoaded = false;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+            @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_home_weather, container, false);
 
@@ -67,29 +60,14 @@ public class HomeWeatherFragment extends Fragment {
 
         initViews(view);
 
-        // 최초 로딩
-        loadWeatherData();
+        sharedViewModel.getCurrentLatitude().observe(getViewLifecycleOwner(), lat -> {
+            Double lon = sharedViewModel.getCurrentLongitude().getValue();
+            if (lon != null) {
+                loadWeatherData(lat, lon);
+            }
+        });
 
         return view;
-    }
-
-    // -------------------------
-    // ⭐ HomeFragment에서 호출하는 함수
-    // -------------------------
-    public void updateLocation(double latitude, double longitude) {
-
-        // 같은 좌표면 다시 불러오지 않음
-        if (isDataLoaded && currentLat == latitude && currentLon == longitude) {
-            return;
-        }
-
-        this.currentLat = latitude;
-        this.currentLon = longitude;
-        this.isDataLoaded = false;
-
-        if (isAdded()) {
-            loadWeatherData();
-        }
     }
 
     private void initViews(View v) {
@@ -107,8 +85,8 @@ public class HomeWeatherFragment extends Fragment {
 
         ivEdit = v.findViewById(R.id.iv_edit);
         ivEdit.setOnClickListener(view -> {
-            SelectOptionDialogFragment dialog =
-                    new SelectOptionDialogFragment(selectedKeys -> applySelectedOptions(selectedKeys));
+            SelectOptionDialogFragment dialog = new SelectOptionDialogFragment(
+                    selectedKeys -> applySelectedOptions(selectedKeys));
             dialog.show(getParentFragmentManager(), "select_options");
         });
     }
@@ -138,7 +116,8 @@ public class HomeWeatherFragment extends Fragment {
 
     private void saveSelectedKeys(List<String> keys) {
         Context context = getContext();
-        if (context == null) return;
+        if (context == null)
+            return;
 
         SharedPreferences prefs = context.getSharedPreferences("user", Context.MODE_PRIVATE);
         prefs.edit().putString(PREF_CARD_KEYS, new Gson().toJson(keys)).apply();
@@ -164,19 +143,28 @@ public class HomeWeatherFragment extends Fragment {
         TextView title = card.findViewById(R.id.card_title);
         TextView value = card.findViewById(R.id.card_value);
 
-        if (title != null) title.setTextColor(0xFFFFFFFF);
-        if (value != null) value.setTextColor(0xFFFFFFFF);
+        if (title != null)
+            title.setTextColor(0xFFFFFFFF);
+        if (value != null)
+            value.setTextColor(0xFFFFFFFF);
     }
 
     private int getCardLayout(String key) {
         switch (key) {
-            case "FEEL": return R.layout.home_feel_card_item;
-            case "POP": return R.layout.home_pop_card_item;
-            case "PM10": return R.layout.home_pm_card_item;
-            case "PM25": return R.layout.home_pm25_card_item;
-            case "HUMIDITY": return R.layout.home_humidity_card_item;
-            case "WIND": return R.layout.home_wind_card_item;
-            case "RAIN": return R.layout.home_rain_card_item;
+            case "FEEL":
+                return R.layout.home_feel_card_item;
+            case "POP":
+                return R.layout.home_pop_card_item;
+            case "PM10":
+                return R.layout.home_pm_card_item;
+            case "PM25":
+                return R.layout.home_pm25_card_item;
+            case "HUMIDITY":
+                return R.layout.home_humidity_card_item;
+            case "WIND":
+                return R.layout.home_wind_card_item;
+            case "RAIN":
+                return R.layout.home_rain_card_item;
         }
         return R.layout.home_feel_card_item;
     }
@@ -185,6 +173,9 @@ public class HomeWeatherFragment extends Fragment {
         ImageView icon = card.findViewById(R.id.card_icon);
         TextView value = card.findViewById(R.id.card_value);
         TextView title = card.findViewById(R.id.card_title);
+
+        if (today == null)
+            return;
 
         switch (key) {
 
@@ -195,7 +186,7 @@ public class HomeWeatherFragment extends Fragment {
 
             case "POP":
                 title.setText("강수확률");
-                value.setText((int)(today.pop * 100) + "%");
+                value.setText((int) (today.pop * 100) + "%");
                 break;
 
             case "PM10":
@@ -228,39 +219,40 @@ public class HomeWeatherFragment extends Fragment {
     }
 
     private int getPmIcon(String text) {
-        if (text == null) return R.drawable.ic_pm_normal;
+        if (text == null)
+            return R.drawable.ic_pm_normal;
 
         switch (text) {
-            case "좋음": return R.drawable.ic_pm_good;
-            case "보통": return R.drawable.ic_pm_normal;
-            case "나쁨": return R.drawable.ic_pm_bad;
-            case "매우 나쁨": return R.drawable.ic_pm_very_bad;
-            default: return R.drawable.ic_pm_normal;
+            case "좋음":
+                return R.drawable.ic_pm_good;
+            case "보통":
+                return R.drawable.ic_pm_normal;
+            case "나쁨":
+                return R.drawable.ic_pm_bad;
+            case "매우 나쁨":
+                return R.drawable.ic_pm_very_bad;
+            default:
+                return R.drawable.ic_pm_normal;
         }
     }
 
-    // -------------------------
-    // ⭐ 좌표 기반 날씨 API 호출
-    // -------------------------
-    private void loadWeatherData() {
-
+    private void loadWeatherData(double latitude, double longitude) {
         HomeApi api = RetrofitClient.getClient("https://api.weather-robe.kro.kr/")
                 .create(HomeApi.class);
 
-        SharedPreferences prefs =
-                requireActivity().getSharedPreferences("user", Context.MODE_PRIVATE);
+        SharedPreferences prefs = requireActivity().getSharedPreferences("user", Context.MODE_PRIVATE);
 
         int userId = prefs.getInt("userId", -1);
-
-        // ⭐ 좌표 하드코딩 제거 → currentLat, currentLon 사용
-        HomeRequest req = new HomeRequest(currentLat, currentLon);
+        HomeRequest req = new HomeRequest(latitude, longitude);
 
         api.getHomeWeather(userId, req).enqueue(new Callback<HomeWeatherResponse>() {
             @Override
             public void onResponse(Call<HomeWeatherResponse> call, Response<HomeWeatherResponse> res) {
 
-                if (!isAdded()) return;
-                if (!res.isSuccessful() || res.body() == null) return;
+                if (!isAdded())
+                    return;
+                if (!res.isSuccessful() || res.body() == null)
+                    return;
 
                 current = res.body().success.current;
                 today = res.body().success.today;
@@ -270,8 +262,6 @@ public class HomeWeatherFragment extends Fragment {
                 setSharedViewModelValue(today.weatherId, today.feedback);
 
                 applySelectedOptions(loadSelectedKeys());
-
-                isDataLoaded = true;
             }
 
             @Override
@@ -282,6 +272,9 @@ public class HomeWeatherFragment extends Fragment {
     }
 
     private void updateWeatherUI() {
+        if (current == null || today == null || yesterday == null)
+            return;
+
         tvTemp.setText(toTemp(current.temp));
         ivWeather.setImageResource(getWeatherIcon(current.icon));
 
@@ -302,10 +295,12 @@ public class HomeWeatherFragment extends Fragment {
 
     private void applyBackground(String icon) {
         Fragment parent = getParentFragment();
-        if (parent == null || parent.getView() == null) return;
+        if (parent == null || parent.getView() == null)
+            return;
 
         View root = parent.getView().findViewById(R.id.home_root);
-        if (root == null) return;
+        if (root == null)
+            return;
 
         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 
@@ -333,15 +328,22 @@ public class HomeWeatherFragment extends Fragment {
         }
     }
 
-    private int round(double v) { return (int) Math.round(v); }
-    private String toTemp(double v) { return round(v) + "°"; }
+    private int round(double v) {
+        return (int) Math.round(v);
+    }
+
+    private String toTemp(double v) {
+        return round(v) + "°";
+    }
 
     private int getWeatherIcon(String icon) {
         switch (icon) {
             case "01d":
-            case "01n": return R.drawable.ic_weather_sunny;
+            case "01n":
+                return R.drawable.ic_weather_sunny;
             case "02d":
-            case "02n": return R.drawable.ic_weather_cloudy_day;
+            case "02n":
+                return R.drawable.ic_weather_cloudy_day;
             case "03d":
             case "03n":
             case "04d":
@@ -364,9 +366,12 @@ public class HomeWeatherFragment extends Fragment {
     }
 
     private void applyDiffIcon(ImageView iv, int diff) {
-        if (diff > 0) iv.setImageResource(R.drawable.ic_arrow_up);
-        else if (diff < 0) iv.setImageResource(R.drawable.ic_arrow_down);
-        else iv.setImageResource(R.drawable.ic_same);
+        if (diff > 0)
+            iv.setImageResource(R.drawable.ic_arrow_up);
+        else if (diff < 0)
+            iv.setImageResource(R.drawable.ic_arrow_down);
+        else
+            iv.setImageResource(R.drawable.ic_same);
     }
 
     private void setSharedViewModelValue(int weatherId, String feedback) {

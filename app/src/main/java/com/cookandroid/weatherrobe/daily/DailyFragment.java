@@ -11,12 +11,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.cookandroid.weatherrobe.R;
 import com.cookandroid.weatherrobe.common.CommonApiResponse;
 import com.cookandroid.weatherrobe.daily.api.DailyService;
 import com.cookandroid.weatherrobe.daily.dto.DailyReqDTO;
 import com.cookandroid.weatherrobe.daily.dto.DailyResDTO;
+import com.cookandroid.weatherrobe.Home.model.SharedWeatherViewModel;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -37,8 +39,7 @@ public class DailyFragment extends Fragment{
     private DailyWeatherAdapter weatherAdapter;
     private final List<DailyWeatherData> dataList = new ArrayList<>();
     private final DecimalFormat tempFormat = new DecimalFormat("0°");
-    private double currentLat = 37.5665;
-    private double currentLon = 126.9780;
+    private SharedWeatherViewModel sharedViewModel;
     private boolean isDataLoaded = false;
 
     @Nullable
@@ -46,6 +47,7 @@ public class DailyFragment extends Fragment{
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         initRetrofit();
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedWeatherViewModel.class);
 
         return inflater.inflate(R.layout.fragment_daily, container, false);
     }
@@ -59,9 +61,12 @@ public class DailyFragment extends Fragment{
         recyclerView.setAdapter(weatherAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
-        if (!isDataLoaded) {
-            fetchDailyWeather(1, currentLat, currentLon);
-        }
+        sharedViewModel.getCurrentLatitude().observe(getViewLifecycleOwner(), lat -> {
+            Double lon = sharedViewModel.getCurrentLongitude().getValue();
+            if (lon != null) {
+                fetchDailyWeather(1, lat, lon);
+            }
+        });
     }
 
     @Override
@@ -72,18 +77,6 @@ public class DailyFragment extends Fragment{
     @Override
     public void onPause() {
         super.onPause();
-    }
-    public void updateLocation(double latitude, double longitude) {
-        if (isDataLoaded && currentLat == latitude && currentLon == longitude) {
-            return;
-        }
-        this.currentLat = latitude;
-        this.currentLon = longitude;
-        this.isDataLoaded = false;
-
-        if (isAdded()) {
-            fetchDailyWeather(1, currentLat, currentLon);
-        }
     }
 
     private void initRetrofit() {
@@ -98,6 +91,9 @@ public class DailyFragment extends Fragment{
     }
 
     private void fetchDailyWeather(int userId, double latitude, double longitude) {
+
+        this.isDataLoaded = false;
+
         DailyReqDTO reqDto = new DailyReqDTO();
         DailyReqDTO.PostDailyDTO postDto = reqDto.new PostDailyDTO(latitude, longitude);
 
@@ -112,7 +108,7 @@ public class DailyFragment extends Fragment{
 
                 if (response.isSuccessful() && apiResponse.isSuccessful()) {
                     Log.d("API_CALL", "일자별 날씨 로드 성공");
-                    isDataLoaded = true; // 성공적으로 로드 완료
+                    isDataLoaded = true;
 
                     DailyResDTO.PostDailyDTO successData = apiResponse.getSuccess();
                     updateWeatherList(successData);
@@ -138,9 +134,8 @@ public class DailyFragment extends Fragment{
         boolean hasYesterday = false;
 
         java.text.SimpleDateFormat dayOfWeekFormat =
-                new java.text.SimpleDateFormat("EEE", java.util.Locale.KOREA); // 요일 만들기 (금, 토, 일 이런식)
+                new java.text.SimpleDateFormat("EEE", java.util.Locale.KOREA);
 
-        // 어제 데이터 추가 (없는 경우 아예 false 상태로 유지)
         DailyResDTO.Yesterday yesterdayData = successData.getYesterday();
         System.out.println(yesterdayData);
         if (yesterdayData != null && yesterdayData.getTemp() != null && yesterdayData.getWeatherId() > 0) {
@@ -156,7 +151,6 @@ public class DailyFragment extends Fragment{
             hasYesterday = true;
         }
 
-        // 일자별은 리스트로 추가
         List<DailyResDTO.Daily> dailyList = successData.getDaily();
 
         if (dailyList != null) {
