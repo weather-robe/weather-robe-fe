@@ -47,6 +47,8 @@ public class HomeWeatherFragment extends Fragment {
 
     private FrameLayout slot1, slot2, slot3;
 
+    private final List<String> DEFAULT_KEYS = Arrays.asList("FEEL", "POP", "PM10");
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -59,6 +61,17 @@ public class HomeWeatherFragment extends Fragment {
                 .get(SharedWeatherViewModel.class);
 
         initViews(view);
+
+        if (sharedViewModel.getSelectedKeys().getValue() == null ||
+                sharedViewModel.getSelectedKeys().getValue().isEmpty()) {
+
+            sharedViewModel.setSelectedKeys(DEFAULT_KEYS);
+        }
+
+        sharedViewModel.getSelectedKeys().observe(
+                getViewLifecycleOwner(),
+                this::applySelectedOptions
+        );
 
         sharedViewModel.getCurrentLatitude().observe(getViewLifecycleOwner(), lat -> {
             Double lon = sharedViewModel.getCurrentLongitude().getValue();
@@ -86,12 +99,14 @@ public class HomeWeatherFragment extends Fragment {
         ivEdit = v.findViewById(R.id.iv_edit);
         ivEdit.setOnClickListener(view -> {
             SelectOptionDialogFragment dialog = new SelectOptionDialogFragment(
-                    selectedKeys -> applySelectedOptions(selectedKeys));
+                    selectedKeys -> sharedViewModel.setSelectedKeys(selectedKeys));
             dialog.show(getParentFragmentManager(), "select_options");
         });
     }
 
     private void applySelectedOptions(List<String> keys) {
+        if (keys == null) return;
+
         FrameLayout[] slots = { slot1, slot2, slot3 };
 
         for (int i = 0; i < keys.size(); i++) {
@@ -103,40 +118,13 @@ public class HomeWeatherFragment extends Fragment {
                     .inflate(layoutRes, container, false);
 
             View cardRoot = card.findViewById(R.id.card_root);
-            cardRoot.setBackground(null);
+            if (cardRoot != null) cardRoot.setBackground(null);
 
             bindCardData(card, keys.get(i));
             applyWhiteText(card);
 
             container.addView(card);
         }
-
-        saveSelectedKeys(keys);
-    }
-
-    private void saveSelectedKeys(List<String> keys) {
-        Context context = getContext();
-        if (context == null)
-            return;
-
-        SharedPreferences prefs = context.getSharedPreferences("user", Context.MODE_PRIVATE);
-        prefs.edit().putString(PREF_CARD_KEYS, new Gson().toJson(keys)).apply();
-    }
-
-    private List<String> loadSelectedKeys() {
-        Context context = getContext();
-        if (context == null) {
-            return Arrays.asList("FEEL", "POP", "PM10");
-        }
-
-        SharedPreferences prefs = context.getSharedPreferences("user", Context.MODE_PRIVATE);
-        String json = prefs.getString(PREF_CARD_KEYS, null);
-
-        if (json == null) {
-            return Arrays.asList("FEEL", "POP", "PM10");
-        }
-
-        return Arrays.asList(new Gson().fromJson(json, String[].class));
     }
 
     private void applyWhiteText(View card) {
@@ -261,7 +249,6 @@ public class HomeWeatherFragment extends Fragment {
                 updateWeatherUI();
                 setSharedViewModelValue(today.weatherId, today.feedback);
 
-                applySelectedOptions(loadSelectedKeys());
             }
 
             @Override
