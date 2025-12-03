@@ -45,6 +45,10 @@ public class HomeCodyKeywordFragment extends Fragment {
 
     private int lastLoadedWeatherId = 0;
 
+    private double currentLat = 37.5665;
+    private double currentLon = 126.9780;
+    private boolean isDataLoaded = false;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -54,27 +58,11 @@ public class HomeCodyKeywordFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home_cody_keyword, container, false);
 
         View shimmerLayoutWrapper = view.findViewById(R.id.simmer_layout_wrapper);
-        if (shimmerLayoutWrapper != null) {
-            shimmerContainer = shimmerLayoutWrapper.findViewById(R.id.shimmer_container);
-            if (shimmerContainer != null) {
-                shimmerContainer.setAlpha(1.0f);
-            }
-        } else {
-            Log.e("CodyFragment", "Simmer layout wrapper not found.");
-        }
+        shimmerContainer = shimmerLayoutWrapper.findViewById(R.id.shimmer_container);
 
         dataLayoutWrapper = view.findViewById(R.id.data_layout_wrapper);
-
-        if (dataLayoutWrapper instanceof LinearLayout) {
-            tvWeatherText = dataLayoutWrapper.findViewById(R.id.tv_weather_description);
-            llKeywordLayout = dataLayoutWrapper.findViewById(R.id.ll_keyword_tags);
-
-            if (tvWeatherText == null || llKeywordLayout == null) {
-                Log.e("CodyFragment", "Required data views (TV/LL tags) not found inside dataLayoutWrapper.");
-            }
-        } else {
-            Log.e("CodyFragment", "Data layout wrapper not found or is not a LinearLayout.");
-        }
+        tvWeatherText = dataLayoutWrapper.findViewById(R.id.tv_weather_description);
+        llKeywordLayout = dataLayoutWrapper.findViewById(R.id.ll_keyword_tags);
 
         sharedViewModel = new ViewModelProvider(requireActivity())
                 .get(SharedWeatherViewModel.class);
@@ -83,8 +71,8 @@ public class HomeCodyKeywordFragment extends Fragment {
 
         sharedViewModel.getWeatherId().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
-            public void onChanged(@Nullable Integer weatherId) {
-                if (weatherId != null && weatherId > 0 && weatherId != lastLoadedWeatherId) {
+            public void onChanged(Integer weatherId) {
+                if (weatherId != null && weatherId > 0) {
                     lastLoadedWeatherId = weatherId;
                     startShimmerLoading();
                     fetchWeatherKeywords(1, weatherId);
@@ -95,35 +83,33 @@ public class HomeCodyKeywordFragment extends Fragment {
         return view;
     }
 
+    // -------------------------
+    // ⭐ HomeFragment가 호출하는 함수
+    // -------------------------
+    public void updateLocation(double lat, double lon) {
+        this.currentLat = lat;
+        this.currentLon = lon;
+
+        // 좌표는 실제로 keyword API 호출에 직접 쓰이지 않음 (weatherId 기반)
+        // weatherId 업데이트는 SharedViewModel에서 온다.
+    }
+
     private void startShimmerLoading() {
-        if (shimmerContainer != null && dataLayoutWrapper != null) {
-            dataLayoutWrapper.setVisibility(View.GONE);
-
-            shimmerContainer.setVisibility(View.GONE);
-
-            if (shimmerContainer.getParent() instanceof View) {
-                ((View) shimmerContainer.getParent()).setVisibility(View.GONE);
-            }
-            dataLayoutWrapper.setVisibility(View.VISIBLE);
-        }
+        dataLayoutWrapper.setVisibility(View.GONE);
+        shimmerContainer.setVisibility(View.VISIBLE);
+        shimmerContainer.startShimmer();
     }
 
     private void stopShimmerLoading() {
-        if (shimmerContainer != null && dataLayoutWrapper != null) {
-            shimmerContainer.stopShimmer();
-
-            if (shimmerContainer.getParent() instanceof View) {
-                ((View) shimmerContainer.getParent()).setVisibility(View.GONE);
-            }
-            dataLayoutWrapper.setVisibility(View.VISIBLE);
-        }
+        shimmerContainer.stopShimmer();
+        shimmerContainer.setVisibility(View.GONE);
+        dataLayoutWrapper.setVisibility(View.VISIBLE);
     }
 
     private void fetchWeatherKeywords(int userId, int weatherId) {
+
         HomeApi api = RetrofitClient.getClient("https://api.weather-robe.kro.kr/")
                 .create(HomeApi.class);
-
-        Log.d("CodyAPI", "키워드 요청: User ID " + userId + ", Weather ID " + weatherId);
 
         api.getWeatherKeywords(userId, weatherId)
                 .enqueue(new Callback<CommonApiResponse<HomeResDTO.PostKeywordDTO>>() {
@@ -134,19 +120,15 @@ public class HomeCodyKeywordFragment extends Fragment {
                         stopShimmerLoading();
 
                         if (res.isSuccessful() && res.body() != null && res.body().getSuccess() != null) {
-                            Log.d("API_CALL", "키워드 로드 성공");
                             HomeResDTO.Weather weatherData = res.body().getSuccess().getWeather();
                             updateKeywordUI(weatherData);
-
                         } else {
-                            Log.e("API_CALL", "응답 실패. Status: " + res.code() + ", Message: " + (res.body() != null ? res.body().getError() : "N/A"));
                             updateKeywordUI(null);
                         }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<CommonApiResponse<HomeResDTO.PostKeywordDTO>> call, @NonNull Throwable t) {
-                        Log.e("CodyAPI", "키워드 요청 실패: " + t.getMessage());
                         stopShimmerLoading();
                         updateKeywordUI(null);
                     }
@@ -157,39 +139,41 @@ public class HomeCodyKeywordFragment extends Fragment {
         if (!isAdded()) return;
 
         if (weatherData == null) {
-            if (tvWeatherText != null) {
-                tvWeatherText.setText("날씨 정보를 불러오는 데 실패했습니다.");
-            }
-            if (llKeywordLayout != null) {
-                llKeywordLayout.removeAllViews();
-            }
-            lastLoadedWeatherId = 0;
+            tvWeatherText.setText("날씨 정보를 불러오는 데 실패했습니다.");
+            llKeywordLayout.removeAllViews();
             return;
         }
 
-        String description = weatherData.getText();
-        if (tvWeatherText != null) {
-            if (description != null) {
-                tvWeatherText.setText(description);
-            } else {
-                tvWeatherText.setText("오늘의 날씨 정보가 없습니다.");
-            }
-        }
+        tvWeatherText.setText(weatherData.getText());
 
         List<String> keywords = weatherData.getKeywords();
-        if (llKeywordLayout != null) {
-            llKeywordLayout.removeAllViews();
+        llKeywordLayout.removeAllViews();
 
-            if (keywords != null && !keywords.isEmpty()) {
-                for (String keyword : keywords) {
-                    TextView tagView = createKeywordTag(keyword);
-                    llKeywordLayout.addView(tagView);
-                }
-                Log.d("CodyUI", "코디 키워드 " + keywords.size() + "개 업데이트 완료.");
-            } else {
-                Log.d("CodyUI", "받은 코디 키워드가 없습니다.");
+        if (keywords != null) {
+            for (String keyword : keywords) {
+                TextView tagView = createKeywordTag(keyword);
+                llKeywordLayout.addView(tagView);
             }
         }
+    }
+
+    private TextView createKeywordTag(String keyword) {
+        Context context = getContext();
+        TextView textView = new TextView(context);
+        textView.setText(CommonUtils.addKeywordIcon(keyword));
+
+        textView.setBackgroundResource(R.drawable.label_bg);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        params.setMargins(0, 0, dpToPx(6), 0);
+        textView.setLayoutParams(params);
+
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
+
+        return textView;
     }
 
     private int dpToPx(int dp) {
@@ -198,35 +182,5 @@ public class HomeCodyKeywordFragment extends Fragment {
                 dp,
                 getResources().getDisplayMetrics()
         );
-    }
-
-    private TextView createKeywordTag(String keyword) {
-        Context context = getContext();
-        if (context == null) return new TextView(requireContext());
-
-        TextView textView = new TextView(context);
-        textView.setText(CommonUtils.addKeywordIcon(keyword));
-
-        textView.setBackgroundResource(R.drawable.label_bg);
-
-        textView.setTextColor(ContextCompat.getColor(context, R.color.text_dark));
-
-        try {
-            textView.setTypeface(ResourcesCompat.getFont(context, R.font.nanumbarungothic));
-        } catch (Exception e) {
-            Log.e("FontLoad", "폰트 nanumbarungothic 로드 실패", e);
-        }
-
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-
-        params.setMargins(0, 0, dpToPx(6), 0);
-        textView.setLayoutParams(params);
-
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
-
-        return textView;
     }
 }

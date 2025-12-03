@@ -46,7 +46,7 @@ public class HomeFragment extends Fragment {
 
         if (isAdded()) {
             Log.d("HomeFragment", "위치 수신. 자식 프래그먼트 업데이트 시작.");
-            notifyChildFragments(currentLat, currentLon);
+            notifyChildFragments(latitude, longitude);
         }
     }
 

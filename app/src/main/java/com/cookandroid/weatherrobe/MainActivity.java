@@ -26,7 +26,6 @@ import com.cookandroid.weatherrobe.location.LocationUpdateListener;
 import com.cookandroid.weatherrobe.login.LoginActivity;
 import com.cookandroid.weatherrobe.Home.model.SharedWeatherViewModel;
 
-
 public class MainActivity extends AppCompatActivity implements LocationUpdateListener {
 
     private View headerLayout;
@@ -71,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements LocationUpdateLis
             drawer.openDrawer(GravityCompat.START);
         });
 
-
         headerLayout = findViewById(R.id.header_root);
 
         int statusBarHeightId = getResources()
@@ -83,9 +81,7 @@ public class MainActivity extends AppCompatActivity implements LocationUpdateLis
 
         headerLayout.setPadding(0, statusBarHeight, 0, 0);
 
-
         WindowCompat.setDecorFitsSystemWindows(getWindow(), true);
-
 
         headerLayout = findViewById(R.id.header_root);
         headerLeftIcon = findViewById(R.id.header_left_icon);
@@ -95,7 +91,6 @@ public class MainActivity extends AppCompatActivity implements LocationUpdateLis
         headerBottomBorder = findViewById(R.id.header_bottom_border);
 
         View bottomNav = findViewById(R.id.bottom_nav);
-
 
         locationManager = new AppLocationManager(this, this);
         locationManager.requestPermissionsAndStartUpdates();
@@ -132,7 +127,6 @@ public class MainActivity extends AppCompatActivity implements LocationUpdateLis
         });
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -149,9 +143,9 @@ public class MainActivity extends AppCompatActivity implements LocationUpdateLis
         }
     }
 
-
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+            @NonNull int[] grantResults) {
         if (locationManager != null && locationManager.handlePermissionResult(requestCode, grantResults)) {
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);

@@ -26,9 +26,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class HomeFeelingFragment extends Fragment {
+
     private SharedWeatherViewModel sharedViewModel;
+
     TextView tvModerate, tvCold, tvHot;
     SharedPreferences prefs;
+
+    private double currentLat = 37.5665;
+    private double currentLon = 126.9780;
 
     @Nullable
     @Override
@@ -50,6 +55,11 @@ public class HomeFeelingFragment extends Fragment {
         return root;
     }
 
+    public void updateLocation(double lat, double lon) {
+        this.currentLat = lat;
+        this.currentLon = lon;
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -66,36 +76,27 @@ public class HomeFeelingFragment extends Fragment {
 
     private void setListeners() {
         tvModerate.setOnClickListener(v -> {
-            final Integer weatherIdObj = sharedViewModel.getWeatherId().getValue();
-            if (weatherIdObj == null || weatherIdObj <= 0) {
-                Log.e("HomeFeelingFragment", "필수 ID 값(Weather ID)이 유효하지 않습니다. API 호출 취소.");
-                return;
-            }
-            int weatherId = weatherIdObj;
+            Integer weatherId = sharedViewModel.getWeatherId().getValue();
+            if (weatherId == null || weatherId <= 0) return;
+
             String currentFeedback = sharedViewModel.getWeatherFeedback().getValue();
             String newFeedback = "적당".equals(currentFeedback) ? "" : "적당";
             fetchWeatherFeedback(1, weatherId, newFeedback);
         });
 
         tvCold.setOnClickListener(v -> {
-            final Integer weatherIdObj = sharedViewModel.getWeatherId().getValue();
-            if (weatherIdObj == null || weatherIdObj <= 0) {
-                Log.e("HomeFeelingFragment", "필수 ID 값(Weather ID)이 유효하지 않습니다. API 호출 취소.");
-                return;
-            }
-            int weatherId = weatherIdObj;
+            Integer weatherId = sharedViewModel.getWeatherId().getValue();
+            if (weatherId == null || weatherId <= 0) return;
+
             String currentFeedback = sharedViewModel.getWeatherFeedback().getValue();
             String newFeedback = "추움".equals(currentFeedback) ? "" : "추움";
             fetchWeatherFeedback(1, weatherId, newFeedback);
         });
 
         tvHot.setOnClickListener(v -> {
-            final Integer weatherIdObj = sharedViewModel.getWeatherId().getValue();
-            if (weatherIdObj == null || weatherIdObj <= 0) {
-                Log.e("HomeFeelingFragment", "필수 ID 값(Weather ID)이 유효하지 않습니다. API 호출 취소.");
-                return;
-            }
-            int weatherId = weatherIdObj;
+            Integer weatherId = sharedViewModel.getWeatherId().getValue();
+            if (weatherId == null || weatherId <= 0) return;
+
             String currentFeedback = sharedViewModel.getWeatherFeedback().getValue();
             String newFeedback = "더움".equals(currentFeedback) ? "" : "더움";
             fetchWeatherFeedback(1, weatherId, newFeedback);
@@ -109,77 +110,57 @@ public class HomeFeelingFragment extends Fragment {
     }
 
     private void updateFeedbackUI(String feedback) {
-        if (feedback == null || feedback.isEmpty()) {
-            resetBackground();
-            return;
-        }
+        resetBackground();
+
+        if (feedback == null || feedback.isEmpty()) return;
 
         switch(feedback) {
             case "적당":
-                resetBackground();
                 tvModerate.setBackgroundResource(R.drawable.label_bg_yellow);
                 break;
             case "추움":
-                resetBackground();
                 tvCold.setBackgroundResource(R.drawable.label_bg_sky_blue);
                 break;
             case "더움":
-                resetBackground();
                 tvHot.setBackgroundResource(R.drawable.label_bg_red);
-                break;
-            default:
-                resetBackground();
                 break;
         }
     }
 
     private void fetchWeatherFeedback(int userId, int weatherId, String feedback) {
+
         HomeReqDTO reqDto = new HomeReqDTO();
         HomeReqDTO.PostHomeDTO postDto = reqDto.new PostHomeDTO(feedback);
 
         HomeApi apiService = RetrofitClient.getClient("https://api.weather-robe.kro.kr/")
                 .create(HomeApi.class);
 
-        Call<CommonApiResponse<HomeResDTO.PostFeedbackDTO>> call =
-                apiService.postFeedback(userId, weatherId, postDto);
+        apiService.postFeedback(userId, weatherId, postDto)
+                .enqueue(new Callback<CommonApiResponse<HomeResDTO.PostFeedbackDTO>>() {
+                    @Override
+                    public void onResponse(Call<CommonApiResponse<HomeResDTO.PostFeedbackDTO>> call,
+                                           Response<CommonApiResponse<HomeResDTO.PostFeedbackDTO>> res) {
 
-        call.enqueue(new Callback<CommonApiResponse<HomeResDTO.PostFeedbackDTO>>() {
-            @Override
-            public void onResponse(Call<CommonApiResponse<HomeResDTO.PostFeedbackDTO>> call,
-                                   Response<CommonApiResponse<HomeResDTO.PostFeedbackDTO>> res) {
+                        if (!isAdded()) return;
 
-                if (!isAdded()) return;
+                        if (res.isSuccessful() && res.body() != null
+                                && res.body().getSuccess() != null) {
 
-                if (res.isSuccessful() && res.body() != null && res.body().getSuccess() != null) {
+                            HomeResDTO.Daily weatherData = res.body().getSuccess().getDaily();
 
-                    HomeResDTO.Daily weatherData = res.body().getSuccess().getDaily();
+                            String finalFeedback = weatherData != null
+                                    ? weatherData.getFeedback()
+                                    : "";
 
-                    if (weatherData != null) {
-                        Log.d("API_CALL", "피드백 업데이트 성공");
+                            sharedViewModel.setWeatherFeedback(finalFeedback);
 
-                        String finalFeedback = weatherData.getFeedback();
-
-                        if (finalFeedback == null) {
-                            finalFeedback = "";
                         }
-
-                        sharedViewModel.setWeatherFeedback(finalFeedback);
-                    } else {
-                        Log.e("API_CALL", "응답은 성공했으나 Daily 데이터가 누락됨.");
                     }
 
+                    @Override
+                    public void onFailure(Call<CommonApiResponse<HomeResDTO.PostFeedbackDTO>> call, Throwable t) {
 
-                } else {
-                    Log.e("API_CALL", "응답 실패. Status: " + res.code() + ", Message: " + (res.body() != null ? res.body().getError() : "N/A"));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<CommonApiResponse<HomeResDTO.PostFeedbackDTO>> call, Throwable t) {
-                if (!isAdded()) return;
-
-                Log.e("CodyAPI", "키워드 요청 실패: " + t.getMessage());
-            }
-        });
+                    }
+                });
     }
 }
