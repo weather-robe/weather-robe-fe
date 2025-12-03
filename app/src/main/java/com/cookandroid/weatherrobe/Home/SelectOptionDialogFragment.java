@@ -16,7 +16,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.cookandroid.weatherrobe.Home.model.SharedWeatherViewModel;
 import com.cookandroid.weatherrobe.R;
 
 import java.util.ArrayList;
@@ -25,6 +27,8 @@ import java.util.List;
 public class SelectOptionDialogFragment extends DialogFragment {
 
     private final List<View> selectedCards = new ArrayList<>();
+
+    private SharedWeatherViewModel sharedViewModel;
 
     public interface OnOptionSelectedListener {
         void onSelected(List<String> selectedKeys);
@@ -36,6 +40,13 @@ public class SelectOptionDialogFragment extends DialogFragment {
         this.listener = listener;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        sharedViewModel = new ViewModelProvider(requireActivity())
+                .get(SharedWeatherViewModel.class);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -45,21 +56,39 @@ public class SelectOptionDialogFragment extends DialogFragment {
         View root = inflater.inflate(R.layout.home_weather_dialog, container, false);
 
         initCardClicks(root);
-        applyDefaultSelection(root);
+        List<String> keys = sharedViewModel.getSelectedKeys().getValue();
+        applySelectedKeys(root, keys);
         initConfirmButton(root);
 
         return root;
     }
 
     /** 기본 선택 */
-    private void applyDefaultSelection(View root) {
+    private void applySelectedKeys(View root, List<String> keys) {
+        if (keys == null) return;
+
         View feel = root.findViewById(R.id.feel_card2);
         View pop = root.findViewById(R.id.pop_card2);
+        View rain = root.findViewById(R.id.rain_card);
+        View humidity = root.findViewById(R.id.humidity_card);
+        View wind = root.findViewById(R.id.wind_card);
         View pm10 = root.findViewById(R.id.pm10_card2);
+        View pm25 = root.findViewById(R.id.pm25_card);
 
-        selectCard(feel);
-        selectCard(pop);
-        selectCard(pm10);
+        List<View> allCards =
+                java.util.Arrays.asList(feel, pop, rain, humidity, wind, pm10, pm25);
+
+        selectedCards.clear();
+
+        for (View c : allCards) {
+            String tag = (String) c.getTag();
+            if (tag != null && keys.contains(tag)) {
+                selectCard(c);
+            } else {
+                c.setSelected(false);
+                c.setBackgroundResource(R.drawable.home_dialog_card);
+            }
+        }
 
         updateCurrentSelectionUI(root);
     }
@@ -160,6 +189,7 @@ public class SelectOptionDialogFragment extends DialogFragment {
             }
 
             listener.onSelected(result);
+            sharedViewModel.setSelectedKeys(result);
             dismiss();
         });
     }
