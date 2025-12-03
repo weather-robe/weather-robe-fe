@@ -15,9 +15,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.cookandroid.weatherrobe.R;
 import com.cookandroid.weatherrobe.RetrofitClient;
+import com.cookandroid.weatherrobe.Home.model.SharedWeatherViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,6 +43,7 @@ public class HourlyFragment extends Fragment {
     private TextView pm10Comment2, pm25Comment2;
     private TextView pm10Comment3, pm25Comment3;
     private View pm10BarFill, pm25BarFill;
+    private SharedWeatherViewModel sharedViewModel;
 
     public HourlyFragment() {}
 
@@ -54,6 +57,8 @@ public class HourlyFragment extends Fragment {
 
         prefs = requireActivity().getSharedPreferences("user", Context.MODE_PRIVATE);
         prefs.edit().putInt("userId", 1).apply();
+
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedWeatherViewModel.class);
 
         dateText = view.findViewById(R.id.txt_date);
         dayText = view.findViewById(R.id.txt_day);
@@ -93,7 +98,12 @@ public class HourlyFragment extends Fragment {
         pm10Title.setText("미세먼지");
         pm25Title.setText("초미세먼지");
 
-        loadWeather();
+        sharedViewModel.getCurrentLatitude().observe(getViewLifecycleOwner(), lat -> {
+            Double lon = sharedViewModel.getCurrentLongitude().getValue();
+            if (lon != null) {
+                loadWeather(lat, lon);
+            }
+        });
 
         RecyclerView recycler = view.findViewById(R.id.recycler_weather);
         LinearLayoutManager layoutManager =
@@ -104,12 +114,12 @@ public class HourlyFragment extends Fragment {
 
     }
 
-    private void loadWeather() {
+    private void loadWeather(double latitude, double longitude) {
         SharedPreferences prefs =
                 requireActivity().getSharedPreferences("user", Context.MODE_PRIVATE);
 
         int userId = prefs.getInt("userId", -1);
-        HourlyRequest req = new HourlyRequest(37.5665, 126.9780);
+        HourlyRequest req = new HourlyRequest(latitude, longitude);
 
         api.getHourlyWeather(userId, req).enqueue(new Callback<HourlyResponse>() {
             @Override

@@ -20,7 +20,6 @@ import com.cookandroid.weatherrobe.Home.model.Today;
 import com.cookandroid.weatherrobe.Home.model.Yesterday;
 import com.cookandroid.weatherrobe.R;
 import com.cookandroid.weatherrobe.RetrofitClient;
-import com.cookandroid.weatherrobe.hourly.HourlyRequest;
 import com.google.gson.Gson;
 import com.cookandroid.weatherrobe.Home.model.SharedWeatherViewModel;
 import androidx.lifecycle.ViewModelProvider;
@@ -58,7 +57,13 @@ public class HomeWeatherFragment extends Fragment {
                 .get(SharedWeatherViewModel.class);
 
         initViews(view);
-        loadWeatherData();
+
+        sharedViewModel.getCurrentLatitude().observe(getViewLifecycleOwner(), lat -> {
+            Double lon = sharedViewModel.getCurrentLongitude().getValue();
+            if (lon != null) {
+                loadWeatherData(lat, lon);
+            }
+        });
 
         return view;
     }
@@ -157,6 +162,8 @@ public class HomeWeatherFragment extends Fragment {
         TextView value = card.findViewById(R.id.card_value);
         TextView title = card.findViewById(R.id.card_title);
 
+        if (today == null) return;
+
         switch (key) {
             case "FEEL":
                 title.setText("체감온도");
@@ -214,7 +221,7 @@ public class HomeWeatherFragment extends Fragment {
         }
     }
 
-    private void loadWeatherData() {
+    private void loadWeatherData(double latitude, double longitude) {
         HomeApi api = RetrofitClient.getClient("https://api.weather-robe.kro.kr/")
                 .create(HomeApi.class);
 
@@ -222,7 +229,7 @@ public class HomeWeatherFragment extends Fragment {
                 requireActivity().getSharedPreferences("user", Context.MODE_PRIVATE);
 
         int userId = prefs.getInt("userId", -1);
-        HomeRequest req = new HomeRequest(37.5665, 126.9780);
+        HomeRequest req = new HomeRequest(latitude, longitude);
 
         api.getHomeWeather(userId, req).enqueue(new Callback<HomeWeatherResponse>() {
             @Override
@@ -250,6 +257,8 @@ public class HomeWeatherFragment extends Fragment {
     }
 
     private void updateWeatherUI() {
+        if (current == null || today == null || yesterday == null) return;
+
         tvTemp.setText(toTemp(current.temp));
         ivWeather.setImageResource(getWeatherIcon(current.icon));
 
