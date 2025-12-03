@@ -205,6 +205,10 @@ public class MainActivity extends AppCompatActivity implements LocationUpdateLis
             ((HomeFragment) currentFragment).updateLocation(latitude, longitude);
         }
 
+        if (currentFragment instanceof HourlyFragment) {
+            ((HourlyFragment) currentFragment).updateLocation(latitude, longitude);
+        }
+
         if (currentFragment instanceof DailyFragment) {
             ((DailyFragment) currentFragment).updateLocation(latitude, longitude);
         }

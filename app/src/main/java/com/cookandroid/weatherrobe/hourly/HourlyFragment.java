@@ -42,6 +42,11 @@ public class HourlyFragment extends Fragment {
     private TextView pm10Comment3, pm25Comment3;
     private View pm10BarFill, pm25BarFill;
 
+    // 🔥 추가: HomeFragment에서 전달받은 현재 좌표 보관
+    private double currentLat = 37.5665;
+    private double currentLon = 126.9780;
+    private boolean isDataLoaded = false;
+
     public HourlyFragment() {}
 
     @Nullable
@@ -93,23 +98,38 @@ public class HourlyFragment extends Fragment {
         pm10Title.setText("미세먼지");
         pm25Title.setText("초미세먼지");
 
-        loadWeather();
-
-        RecyclerView recycler = view.findViewById(R.id.recycler_weather);
-        LinearLayoutManager layoutManager =
-                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        recycler.setLayoutManager(layoutManager);
+        // 🔥 초기 로딩: 기본 좌표로 호출
+        if (!isDataLoaded) {
+            loadWeather(currentLat, currentLon);
+        }
 
         return view;
-
     }
 
-    private void loadWeather() {
+    // 🔥 HomeFragment가 위치를 전달할 때 호출하는 메소드
+    public void updateLocation(double lat, double lon) {
+
+        // 좌표 변화 없으면 호출 안 함
+        if (isDataLoaded && currentLat == lat && currentLon == lon) {
+            return;
+        }
+
+        this.currentLat = lat;
+        this.currentLon = lon;
+        isDataLoaded = false;
+
+        if (isAdded()) {
+            loadWeather(lat, lon);
+        }
+    }
+
+    // 🔥 위치 기반으로 API 다시 호출하도록 변경
+    private void loadWeather(double lat, double lon) {
         SharedPreferences prefs =
                 requireActivity().getSharedPreferences("user", Context.MODE_PRIVATE);
 
         int userId = prefs.getInt("userId", -1);
-        HourlyRequest req = new HourlyRequest(37.5665, 126.9780);
+        HourlyRequest req = new HourlyRequest(lat, lon);
 
         api.getHourlyWeather(userId, req).enqueue(new Callback<HourlyResponse>() {
             @Override
@@ -118,6 +138,8 @@ public class HourlyFragment extends Fragment {
                     Log.e("Hourly", "응답 실패: " + response.code());
                     return;
                 }
+
+                isDataLoaded = true;
 
                 HourlyResponse.SuccessData data = response.body().success;
                 if (data == null || data.hourly == null) {
@@ -129,6 +151,7 @@ public class HourlyFragment extends Fragment {
                 hourlyList.addAll(data.hourly);
                 adapter.notifyDataSetChanged();
 
+                // 날짜 UI 업데이트
                 String rawDate = data.hourly.get(0).date;
 
                 try {

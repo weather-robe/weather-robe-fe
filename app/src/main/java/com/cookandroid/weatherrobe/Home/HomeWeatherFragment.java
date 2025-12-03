@@ -14,16 +14,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.cookandroid.weatherrobe.Home.model.Current;
 import com.cookandroid.weatherrobe.Home.model.Today;
 import com.cookandroid.weatherrobe.Home.model.Yesterday;
 import com.cookandroid.weatherrobe.R;
 import com.cookandroid.weatherrobe.RetrofitClient;
-import com.cookandroid.weatherrobe.hourly.HourlyRequest;
 import com.google.gson.Gson;
 import com.cookandroid.weatherrobe.Home.model.SharedWeatherViewModel;
-import androidx.lifecycle.ViewModelProvider;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -36,7 +35,9 @@ import retrofit2.Response;
 public class HomeWeatherFragment extends Fragment {
 
     private static final String PREF_CARD_KEYS = "home_card_keys";
+
     private SharedWeatherViewModel sharedViewModel;
+
     private ImageView ivWeather, ivYesterdayHigh, ivYesterdayLow, ivEdit;
     private TextView tvTemp, tvYesterdayHigh, tvYesterdayLow;
 
@@ -45,6 +46,13 @@ public class HomeWeatherFragment extends Fragment {
     private Yesterday yesterday;
 
     private FrameLayout slot1, slot2, slot3;
+
+    // -------------------------
+    // ⭐ 위치 기반 업데이트용 변수
+    // -------------------------
+    private double currentLat = 37.5665;
+    private double currentLon = 126.9780;
+    private boolean isDataLoaded = false;
 
     @Nullable
     @Override
@@ -58,9 +66,30 @@ public class HomeWeatherFragment extends Fragment {
                 .get(SharedWeatherViewModel.class);
 
         initViews(view);
+
+        // 최초 로딩
         loadWeatherData();
 
         return view;
+    }
+
+    // -------------------------
+    // ⭐ HomeFragment에서 호출하는 함수
+    // -------------------------
+    public void updateLocation(double latitude, double longitude) {
+
+        // 같은 좌표면 다시 불러오지 않음
+        if (isDataLoaded && currentLat == latitude && currentLon == longitude) {
+            return;
+        }
+
+        this.currentLat = latitude;
+        this.currentLon = longitude;
+        this.isDataLoaded = false;
+
+        if (isAdded()) {
+            loadWeatherData();
+        }
     }
 
     private void initViews(View v) {
@@ -158,6 +187,7 @@ public class HomeWeatherFragment extends Fragment {
         TextView title = card.findViewById(R.id.card_title);
 
         switch (key) {
+
             case "FEEL":
                 title.setText("체감온도");
                 value.setText(toTemp(today.feels_like));
@@ -201,20 +231,19 @@ public class HomeWeatherFragment extends Fragment {
         if (text == null) return R.drawable.ic_pm_normal;
 
         switch (text) {
-            case "좋음":
-                return R.drawable.ic_pm_good;
-            case "보통":
-                return R.drawable.ic_pm_normal;
-            case "나쁨":
-                return R.drawable.ic_pm_bad;
-            case "매우 나쁨":
-                return R.drawable.ic_pm_very_bad;
-            default:
-                return R.drawable.ic_pm_normal;
+            case "좋음": return R.drawable.ic_pm_good;
+            case "보통": return R.drawable.ic_pm_normal;
+            case "나쁨": return R.drawable.ic_pm_bad;
+            case "매우 나쁨": return R.drawable.ic_pm_very_bad;
+            default: return R.drawable.ic_pm_normal;
         }
     }
 
+    // -------------------------
+    // ⭐ 좌표 기반 날씨 API 호출
+    // -------------------------
     private void loadWeatherData() {
+
         HomeApi api = RetrofitClient.getClient("https://api.weather-robe.kro.kr/")
                 .create(HomeApi.class);
 
@@ -222,14 +251,15 @@ public class HomeWeatherFragment extends Fragment {
                 requireActivity().getSharedPreferences("user", Context.MODE_PRIVATE);
 
         int userId = prefs.getInt("userId", -1);
-        HomeRequest req = new HomeRequest(37.5665, 126.9780);
+
+        // ⭐ 좌표 하드코딩 제거 → currentLat, currentLon 사용
+        HomeRequest req = new HomeRequest(currentLat, currentLon);
 
         api.getHomeWeather(userId, req).enqueue(new Callback<HomeWeatherResponse>() {
             @Override
             public void onResponse(Call<HomeWeatherResponse> call, Response<HomeWeatherResponse> res) {
 
                 if (!isAdded()) return;
-
                 if (!res.isSuccessful() || res.body() == null) return;
 
                 current = res.body().success.current;
@@ -240,6 +270,8 @@ public class HomeWeatherFragment extends Fragment {
                 setSharedViewModelValue(today.weatherId, today.feedback);
 
                 applySelectedOptions(loadSelectedKeys());
+
+                isDataLoaded = true;
             }
 
             @Override
@@ -273,7 +305,7 @@ public class HomeWeatherFragment extends Fragment {
         if (parent == null || parent.getView() == null) return;
 
         View root = parent.getView().findViewById(R.id.home_root);
-        if(root == null) return;
+        if (root == null) return;
 
         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 
@@ -282,24 +314,20 @@ public class HomeWeatherFragment extends Fragment {
             return;
         }
 
-        // 2) 아이콘이 n(밤)으로 끝나면 night 배경
         if (icon.endsWith("n")) {
             root.setBackgroundResource(R.drawable.bg_weather_night);
             return;
         }
 
-        // 3) 낮(d)일 때 날씨에 맞춰 배경 설정
         switch (icon) {
             case "01d":
                 root.setBackgroundResource(R.drawable.bg_weather_sunny);
                 break;
-
             case "02d":
             case "03d":
             case "04d":
                 root.setBackgroundResource(R.drawable.bg_weather_cloudy);
                 break;
-
             default:
                 root.setBackgroundResource(R.drawable.bg_weather_cloudy);
         }
@@ -311,11 +339,9 @@ public class HomeWeatherFragment extends Fragment {
     private int getWeatherIcon(String icon) {
         switch (icon) {
             case "01d":
-            case "01n":
-                return R.drawable.ic_weather_sunny;
+            case "01n": return R.drawable.ic_weather_sunny;
             case "02d":
-            case "02n":
-                return R.drawable.ic_weather_cloudy_day;
+            case "02n": return R.drawable.ic_weather_cloudy_day;
             case "03d":
             case "03n":
             case "04d":
