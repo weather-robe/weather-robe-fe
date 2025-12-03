@@ -5,7 +5,6 @@
     android:id="@+id/header_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="40dp"
     android:background="@android:color/transparent">
 
     <!-- 왼쪽 햄버거 -->
@@ -56,6 +55,7 @@
             android:src="@drawable/ic_chevron_down" />
     </LinearLayout>
 
+    <!-- 아래 간격 -->
     <View
         android:id="@+id/spacer_bottom"
         android:layout_width="match_parent"
@@ -64,6 +64,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+    <!-- 헤더 밑줄 -->
     <View
         android:id="@+id/header_bottom_border"
         android:layout_width="match_parent"

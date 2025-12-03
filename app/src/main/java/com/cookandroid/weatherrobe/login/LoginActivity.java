@@ -1,4 +1,4 @@
-package com.cookandroid.weatherrobe;
+package com.cookandroid.weatherrobe.login;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
@@ -17,12 +18,22 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.cookandroid.weatherrobe.MainActivity;
+import com.cookandroid.weatherrobe.R;
+import com.cookandroid.weatherrobe.signup.SignupActivity;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class LoginActivity extends AppCompatActivity {
 
     private EditText inputId;
     private EditText inputPw;
     private ImageView btnLogin;
     private TextView textSignup;
+    private ImageView pwToggle;
+    private boolean isPwVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +44,7 @@ public class LoginActivity extends AppCompatActivity {
         inputPw = findViewById(R.id.input_pw);
         btnLogin = findViewById(R.id.btn_login);
         textSignup = findViewById(R.id.text_signup);
+        pwToggle = findViewById(R.id.pw_toggle);
 
         textSignup.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
@@ -40,9 +52,16 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         TextWatcher watcher = new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void afterTextChanged(Editable s) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
                 updateButton();
             }
         };
@@ -52,19 +71,22 @@ public class LoginActivity extends AppCompatActivity {
 
         updateButton();
 
-        btnLogin.setOnClickListener(v -> {
-            String id = inputId.getText().toString().trim();
-            String pw = inputPw.getText().toString().trim();
+        btnLogin.setOnClickListener(v -> sendLoginRequest());
 
-            if (!id.equals("test") || !pw.equals("1234")) {
-                showLoginFailDialog();
-                return;
-            }
+        pwToggle.setOnClickListener(v -> togglePassword());
+    }
 
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        });
+    private void togglePassword() {
+        if (isPwVisible) {
+            inputPw.setTransformationMethod(android.text.method.PasswordTransformationMethod.getInstance());
+            pwToggle.setImageResource(R.drawable.ic_eye_off);
+        } else {
+            inputPw.setTransformationMethod(null);
+            pwToggle.setImageResource(R.drawable.ic_eye_on);
+        }
+
+        inputPw.setSelection(inputPw.getText().length());
+        isPwVisible = !isPwVisible;
     }
 
     private void updateButton() {
@@ -77,6 +99,40 @@ public class LoginActivity extends AppCompatActivity {
             btnLogin.setBackgroundResource(R.drawable.login_default);
         }
     }
+
+        private void sendLoginRequest() {
+            String id = inputId.getText().toString().trim();
+            String pw = inputPw.getText().toString().trim();
+
+            LoginRequest body = new LoginRequest(id, pw);
+
+            Call<LoginResponse> call = RetrofitClient.getLoginService().login(body);
+            call.enqueue(new Callback<LoginResponse>() {
+                @Override
+                public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+
+                    if (!response.isSuccessful()) {
+                        showLoginFailDialog();
+                        return;
+                    }
+
+                    LoginResponse res = response.body();
+                    if (res == null || !"SUCCESS".equals(res.resultType)) {
+                        showLoginFailDialog();
+                        return;
+                    }
+
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+
+                @Override
+                public void onFailure(Call<LoginResponse> call, Throwable t) {
+                    showLoginFailDialog();
+                }
+            });
+        }
 
     private void showLoginFailDialog() {
         View view = getLayoutInflater().inflate(R.layout.login_error, null);

@@ -115,3 +115,4 @@ public class DailyResDTO {
         public Yesterday getYesterday() { return yesterday; }
     }
 }
+
