@@ -10,6 +10,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -26,6 +28,9 @@ import com.cookandroid.weatherrobe.location.LocationUpdateListener;
 import com.cookandroid.weatherrobe.login.LoginActivity;
 import com.cookandroid.weatherrobe.Home.model.SharedWeatherViewModel;
 
+import java.util.List;
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity implements LocationUpdateListener {
 
     private View headerLayout;
@@ -37,6 +42,9 @@ public class MainActivity extends AppCompatActivity implements LocationUpdateLis
 
     private AppLocationManager locationManager;
     private SharedWeatherViewModel sharedViewModel;
+
+    private boolean locationInitialized = false;
+    private boolean ignoreFirstGeocode = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +133,20 @@ public class MainActivity extends AppCompatActivity implements LocationUpdateLis
 
             }
         });
+
+        sharedViewModel.getCurrentLatitude().observe(this, lat -> {
+            Double lon = sharedViewModel.getCurrentLongitude().getValue();
+            if (lat != null && lon != null && locationInitialized) {
+                updateHeaderLocation(lat, lon);
+            }
+        });
+
+        sharedViewModel.getCurrentLongitude().observe(this, lon -> {
+            Double lat = sharedViewModel.getCurrentLatitude().getValue();
+            if (lat != null && lon != null && locationInitialized) {
+                updateHeaderLocation(lat, lon);
+            }
+        });
     }
 
     @Override
@@ -156,6 +178,7 @@ public class MainActivity extends AppCompatActivity implements LocationUpdateLis
     public void onLocationReceived(double latitude, double longitude) {
         Log.d("MainActivity", "위치 수신 성공: Lat=" + latitude + ", Lon=" + longitude);
 
+        locationInitialized = true;
         sharedViewModel.setLocation(latitude, longitude);
 
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
@@ -230,5 +253,47 @@ public class MainActivity extends AppCompatActivity implements LocationUpdateLis
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .commit();
+    }
+
+    private String getCityDistrict(double lat, double lon) {
+        try {
+            Geocoder geocoder = new Geocoder(this, Locale.KOREA);
+            List<Address> list = geocoder.getFromLocation(lat, lon, 1);
+
+            if (list == null || list.isEmpty()) return null;
+
+            Address addr = list.get(0);
+
+            String city = addr.getLocality();
+            String district = addr.getSubLocality();
+
+            if (city == null) {
+                city = addr.getAdminArea().replace("특별시", "")
+                        .replace("광역시", "");
+            }
+
+            if (district == null) {
+                district = addr.getSubAdminArea();
+            }
+
+            return city + " " + district;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private void updateHeaderLocation(double lat, double lon) {
+
+        if (ignoreFirstGeocode) {
+            ignoreFirstGeocode = false;
+            return;
+        }
+
+        String location = getCityDistrict(lat, lon);
+        if (location != null) {
+            headerTitle.setText(location);
+        }
     }
 }
