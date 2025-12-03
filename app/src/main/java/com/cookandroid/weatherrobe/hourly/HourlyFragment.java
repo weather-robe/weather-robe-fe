@@ -15,9 +15,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.cookandroid.weatherrobe.R;
 import com.cookandroid.weatherrobe.RetrofitClient;
+import com.cookandroid.weatherrobe.Home.model.SharedWeatherViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,32 +43,35 @@ public class HourlyFragment extends Fragment {
     private TextView pm10Comment2, pm25Comment2;
     private TextView pm10Comment3, pm25Comment3;
     private View pm10BarFill, pm25BarFill;
+    private SharedWeatherViewModel sharedViewModel;
 
     // 🔥 추가: HomeFragment에서 전달받은 현재 좌표 보관
     private double currentLat = 37.5665;
     private double currentLon = 126.9780;
     private boolean isDataLoaded = false;
 
-    public HourlyFragment() {}
+    public HourlyFragment() {
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+            @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_hourly, container, false);
 
         prefs = requireActivity().getSharedPreferences("user", Context.MODE_PRIVATE);
         prefs.edit().putInt("userId", 1).apply();
 
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedWeatherViewModel.class);
+
         dateText = view.findViewById(R.id.txt_date);
         dayText = view.findViewById(R.id.txt_day);
 
         recyclerView = view.findViewById(R.id.recycler_weather);
         recyclerView.setLayoutManager(
-                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false)
-        );
+                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
         adapter = new HourlyAdapter(hourlyList);
         recyclerView.setAdapter(adapter);
@@ -98,38 +103,26 @@ public class HourlyFragment extends Fragment {
         pm10Title.setText("미세먼지");
         pm25Title.setText("초미세먼지");
 
-        // 🔥 초기 로딩: 기본 좌표로 호출
-        if (!isDataLoaded) {
-            loadWeather(currentLat, currentLon);
-        }
+        sharedViewModel.getCurrentLatitude().observe(getViewLifecycleOwner(), lat -> {
+            Double lon = sharedViewModel.getCurrentLongitude().getValue();
+            if (lon != null) {
+                loadWeather(lat, lon);
+            }
+        });
+
+        RecyclerView recycler = view.findViewById(R.id.recycler_weather);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,
+                false);
+        recycler.setLayoutManager(layoutManager);
 
         return view;
     }
 
-    // 🔥 HomeFragment가 위치를 전달할 때 호출하는 메소드
-    public void updateLocation(double lat, double lon) {
-
-        // 좌표 변화 없으면 호출 안 함
-        if (isDataLoaded && currentLat == lat && currentLon == lon) {
-            return;
-        }
-
-        this.currentLat = lat;
-        this.currentLon = lon;
-        isDataLoaded = false;
-
-        if (isAdded()) {
-            loadWeather(lat, lon);
-        }
-    }
-
-    // 🔥 위치 기반으로 API 다시 호출하도록 변경
-    private void loadWeather(double lat, double lon) {
-        SharedPreferences prefs =
-                requireActivity().getSharedPreferences("user", Context.MODE_PRIVATE);
+    private void loadWeather(double latitude, double longitude) {
+        SharedPreferences prefs = requireActivity().getSharedPreferences("user", Context.MODE_PRIVATE);
 
         int userId = prefs.getInt("userId", -1);
-        HourlyRequest req = new HourlyRequest(lat, lon);
+        HourlyRequest req = new HourlyRequest(latitude, longitude);
 
         api.getHourlyWeather(userId, req).enqueue(new Callback<HourlyResponse>() {
             @Override
@@ -183,13 +176,13 @@ public class HourlyFragment extends Fragment {
     }
 
     private void updatePmCard(ImageView icon,
-                              TextView valueText,
-                              String gradeText,
-                              int value,
-                              View barFill,
-                              TextView comment2,
-                              TextView comment3,
-                              boolean isPm10) {
+            TextView valueText,
+            String gradeText,
+            int value,
+            View barFill,
+            TextView comment2,
+            TextView comment3,
+            boolean isPm10) {
 
         valueText.setText(gradeText + " " + value + "㎍/㎥");
         icon.setImageResource(getPmIcon(gradeText));
@@ -205,21 +198,31 @@ public class HourlyFragment extends Fragment {
 
     private String getActivityMessage(String grade) {
         switch (grade) {
-            case "좋음": return "야외 활동에 적합";
-            case "보통": return "몸상태에 따라 활동 유의";
-            case "나쁨": return "가급적 실내 활동 권장";
-            case "매우 나쁨": return "실외 활동 제한 및 마스크 착용 권장";
-            default: return "활동 유의";
+            case "좋음":
+                return "야외 활동에 적합";
+            case "보통":
+                return "몸상태에 따라 활동 유의";
+            case "나쁨":
+                return "가급적 실내 활동 권장";
+            case "매우 나쁨":
+                return "실외 활동 제한 및 마스크 착용 권장";
+            default:
+                return "활동 유의";
         }
     }
 
     private int getBarColor(String grade) {
         switch (grade) {
-            case "좋음": return 0xFF8FDA92;
-            case "보통": return 0xFFFFED65;
-            case "나쁨": return 0xFFFF9800;
-            case "매우 나쁨": return 0xFFFD675C;
-            default: return 0xFF8FDA92;
+            case "좋음":
+                return 0xFF8FDA92;
+            case "보통":
+                return 0xFFFFED65;
+            case "나쁨":
+                return 0xFFFF9800;
+            case "매우 나쁨":
+                return 0xFFFD675C;
+            default:
+                return 0xFF8FDA92;
         }
     }
 
@@ -235,11 +238,16 @@ public class HourlyFragment extends Fragment {
 
     private int getPmIcon(String grade) {
         switch (grade) {
-            case "좋음": return R.drawable.ic_pm_good;
-            case "보통": return R.drawable.ic_pm_normal;
-            case "나쁨": return R.drawable.ic_pm_bad;
-            case "매우 나쁨": return R.drawable.ic_pm_very_bad;
-            default: return R.drawable.ic_pm_normal;
+            case "좋음":
+                return R.drawable.ic_pm_good;
+            case "보통":
+                return R.drawable.ic_pm_normal;
+            case "나쁨":
+                return R.drawable.ic_pm_bad;
+            case "매우 나쁨":
+                return R.drawable.ic_pm_very_bad;
+            default:
+                return R.drawable.ic_pm_normal;
         }
     }
 }
